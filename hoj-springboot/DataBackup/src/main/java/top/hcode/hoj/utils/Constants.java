@@ -1,5 +1,8 @@
 package top.hcode.hoj.utils;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * @Author: Himit_ZH
  * @Date: 2021/1/1 13:00
@@ -446,5 +449,15 @@ public class Constants {
             return path;
         }
 
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum Team{
+        ACCEPT(200),
+        PENDING(500),
+        REJECT(400),
+        APPLY_FOR_UPDATE(300);
+        Integer status;
     }
 }
