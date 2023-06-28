@@ -117,6 +117,44 @@ export const JUDGE_STATUS = {
   }
 }
 
+export const SIGN_UP_STATUS_REVERSE = {
+  '200': {
+    name: 'Accept',
+    color: '#8fc31f',
+    type:'success',
+    describe:'已通过'
+  },
+  '300': {
+    name: 'Apply_For_Update',
+    color: '#ffd521',
+    type:'',
+    describe:'申请修改中'
+  },
+  '500': {
+    name: 'Pending',
+    color: '#ff9900',
+    type:'warning',
+    describe:'审核中'
+  },
+  '400': {
+    name: 'Reject',
+    color: '#ed3f14',
+    type: 'danger',
+    describe:'已拒绝'
+  },
+}
+
+export const SIGN_UP_TYPE ={
+  '0':{
+    name:'Official',
+    color: '#2ea7e0'
+  },
+  '1':{
+    name:'Star',
+    color: '#ffc107'
+  }
+}
+
 export const JUDGE_STATUS_RESERVE={
   'ns':-10,
   'snr':-5,
@@ -138,21 +176,35 @@ export const JUDGE_STATUS_RESERVE={
 }
 
 export const PROBLEM_LEVEL={
-  '0':{
+  '10000':{
+    name:{
+      'zh-CN':'容易',
+      'en-US':'VeryEasy',
+    },
+    color:'#B3E5CC'
+  },
+  '20000':{
     name:{
       'zh-CN':'简单',
       'en-US':'Easy',
     },
-    color:'#19be6b'
+    color:'#79D2A5'
   },
-  '1':{
+  '30000':{
+    name:{
+      'zh-CN':'普通',
+      'en-US':'Ordinary',
+    },
+    color:'#40BF80'
+  },  
+  '40000':{
     name:{
       'zh-CN':'中等',
       'en-US':'Mid',
     },
     color:'#2d8cf0'
   },
-  '2':{
+  '50000':{
     name:{
       'zh-CN':'困难',
       'en-US':'Hard',

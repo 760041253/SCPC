@@ -65,6 +65,12 @@
               ></i
               >{{ $t('m.NavBar_Group') }}</el-menu-item
             >
+            <el-menu-item index="/sign-up"
+              ><i
+                class="el-icon-s-management navbar-icon"
+              ></i
+              >{{ $t('m.NavBar_Sign_Up') }}</el-menu-item
+            >
             <el-submenu index="about">
               <template slot="title"
                 ><i class="el-icon-info"></i>{{ $t('m.NavBar_About') }}</template
@@ -557,6 +563,18 @@
               <mu-icon value=":fa fa-users" size="24"></mu-icon>
             </mu-list-item-action>
             <mu-list-item-title>{{ $t('m.NavBar_Group') }}</mu-list-item-title>
+          </mu-list-item>
+
+          <mu-list-item
+            button
+            to="/sign-up"
+            @click="opendrawer = !opendrawer"
+            active-class="mobile-menu-active"
+            >
+              <mu-list-item-action>
+                <mu-icon value=":fa el-icon-s-management" size="24"></mu-icon>
+              </mu-list-item-action>
+              <mu-list-item-title>{{ $t('m.NavBar_Sign_Up') }}</mu-list-item-title>
           </mu-list-item>
 
           <mu-list-item

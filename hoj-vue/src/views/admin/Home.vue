@@ -99,6 +99,19 @@
           }}</el-menu-item>
         </el-submenu>
 
+        <el-submenu index="signup" v-if="isSuperAdmin">
+          <template slot="title"
+            ><i class="el-icon-s-management fa-size" aria-hidden="true"></i
+            >{{ $t('m.SignUp_Admin') }}</template
+          >
+           <el-menu-item index="/admin/signUp">{{
+            $t('m.SignUp_List')
+          }}</el-menu-item>
+          <el-menu-item index="/admin/signUp/create">{{
+            $t('m.Create_SignUp')
+          }}</el-menu-item>
+        </el-submenu>
+
         <el-submenu index="discussion">
           <template slot="title"
             ><i class="fa fa-comments fa-size" aria-hidden="true"></i
@@ -465,6 +478,51 @@
             </mu-list-item>
           </mu-list-item>
 
+          <mu-list-item
+            v-if="isSuperAdmin"
+            button
+            :ripple="false"
+            nested
+            :open="openSideMenu === 'signup'"
+            @toggle-nested="openSideMenu = arguments[0] ? 'signup' : ''"
+          >
+            <mu-list-item-action>
+              <mu-icon value=":el-icon-s-management fa-size" size="24"></mu-icon>
+            </mu-list-item-action>
+            <mu-list-item-title>{{ $t('m.SignUp_Admin') }}</mu-list-item-title>
+            <mu-list-item-action>
+              <mu-icon
+                class="toggle-icon"
+                size="24"
+                value=":el-icon-arrow-down"
+              ></mu-icon>
+            </mu-list-item-action>
+            <mu-list-item
+              button
+              :ripple="false"
+              slot="nested"
+              to="/admin/signUp"
+              @click="opendrawer = !opendrawer"
+              active-class="mobile-menu-active"
+            >
+              <mu-list-item-title>{{
+                $t('m.SignUp_List')
+              }}</mu-list-item-title>
+            </mu-list-item>
+            <mu-list-item
+              button
+              :ripple="false"
+              slot="nested"
+              to="/admin/signUp/create"
+              @click="opendrawer = !opendrawer"
+              active-class="mobile-menu-active"
+            >
+              <mu-list-item-title>{{
+                $t('m.Create_SignUp')
+              }}</mu-list-item-title>
+            </mu-list-item>
+          </mu-list-item>
+          
           <mu-list-item
             button
             :ripple="false"

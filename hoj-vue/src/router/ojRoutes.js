@@ -44,6 +44,9 @@ import GroupMemberList from '@/views/oj/group/children/GroupMemberList.vue'
 import GroupSetting from '@/views/oj/group/children/GroupSetting.vue'
 import GroupRank from '@/views/oj/group/children/GroupRank.vue'
 import NotFound from "@/views/404.vue"
+import SignUp from '@/views/oj/signUp/SignUpList.vue'
+import SignUpDetails from "@/views/oj/signUp/SignUpDetails.vue"
+import SignUpInfo from "@/views/oj/signUp/SignUpInfo.vue"
 
 const ojRoutes = [
   {
@@ -455,6 +458,24 @@ const ojRoutes = [
         meta: { requireAuth: true,title: 'Mine Message' }
       },
     ]
+  },
+  {
+    path: '/sign-up',
+    name: 'SignUp',
+    component: SignUp,
+    meta: {title: 'SignUp'}
+  },
+  {
+    name: 'SignUpDetails',
+    path: '/sign-up/:signUpID/',
+    component:SignUpDetails,
+    meta: {title: 'SignUp Details',requireAuth:true},
+  },
+  {
+    name: 'SignUpInfo',
+    path: '/sign-up-info/:signUpID/',
+    component:SignUpInfo,
+    meta: {title: 'SignUp Info',requireAuth:true},
   },
   {
     path: '*',

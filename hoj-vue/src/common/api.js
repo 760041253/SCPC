@@ -1262,6 +1262,103 @@ const ojApi = {
     })
   },
 
+  // 比赛报名
+  
+  getACTeamCount(contestId){
+    return ajax('/api/team/get-ac-team-count','get',{
+      params:{
+        contestId
+      }
+    })
+  },
+
+  deleteSignUp(sid){
+    return ajax('/api/signup/delete-sign-up-contest','delete',{
+      params:{sid}
+    })
+  },
+  
+  getSIgnUpContestPage(pageNum,pageSize){
+    return ajax ('/api/signup/get-sign-up-page','get',{
+      params:{
+        pageNum,pageSize
+      }
+    })
+  },
+
+  getTeamInfoPageByContestId(status,cid,pageNum,pageSize){
+    return ajax('/api/team/get-team-info-page-by-contest-id','get',{
+      params:{
+        status,
+        cid,
+        pageNum,
+        pageSize
+      }
+    })
+  },
+  
+  getAcApplyTeam(cid,pageNum,pageSize){
+    return ajax('/api/team/select-waiting-review-team-info-page','get',{
+      params:{
+        cid,
+        pageNum,
+        pageSize
+      }
+    })
+  },
+  
+  getTeamInfoById(teamId){
+    return ajax('/api/team/get-team-info-by-id','get',{
+      params:{
+        teamId
+      }
+    })
+  },
+
+  addSignUpInfo(data){
+    return ajax('/api/team/sign-up','post',{
+      data
+    })
+  },
+
+  deleteSignUpTeam(tid){
+    return ajax('/api/team/withdraw-apply','put',{
+      params:{tid}
+    })
+  },
+
+  getTeamInfoByUserName(cid){
+    return ajax('/api/team/get-team-info-by-username-from-contest-id','get',{
+      params:{cid}
+    })
+  },
+
+  putTeamStatus(cid,tid,isOk){
+    return ajax('/api/team/check-apply','put',{
+      params:{
+        cid,tid,isOk
+      }
+    })
+  },
+
+  putTeamInfo(data){
+    return ajax('/api/team/update-sign-up-table','put',{
+      data
+    })
+  },
+
+  applyForUpdateTeamInfo(data){
+    return ajax('/api/team/apply-for-update-team-info','post',{
+      data
+    })
+  },
+
+  getAcSignUpCsv(cid,choose){
+    return ajax('/api/team/getSignUpCsv','get',{
+      params:{cid,choose}
+    })
+  },  
+
   // 站内消息
 
   getUnreadMsgCount() {

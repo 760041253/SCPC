@@ -15,6 +15,9 @@ const Tag= ()=>import('@/views/admin/problem/Tag')
 const ProblemImportAndExport= ()=>import('@/views/admin/problem/ImportAndExport')
 const Contest= ()=>import('@/views/admin/contest/Contest')
 const ContestList= ()=>import('@/views/admin/contest/ContestList')
+const SignUpTeamList = ()=>import('@/views/admin/signUp/SignUpTeamList')
+const SignUp= ()=>import('@/views/admin/signUp/signUp')
+const SignUpList= ()=>import('@/views/admin/signUp/signUpList')
 const Training= ()=>import('@/views/admin/training/Training')
 const TrainingList= ()=>import('@/views/admin/training/TrainingList')
 const TrainingProblemList= ()=>import('@/views/admin/training/TrainingProblemList')
@@ -181,6 +184,30 @@ const adminRoutes= [
           name: 'admin-edit-contest-problem',
           component: Problem,
           meta: { title:'Edit Problem'}
+        },
+        {
+          path: 'signUp',
+          name: 'admin-signUp-list',
+          component: SignUpList,
+          meta: { title:'SignUp List'}
+        },
+        {
+          path: 'signUp/create',
+          name: 'admin-create-signUp',
+          component: SignUp,
+          meta: { title:'Create SignUp'},
+        },
+        {
+          path: 'signUp/:contestId/edit',
+          name: 'admin-edit-signUp',
+          component: SignUp,
+          meta: { title:'Edit SignUp'}
+        },
+        {
+          path: 'signUpTeam/:signUpID',
+          name: 'admin-signUpTeam-list',
+          component: SignUpTeamList,
+          meta: { title:'signUpTeam List'}
         },
         {
           path: 'discussion',

@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@iktakahiro/markdown-it-katex": "^4.0.1",
+    "all": "^0.0.0",
     "axios": "^0.21.0",
     "browser-detect": "^0.2.28",
     "compression-webpack-plugin": "^5.0.1",
