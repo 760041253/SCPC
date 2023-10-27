@@ -1,0 +1,8 @@
+user.name=760041253@qq.com
+user.email=760041253@qq.com
+filesystem.Temurin|1.8.0_302|-1832655140.timestampresolution=1001 microseconds
+filesystem.Temurin|1.8.0_302|-1832655140.minracythreshold=0 nanoseconds
+filesystem.Temurin|1.8.0_302|1086364811.timestampresolution=1001 microseconds
+filesystem.Temurin|1.8.0_302|1086364811.minracythreshold=0 nanoseconds
+core.autocrlf=true
+http.postbuffer=524288000

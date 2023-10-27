@@ -101,6 +101,13 @@ public class TeamInfoController {
         teamInfoEntityService.generateCsvByContestId(cid,choose,response);
     }
 
+    @ApiOperation("模糊查询username")
+    @GetMapping("/getChooseUserList")
+    public void getChooseUserList(String usernameLike) {
+        teamInfoEntityService.getChooseUserList(usernameLike);
+    }
+
+
     @GetMapping("/test")
     public String test(){
         return "test success";

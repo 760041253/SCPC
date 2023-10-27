@@ -39,5 +39,5 @@ public interface TeamInfoEntityService {
 
     public CommonResult<Void> withdrawApply(Long tid) throws StatusForbiddenException, StatusFailException;
 
-
+    public CommonResult<List<String>> getChooseUserList(String usernameLike);
 }

@@ -1,15 +1,21 @@
 package top.hcode.hoj.common.result;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Data
+@AllArgsConstructor
 public class CommonResult<T> {
 
-    private final Integer status;   // 状态码
+    private Integer status;   // 状态码
 
-    private final T data;   // 返回的数据
+    private T data;   // 返回的数据
 
-    private final String msg;    // 自定义信息
+    private String msg;    // 自定义信息
+
+    public CommonResult(){
+
+    }
+
 
 
     /**
@@ -70,4 +76,27 @@ public class CommonResult<T> {
         return new CommonResult<T>(status, null, msg);
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 }

@@ -2,6 +2,7 @@ package top.hcode.hoj.service.signup.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -461,5 +462,15 @@ public class TeamInfoEntityServiceImpl implements TeamInfoEntityService {
         }
         teamInfoMapper.deleteById(tid);
         return CommonResult.successResponse();
+    }
+
+    /**
+     * 模糊查询获取用户名
+     */
+    @Override
+    public CommonResult<List<String>> getChooseUserList(String usernameLike) {
+        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper();
+        IPage<UserInfo> userInfoIPage = userInfoMapper.selectPage(new Page<>(1, 10), queryWrapper.like("username", usernameLike));
+        return CommonResult.successResponse(userInfoIPage.getRecords().stream().map(UserInfo::getUsername).collect(Collectors.toList()));
     }
 }
