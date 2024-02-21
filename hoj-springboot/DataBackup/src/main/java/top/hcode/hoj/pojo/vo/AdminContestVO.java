@@ -12,7 +12,7 @@ import java.util.List;
  * @Date: 2021/12/7 19:45
  * @Description:
  */
-@ApiModel(value="管理比赛的回传实体", description="")
+@ApiModel(value = "管理比赛的回传实体", description = "")
 @Data
 public class AdminContestVO {
 
@@ -99,6 +99,12 @@ public class AdminContestVO {
 
     @ApiModelProperty(value = "是否允许比赛结束后继续交题")
     private Boolean allowEndSubmit;
+
+    @ApiModelProperty(value = "是否开启同步赛")
+    private Boolean synchronous;
+
+    @ApiModelProperty(value = "同步赛配置")
+    private List<ContestSynchronousConfigVO> synchronousConfigList;
 
     private Date gmtCreate;
 

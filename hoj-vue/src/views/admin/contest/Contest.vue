@@ -265,7 +265,64 @@
             </el-form-item>
           </el-col>
         </el-row>
-
+        <!-- 同步赛配置 -->
+        <el-row :gutter="20" v-if="contest.type == 0">
+          <el-col :md="8" :xs="24">
+            <el-form-item :label="$t('m.Synchronous')">
+              <el-switch v-model="contest.synchronous"> </el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24" v-if="contest.synchronous">
+            <div style="margin-bottom: 10px">
+              <el-button
+                type="primary"
+                icon="el-icon-plus"
+                circle
+                @click="insertEvent2(-1)"
+                size="small"
+              ></el-button>
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                @click="removeEvent2()"
+                size="small"
+              ></el-button>
+            </div>
+            <vxe-table
+              border
+              ref="xAwardTable2"
+              :data="contest.synchronousConfigList"
+              :edit-config="{ trigger: 'click', mode: 'cell' }"
+              align="center"
+              @edit-closed="editClosedEvent2"
+              style="margin-bottom: 15px"
+            >
+              <vxe-table-column type="checkbox" width="60"></vxe-table-column>
+              <vxe-table-column
+                field="school"
+                min-width="150"
+                :title="$t('m.Synchronous_School')"
+                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
+              >
+              </vxe-table-column>
+              <vxe-table-column
+                field="link"
+                min-width="150"
+                :title="$t('m.Synchronous_Link')"
+                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
+              >
+              </vxe-table-column>
+              <vxe-table-column
+                field="authorization"
+                min-width="150"
+                :title="$t('m.Synchronous_Authorization')"
+                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
+              >
+              </vxe-table-column>
+            </vxe-table>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item
@@ -695,6 +752,14 @@ export default {
             num: 30,
           },
         ],
+        synchronous: false,
+        synchronousConfigList: [
+          {
+            school: "",
+            link: "",
+            authorization: "",
+          },
+        ],
       },
       formRule: {
         prefix: "",
@@ -1016,6 +1081,54 @@ export default {
         setTimeout(() => {
           // 局部更新单元格为已保存状态
           this.$refs.xAwardTable.reloadRow(row, null, field);
+        }, 300);
+      }
+    },
+
+     async insertEvent2(row) {
+      let record = {
+        school: "school",
+        link: "",
+        authorization: "",
+      };
+      let { row: newRow } = await this.$refs.xAwardTable2.insertAt(record, row);
+      const { insertRecords } = this.$refs.xAwardTable2.getRecordset();
+      this.contest.synchronousConfigList =
+        this.contest.synchronousConfigList.concat(insertRecords);
+      await this.$refs.xAwardTable2.setActiveCell(newRow, "school");
+    },
+    async removeEvent2() {
+      this.$refs.xAwardTable2.removeCheckboxRow();
+      let removeRecords = this.$refs.xAwardTable2.getRemoveRecords();
+      function getDifferenceSetB(arr1, arr2, typeName) {
+        return Object.values(
+          arr1.concat(arr2).reduce((acc, cur) => {
+            if (
+              acc[cur[typeName]] &&
+              acc[cur[typeName]][typeName] === cur[typeName]
+            ) {
+              delete acc[cur[typeName]];
+            } else {
+              acc[cur[typeName]] = cur;
+            }
+            return acc;
+          }, {})
+        );
+      }
+      this.contest.synchronousConfigList = getDifferenceSetB(
+        this.contest.synchronousConfigList,
+        removeRecords,
+        "_XID2"
+      );
+    },
+    editClosedEvent2({ row, column }) {
+      let xTable = this.$refs.xAwardTable2;
+      let field = column.property;
+      // 判断单元格值是否被修改
+      if (xTable.isUpdateByRow(row, field)) {
+        setTimeout(() => {
+          // 局部更新单元格为已保存状态
+          this.$refs.xAwardTable2.reloadRow(row, null, field);
         }, 300);
       }
     },

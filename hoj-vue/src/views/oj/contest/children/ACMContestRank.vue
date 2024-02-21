@@ -177,7 +177,7 @@
                 </span>
               </el-tooltip>
               <span class="contest-rank-user-info">
-                <a @click="getUserHomeByUsername(row.uid, row.username)">
+                <a @click="getUserHomeByUsername(row.uid, row.username, row.synchronous)">
                   <span
                     class="contest-username"
                     :title="row.rankShowName"
@@ -249,7 +249,7 @@
                 </span>
               </el-tooltip>
               <span class="contest-rank-user-info">
-                <a @click="getUserHomeByUsername(row.uid, row.username)">
+                <a @click="getUserHomeByUsername(row.uid, row.username, row.synchronous)">
                   <span
                     class="contest-username"
                     :title="row.rankShowName"
@@ -442,6 +442,8 @@ const RankBox = () => import("@/components/oj/common/RankBox");
 import time from "@/common/time";
 import utils from "@/common/utils";
 import ContestRankMixin from "./contestRankMixin";
+import ClickRank from "@/views/oj/contest/ClickRank";
+import api from "@/common/api";
 
 export default {
   name: "ACMContestRank",
@@ -457,6 +459,8 @@ export default {
       page: 1,
       limit: 50,
       autoRefresh: false,
+      showChart: false,
+      showStarUser: false,
       contestID: "",
       dataRank: [],
       keyword: null,
@@ -533,6 +537,8 @@ export default {
   },
   created() {
     this.initConcernedList();
+    // 开始对clickGetContestRank事件的监听
+    ClickRank.$on("clickGetContestRank", this.clickGetContestRankData);
   },
   mounted() {
     this.contestID = this.$route.params.contestID;
@@ -545,17 +551,26 @@ export default {
   },
   methods: {
     ...mapActions(["getContestProblems"]),
+    clickGetContestRankData(page, refresh, nowTime) {
+      // 停止自动更新
+      this.autoRefresh = false;
+      this.handleAutoRefresh(false);
+      // 查询对应的榜单
+      this.getContestRankData(page, refresh, nowTime);
+    },
     getUserACSubmit(username) {
       this.$router.push({
         name: "ContestSubmissionList",
         query: { username: username, status: 0 },
       });
     },
-    getUserHomeByUsername(uid, username) {
-      this.$router.push({
-        name: "UserHome",
-        query: { username: username, uid: uid },
-      });
+    getUserHomeByUsername(uid, username, synchronous) {
+      if (!synchronous) {
+        this.$router.push({
+          name: "UserHome",
+          query: { username: username, uid: uid },
+        });
+      }
     },
     getContestProblemById(pid) {
       this.$router.push({
@@ -744,10 +759,24 @@ export default {
       return window.screen.width < 768;
     },
   },
+  beforeDestroy() {
+    // 取消对clickGetContestRank事件的监听，以避免内存泄漏
+    ClickRank.$off("clickGetContestRank", this.executeFunction);
+  },
 };
 </script>
 
 <style scoped>
+label {
+  display: inline-block;
+  margin-right: 5px;
+  text-align: center; /* 将文字居中 */
+}
+
+/* 可选样式，用于将复选框和文字垂直居中 */
+input[type="checkbox"] {
+  vertical-align: middle;
+}
 .echarts {
   margin: 20px auto;
   height: 400px;

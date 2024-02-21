@@ -5,16 +5,18 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/10/29 13:08
  * @Description:
  */
 @Data
-@ApiModel(value="返回的判题信息", description="")
+@Accessors(chain = true)
+@ApiModel(value = "返回的判题信息", description = "")
 public class JudgeVO {
 
     @ApiModelProperty(value = "用户id")
@@ -83,4 +85,7 @@ public class JudgeVO {
 
     @ApiModelProperty(value = "是否人工评测")
     private Boolean isManual;
+
+    @ApiModelProperty(value = "是否为同步赛数据")
+    private Boolean synchronous;
 }

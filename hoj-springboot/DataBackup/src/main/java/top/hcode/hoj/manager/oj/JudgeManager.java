@@ -44,6 +44,7 @@ import top.hcode.hoj.validator.ContestValidator;
 import top.hcode.hoj.validator.GroupValidator;
 import top.hcode.hoj.validator.JudgeValidator;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,6 +58,9 @@ import java.util.stream.Collectors;
 public class JudgeManager {
     @Autowired
     private JudgeEntityService judgeEntityService;
+
+    @Resource
+    private SynchronousManager synchronousManager;
 
     @Autowired
     private JudgeCaseEntityService judgeCaseEntityService;
@@ -314,16 +318,30 @@ public class JudgeManager {
      * @Description 获取单个提交记录的详情
      * @Since 2021/1/2
      */
-    public SubmissionInfoVO getSubmission(Long submitId) throws StatusNotFoundException, StatusAccessDeniedException {
+    public SubmissionInfoVO getSubmission(Long submitId, Long cid)
+            throws StatusNotFoundException, StatusAccessDeniedException {
 
+        Boolean isSynchronous = false;
         Judge judge = judgeEntityService.getById(submitId);
-        if (judge == null) {
+        Problem problem = new Problem();
+
+        if (judge == null && cid != null) {
+            // 获取同步赛对应的 judge 记录
+            judge = synchronousManager.getSynchronousSubmissionDetail(submitId, cid);
+            isSynchronous = true;
+        } else if (judge == null) {
             throw new StatusNotFoundException("此提交数据不存在！");
         }
 
+        problem = isSynchronous ? synchronousManager.getSynchronousProblem(judge.getDisplayPid(), cid)
+                : problemEntityService.getById(judge.getPid());
+
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root"); // 是否为超级管理员
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         // 清空vj信息
         judge.setVjudgeUsername(null);
@@ -347,7 +365,8 @@ public class JudgeManager {
                 // 如果是比赛,那么还需要判断是否为封榜,比赛管理员和超级管理员可以有权限查看(ACM题目除外)
                 if (contest.getType().intValue() == Constants.Contest.TYPE_OI.getCode()
                         && contestValidator.isSealRank(userRolesVo.getUid(), contest, true, false)) {
-                    submissionInfoVo.setSubmission(new Judge().setStatus(Constants.Judge.STATUS_SUBMITTED_UNKNOWN_RESULT.getStatus()));
+                    submissionInfoVo.setSubmission(
+                            new Judge().setStatus(Constants.Judge.STATUS_SUBMITTED_UNKNOWN_RESULT.getStatus()));
                     return submissionInfoVo;
                 }
                 // 不是本人的话不能查看代码、时间，空间，长度
@@ -358,7 +377,8 @@ public class JudgeManager {
                         judge.setTime(null);
                         judge.setMemory(null);
                         judge.setLength(null);
-                        judge.setErrorMessage("The contest is in progress. You are not allowed to view other people's error information.");
+                        judge.setErrorMessage(
+                                "The contest is in progress. You are not allowed to view other people's error information.");
                     }
                 }
             }
@@ -375,12 +395,10 @@ public class JudgeManager {
             }
 
         } else {
-            boolean isProblemAdmin = SecurityUtils.getSubject().hasRole("problem_admin");// 是否为题目管理员
             if (!judge.getShare()
                     && !isRoot
-                    && !isProblemAdmin
                     && !(judge.getGid() != null
-                    && groupValidator.isGroupRoot(userRolesVo.getUid(), judge.getGid()))) {
+                            && groupValidator.isGroupRoot(userRolesVo.getUid(), judge.getGid()))) {
                 if (userRolesVo != null) { // 当前是登陆状态
                     // 需要判断是否为当前登陆用户自己的提交代码
                     if (!judge.getUid().equals(userRolesVo.getUid())) {
@@ -391,7 +409,7 @@ public class JudgeManager {
                 }
             }
             // 比赛外的提交代码 如果不是超管或题目管理员，需要检查网站是否开启隐藏代码功能
-            if (!isRoot && !isProblemAdmin && judge.getCode() != null) {
+            if (!isRoot && judge.getCode() != null) {
                 try {
                     accessValidator.validateAccess(HOJAccessEnum.HIDE_NON_CONTEST_SUBMISSION_CODE);
                 } catch (AccessException e) {
@@ -401,8 +419,6 @@ public class JudgeManager {
                 }
             }
         }
-
-        Problem problem = problemEntityService.getById(judge.getPid());
 
         // 只允许用户查看ce错误,sf错误，se错误信息提示
         if (judge.getStatus().intValue() != Constants.Judge.STATUS_COMPILE_ERROR.getStatus() &&
@@ -586,29 +602,41 @@ public class JudgeManager {
      * @Since 2020/10/29
      */
     @GetMapping("/get-all-case-result")
-    public JudgeCaseVO getALLCaseResult(Long submitId) throws StatusNotFoundException, StatusForbiddenException {
+    public JudgeCaseVO getALLCaseResult(Long submitId, Long cid)
+            throws StatusNotFoundException, StatusForbiddenException {
 
+        Boolean isSynchronous = false;
         Judge judge = judgeEntityService.getById(submitId);
+        Problem problem = new Problem();
 
-        if (judge == null) {
+        if (judge == null && cid != null) {
+            // 获取同步赛对应的 judge 记录
+            judge = synchronousManager.getSynchronousSubmissionDetail(submitId, cid);
+            isSynchronous = true;
+        } else if (judge == null) {
             throw new StatusNotFoundException("此提交数据不存在！");
         }
 
-        Problem problem = problemEntityService.getById(judge.getPid());
+        problem = isSynchronous ? synchronousManager.getSynchronousProblem(judge.getDisplayPid(), cid)
+                : problemEntityService.getById(judge.getPid());
 
-        // 如果该题不支持开放测试点结果查看
-        if (!problem.getOpenCaseResult()) {
+        if (problem.getOpenCaseResult() != null && !problem.getOpenCaseResult()) {
+            // 如果该题不支持开放测试点结果查看
             return null;
         }
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         QueryWrapper<JudgeCase> wrapper = new QueryWrapper<>();
+
         if (judge.getCid() == 0) { // 非比赛提交
             if (userRolesVo == null) { // 没有登录
                 wrapper.select("time", "memory", "score", "status", "user_output", "group_num", "seq", "mode");
             } else {
-                boolean isRoot = SecurityUtils.getSubject().hasRole("root"); // 是否为超级管理员
                 if (!isRoot
                         && !SecurityUtils.getSubject().hasRole("admin")
                         && !SecurityUtils.getSubject().hasRole("problem_admin")) { // 不是管理员
@@ -619,7 +647,6 @@ public class JudgeManager {
             if (userRolesVo == null) {
                 throw new StatusForbiddenException("您还未登录！不可查看比赛提交的测试点详情！");
             }
-            boolean isRoot = SecurityUtils.getSubject().hasRole("root"); // 是否为超级管理员
             if (!isRoot) {
                 Contest contest = contestEntityService.getById(judge.getCid());
                 // 如果不是比赛管理员 需要受到规则限制
@@ -632,7 +659,8 @@ public class JudgeManager {
                         }
                     } else {
                         // 当前是oi比赛期间 同时处于封榜时间
-                        if (contest.getSealRank() && contest.getStatus().intValue() == Constants.Contest.STATUS_RUNNING.getCode()
+                        if (contest.getSealRank()
+                                && contest.getStatus().intValue() == Constants.Contest.STATUS_RUNNING.getCode()
                                 && contest.getSealRankTime().before(new Date())) {
                             return null;
                         }
@@ -644,11 +672,25 @@ public class JudgeManager {
 
         wrapper.eq("submit_id", submitId);
 
-        if (!problem.getIsRemote()) {
+        if (problem.getIsRemote() != null && !problem.getIsRemote()) {
             wrapper.last("order by seq asc");
         }
+
         // 当前所有测试点只支持 空间 时间 状态码 IO得分 和错误信息提示查看而已
-        List<JudgeCase> judgeCaseList = judgeCaseEntityService.list(wrapper);
+        List<JudgeCase> judgeCaseList = new ArrayList<>();
+
+        if (!isSynchronous) {
+            List<JudgeCase> caselist = judgeCaseEntityService.list(wrapper);
+            if (!CollectionUtils.isEmpty(caselist)) {
+                judgeCaseList.addAll(caselist);
+            }
+        } else {// 如果是同步赛中的提交
+            List<JudgeCase> caselist = synchronousManager.getSynchronousCaseResultList(submitId, cid);
+            if (!CollectionUtils.isEmpty(caselist)) {
+                judgeCaseList.addAll(caselist);
+            }
+        }
+
         JudgeCaseVO judgeCaseVo = new JudgeCaseVO();
         if (!CollectionUtils.isEmpty(judgeCaseList)) {
             String mode = judgeCaseList.get(0).getMode();
@@ -697,9 +739,9 @@ public class JudgeManager {
                 int score = (int) Math.round(sumScore * 1.0 / entry.getValue().size());
                 subTaskJudgeCaseVo.setScore(score);
                 if (hasNotACJudgeCase) {
-                    if (score == 0){
+                    if (score == 0) {
                         subTaskJudgeCaseVo.setStatus(Constants.Judge.STATUS_WRONG_ANSWER.getStatus());
-                    }else{
+                    } else {
                         subTaskJudgeCaseVo.setStatus(Constants.Judge.STATUS_PARTIAL_ACCEPTED.getStatus());
                     }
                 } else {

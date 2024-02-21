@@ -448,6 +448,10 @@ export const m = {
   Contest_Award_Number:'人数',
   Contest_Award_Proportion:'占比',
   Allow_Submission_After_The_Contest_Ends: '是否允许比赛结束后提交',
+  Synchronous: '同步赛',
+  Synchronous_School: '同步赛的学校',
+  Synchronous_Link: '同步赛的链接',
+  Synchronous_Authorization: '同步赛的 Authorization （用于爬取信息）',
 
   // /views/admin/signUp/signUp.vue
   SignUp_Title:'报名标题',
@@ -466,7 +470,7 @@ export const m = {
   Max_Participants_Check_Required:'请填写单只队伍成员上限',
   ContestType_Check_Required:'请选择赛制',
   Add_Sign_Up_Success:'添加报名成功',
-  Update_Sign_Up_Success:'我的报名成功',
+  Update_Sign_Up_Success:'修改报名成功',
   Edit_SignUp:'编辑报名',
   View_SignUp_List:'查看报名队伍信息',
   signUpTeam_List:'报名队伍列表',

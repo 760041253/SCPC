@@ -15,8 +15,8 @@ const rootState = {
     visible: false
   },
   websiteConfig:{
-    recordName:'© 2020-2022',
-    projectName:'HOJ',
+    recordName:'© 2020-2023',
+    projectName:'NYOJ',
     shortName:'OJ',
     recordUrl:'#',
     projectUrl:'#',

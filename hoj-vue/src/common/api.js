@@ -337,10 +337,11 @@ const ojApi = {
     })
   },
   // 获取单个提交的信息
-  getSubmission(submitId) {
+  getSubmission(submitId, cid) {
     return ajax('/api/get-submission-detail', 'get', {
       params: {
-        submitId
+        submitId,
+        cid
       }
     })
   },
@@ -378,10 +379,11 @@ const ojApi = {
     })
   },
   // 获取单个提交的全部测试点详情
-  getAllCaseResult(submitId) {
+  getAllCaseResult(submitId, cid) {
     return ajax('/api/get-all-case-result', 'get', {
       params: {
         submitId,
+        cid
       }
     })
   },
@@ -570,6 +572,12 @@ const ojApi = {
       params: { cid, containsEnd }
     })
   },
+  // 获取同步赛题目列表
+  getSynchronousProblemList(cid, containsEnd = false) {
+    return ajax('/api/get-synchronous-problem', 'get', {
+      params: { cid, containsEnd }
+    })
+  },
   // 获取比赛题目详情
   getContestProblem(displayId, cid, gid, containsEnd = false) {
     return ajax('/api/get-contest-problem-details', 'get', {
@@ -583,9 +591,22 @@ const ojApi = {
       params
     })
   },
+  // 获取同步赛提交列表
+  getSynchronousSubmissionList(limit, params) {
+    params.limit = limit
+    return ajax('/api/synchronous-submissions', 'get', {
+      params
+    })
+  },
 
   getContestRank(data) {
     return ajax('/api/get-contest-rank', 'post', {
+      data
+    })
+  },
+  // 获取同步赛榜单
+  getSynchronousRank(data) {
+    return ajax('/api/get-synchronous-rank', 'post', {
       data
     })
   },
@@ -1263,7 +1284,7 @@ const ojApi = {
   },
 
   // 比赛报名
-  
+
   getACTeamCount(contestId){
     return ajax('/api/team/get-ac-team-count','get',{
       params:{
@@ -1277,7 +1298,7 @@ const ojApi = {
       params:{sid}
     })
   },
-  
+
   getSIgnUpContestPage(pageNum,pageSize){
     return ajax ('/api/signup/get-sign-up-page','get',{
       params:{
@@ -1296,7 +1317,7 @@ const ojApi = {
       }
     })
   },
-  
+
   getAcApplyTeam(cid,pageNum,pageSize){
     return ajax('/api/team/select-waiting-review-team-info-page','get',{
       params:{
@@ -1306,7 +1327,7 @@ const ojApi = {
       }
     })
   },
-  
+
   getTeamInfoById(teamId){
     return ajax('/api/team/get-team-info-by-id','get',{
       params:{
@@ -1357,7 +1378,7 @@ const ojApi = {
     return ajax('/api/team/getSignUpCsv','get',{
       params:{cid,choose}
     })
-  },  
+  },
 
   // 站内消息
 
@@ -1982,6 +2003,17 @@ const adminApi = {
         currentPage,
         limit
       }
+    })
+  },
+  // 管理员新建报名
+  admin_addSignUp(data){
+    return ajax('/api/signup/add-new-sign-up-contest', 'post', {
+      data
+    })
+  },
+  admin_updateSignUp(data){
+    return ajax('/api/signup/update-sign-up-contest', 'put', {
+      data
     })
   },
   admin_createContestAnnouncement(data) {

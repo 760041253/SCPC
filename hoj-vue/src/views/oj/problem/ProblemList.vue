@@ -251,8 +251,8 @@
       ></Pagination>
     </el-col>
 
-    <el-col :sm="24" :md="6" :lg="6">
-      <el-card style="text-align:center">
+    <el-col :sm="24" :md="6" :lg="6" style="position: sticky;top: 80px;z-index: 717;">
+      <el-card style="text-align:center;">
         <span class="panel-title">{{ currentProblemTitle }}</span>
         <el-row v-for="(record, index) in problemRecord" :key="index">
           <el-col :xs="5" :sm="4" :md="6" :lg="4" style="margin-top: 10px;">
@@ -273,7 +273,7 @@
           </el-col>
         </el-row>
       </el-card>
-      <el-card :padding="10" style="margin-top:20px">
+      <el-card :padding="10" style="margin-top:20px;">
         <div slot="header" style="text-align: center;">
           <span class="taglist-title">{{ OJName + ' ' + $t('m.Tags') }}</span>
           <div style="margin: 10px 0;">

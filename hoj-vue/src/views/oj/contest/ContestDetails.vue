@@ -29,8 +29,8 @@
                 :content="$t('m.Go_To_Group_Contest_List')"
                 style="margin-left:10px;"
                 placement="top">
-                <el-button 
-                  size="small" 
+                <el-button
+                  size="small"
                   type="primary"
                   @click="toGroupContestList(contest.gid)">
                   <i class="fa fa-users"></i>
@@ -92,11 +92,17 @@
             </el-row>
           </div>
           <div class="slider">
-            <el-slider
+            <!-- <el-slider
               v-model="progressValue"
               :format-tooltip="formatTooltip"
               :step="timeStep"
-            ></el-slider>
+            ></el-slider> -->
+            <Timebar
+              :progressValue="progressValue"
+              :Tooltip="formatTooltip()"
+              @transfer="getStopFlag"
+            />
+            <p></p>
           </div>
           <el-row>
             <el-col :span="24" style="text-align:center">
@@ -169,8 +175,8 @@
             </el-form>
           </el-card>
           <el-card class="box-card">
-            <Markdown 
-              :isAvoidXss="contest.gid != null" 
+            <Markdown
+              :isAvoidXss="contest.gid != null"
               :content="contest.description">
             </Markdown>
           </el-card>
@@ -236,9 +242,9 @@
           </transition>
         </el-tab-pane>
 
-        <el-tab-pane 
-          name="ContestComment" 
-          lazy 
+        <el-tab-pane
+          name="ContestComment"
+          lazy
           :disabled="contestMenuDisabled"
           v-if="websiteConfig.openContestComment">
           <span slot="label"
@@ -345,6 +351,9 @@ import moment from 'moment';
 import api from '@/common/api';
 import { mapState, mapGetters, mapActions } from 'vuex';
 import { addCodeBtn } from '@/common/codeblock';
+import Timebar from "@/components/oj/common/Timebar.vue";
+import ClickRank from "@/views/oj/contest/ClickRank";
+
 import {
   CONTEST_STATUS_REVERSE,
   CONTEST_STATUS,
@@ -358,10 +367,12 @@ import Markdown from "@/components/oj/common/Markdown";
 export default {
   name: 'ContestDetails',
   components: {
-    Markdown
+    Markdown,
+    Timebar,
   },
   data() {
     return {
+      percentage: -1, // 点击点占总长度的距离
       route_name: 'contestDetails',
       timer: null,
       CONTEST_STATUS: {},
@@ -437,14 +448,25 @@ export default {
   },
   methods: {
     ...mapActions(['changeDomTitle']),
+     getStopFlag(percentage) {
+      this.percentage = percentage;
+    },
     formatTooltip(val) {
-      if (this.contest.status == -1) {
-        // 还未开始
-        return '00:00:00';
-      } else if (this.contest.status == 0) {
-        return time.secondFormat(this.BeginToNowDuration); // 格式化时间
+      if (this.percentage !== -1) {
+        const nowTime = this.contest.duration * this.percentage;
+
+        // 查询对应的榜单
+        ClickRank.$emit("clickGetContestRank", 1, false, parseInt(nowTime));
+        return time.secondFormat(nowTime); // 格式化时间
       } else {
-        return time.secondFormat(this.contest.duration);
+        if (this.contest.status == -1) {
+          // 还未开始
+          return "00:00:00";
+        } else if (this.contest.status == 0) {
+          return time.secondFormat(this.BeginToNowDuration);
+        } else {
+          return time.secondFormat(this.contest.duration);
+        }
       }
     },
     checkPassword() {

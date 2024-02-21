@@ -21,6 +21,7 @@ import top.hcode.hoj.pojo.entity.contest.Contest;
 import top.hcode.hoj.pojo.entity.contest.ContestRegister;
 import top.hcode.hoj.pojo.vo.AdminContestVO;
 import top.hcode.hoj.pojo.vo.ContestAwardConfigVO;
+import top.hcode.hoj.pojo.vo.ContestSynchronousConfigVO;
 import top.hcode.hoj.pojo.vo.UserRolesVO;
 import top.hcode.hoj.shiro.AccountProfile;
 import top.hcode.hoj.utils.Constants;
@@ -107,6 +108,23 @@ public class AdminContestManager {
             adminContestVo.setAwardConfigList(new ArrayList<>());
         }
 
+        if (contest.getSynchronous() != null) {
+            try {
+                JSONObject jsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
+                List<ContestSynchronousConfigVO> synchronousConfigList = jsonObject.get("config", List.class);
+
+                adminContestVo.setSynchronous(contest.getSynchronous());
+                adminContestVo.setSynchronousConfigList(synchronousConfigList);
+
+            } catch (Exception e) {
+                adminContestVo.setSynchronous(false);
+                adminContestVo.setSynchronousConfigList(new ArrayList<>());
+            }
+        } else {
+            adminContestVo.setSynchronous(false);
+            adminContestVo.setSynchronousConfigList(new ArrayList<>());
+        }
+
         return adminContestVo;
     }
 
@@ -141,6 +159,15 @@ public class AdminContestManager {
             awardConfigList.sort(Comparator.comparingInt(ContestAwardConfigVO::getPriority));
             awardConfigJson.set("config", awardConfigList);
             contest.setAwardConfig(awardConfigJson.toString());
+        }
+
+        if (adminContestVo.getSynchronous() != null) {
+            Boolean synchronous = adminContestVo.getSynchronous();
+            List<ContestSynchronousConfigVO> synchronousConfigList = adminContestVo.getSynchronousConfigList();
+            JSONObject awardConfigJson = new JSONObject();
+            awardConfigJson.set("config", synchronousConfigList);
+            contest.setSynchronous(synchronous);
+            contest.setSynchronousConfig(awardConfigJson.toString());
         }
 
         boolean isOk = contestEntityService.save(contest);
@@ -191,6 +218,14 @@ public class AdminContestManager {
             contest.setAwardConfig(awardConfigJson.toString());
         }
 
+        if (adminContestVo.getSynchronous() != null) {
+            Boolean synchronous = adminContestVo.getSynchronous();
+            List<ContestSynchronousConfigVO> synchronousConfigList = adminContestVo.getSynchronousConfigList();
+            JSONObject awardConfigJson = new JSONObject();
+            awardConfigJson.set("config", synchronousConfigList);
+            contest.setSynchronous(synchronous);
+            contest.setSynchronousConfig(awardConfigJson.toString());
+        }
 
         Contest oldContest = contestEntityService.getById(contest.getId());
         boolean isOk = contestEntityService.saveOrUpdate(contest);

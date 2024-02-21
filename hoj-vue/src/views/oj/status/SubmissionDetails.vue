@@ -145,11 +145,11 @@
       </vxe-table>
     </el-col>
     <template v-if="testCaseResult != null">
-      <template v-if="testCaseResult.judgeCaseMode == JUDGE_CASE_MODE.DEFAULT 
+      <template v-if="testCaseResult.judgeCaseMode == JUDGE_CASE_MODE.DEFAULT
         || testCaseResult.judgeCaseMode == JUDGE_CASE_MODE.ERGODIC_WITHOUT_ERROR ">
         <el-col
           :span="24"
-          v-if="testCaseResult != null 
+          v-if="testCaseResult != null
       && testCaseResult.judgeCaseList != null
       && testCaseResult.judgeCaseList.length > 0"
         >
@@ -446,7 +446,7 @@ export default {
     },
     getSubmission() {
       this.loadingTable = true;
-      api.getSubmission(this.$route.params.submitID).then(
+      api.getSubmission(this.$route.params.submitID, this.$route.params.contestID).then(
         (res) => {
           this.loadingTable = false;
           let data = res.data.data;
@@ -485,7 +485,7 @@ export default {
 
     //首先该题必须支持开放测试点结果查看，同时若是比赛题目，只支持IO查看测试点情况，ACM强制禁止查看
     getAllCaseResult() {
-      api.getAllCaseResult(this.$route.params.submitID).then((res) => {
+      api.getAllCaseResult(this.$route.params.submitID, this.$route.params.contestID).then((res) => {
         this.testCaseResult = res.data.data;
       });
     },

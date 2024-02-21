@@ -15,6 +15,7 @@ const state = {
     openPrint: false,
     rankShowName:'username',
     allowEndSubmit: false,
+    synchronous: false, // 同步赛默认关闭
   },
   contestProblems: [],
   itemVisible: {
@@ -52,7 +53,7 @@ const getters = {
      // 私有赛需要通过验证密码方可查看比赛
       return !state.intoAccess
     }
-    
+
   },
 
   // 榜单是否实时刷新
@@ -87,7 +88,7 @@ const getters = {
   // 是否需要显示密码验证框
   passwordFormVisible: (state, getters) => {
     // 如果是公开赛，保护赛，或已注册过，管理员都不用再显示
-    return state.contest.auth !== CONTEST_TYPE.PUBLIC &&state.contest.auth !== CONTEST_TYPE.PROTECTED &&!state.intoAccess && !getters.isContestAdmin 
+    return state.contest.auth !== CONTEST_TYPE.PUBLIC &&state.contest.auth !== CONTEST_TYPE.PROTECTED &&!state.intoAccess && !getters.isContestAdmin
   },
   contestStartTime: (state) => {
     return moment(state.contest.startTime)
@@ -124,7 +125,7 @@ const getters = {
         state.contest.status = CONTEST_STATUS.ENDED
         return "00:00:00"
       }
-      
+
     } else {
       return 'Ended'
     }
@@ -255,11 +256,38 @@ const actions = {
 
   getContestProblems ({commit, rootState}) {
     return new Promise((resolve, reject) => {
-      api.getContestProblemList(rootState.route.params.contestID, rootState.contest.isContainsAfterContestJudge).then(res => {
+      api.getContest(rootState.route.params.contestID).then((res) => {
         resolve(res)
-        commit('changeContestProblems', {contestProblems: res.data.data})
-      }, (err) => {
-        commit('changeContestProblems', {contestProblems: []})
+        let contest = res.data.data
+        commit('changeContest', {
+          contest: contest
+        })
+        if (state.contest.synchronous) {
+          api.getSynchronousProblemList(rootState.route.params.contestID, rootState.contest.isContainsAfterContestJudge).then(res => {
+            resolve(res)
+            commit('changeContestProblems', {
+              contestProblems: res.data.data
+            })
+          }, (err) => {
+            commit('changeContestProblems', {
+              contestProblems: []
+            })
+            reject(err)
+          })
+        } else {
+          api.getContestProblemList(rootState.route.params.contestID, rootState.contest.isContainsAfterContestJudge).then(res => {
+            resolve(res)
+            commit('changeContestProblems', {
+              contestProblems: res.data.data
+            })
+          }, (err) => {
+            commit('changeContestProblems', {
+              contestProblems: []
+            })
+            reject(err)
+          })
+        }
+      }, err => {
         reject(err)
       })
     })

@@ -136,9 +136,9 @@
 
           <template v-if="!isAuthenticated">
             <div class="btn-menu">
-              <el-button 
-                type="primary" 
-                size="medium" 
+              <el-button
+                type="primary"
+                size="medium"
                 round
                 @click="handleBtnClick('Login')"
                 >{{ $t('m.NavBar_Login') }}
@@ -624,7 +624,7 @@
       </mu-drawer>
     </div>
     </template>
-    
+
     <el-dialog
       :visible.sync="modalVisible"
       width="370px"
@@ -956,7 +956,7 @@ export default {
 .el-menu-item:hover, .el-menu .el-menu-item:hover{
   border-bottom: 2px solid #2474b5 !important;
 }
-.el-menu .el-menu-item:hover, 
+.el-menu .el-menu-item:hover,
 .el-menu .el-menu-item:hover i,
 .el-submenu .el-submenu__title:hover,
 .el-submenu .el-submenu__title:hover i{
@@ -965,7 +965,7 @@ export default {
   background: linear-gradient(270deg, #F2F7FC 0%, #FEFEFE 100%)!important;
   transition: all .2s ease;
 }
-.el-menu .el-menu-item.is-active, 
+.el-menu .el-menu-item.is-active,
 .el-menu .el-menu-item.is-active i,
 .el-submenu.is-active,
 .el-submenu.is-active i
@@ -974,7 +974,7 @@ export default {
   background: linear-gradient(270deg, #F2F7FC 0%, #FEFEFE 100%)!important;
   transition: all .2s ease;
 }
-.el-menu--horizontal .el-menu .el-menu-item:hover, 
+.el-menu--horizontal .el-menu .el-menu-item:hover,
 .el-submenu /deep/.el-submenu__title:hover {
   color: #2E95FB !important;
   background: linear-gradient(270deg, #F2F7FC 0%, #FEFEFE 100%)!important;

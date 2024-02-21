@@ -5,15 +5,17 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/1/16 16:07
  * @Description:
  */
 @ApiModel(value = "比赛题目列表格式数据ContestProblemVO", description = "")
+@Accessors(chain = true)
 @Data
 public class ContestProblemVO implements Serializable {
 
@@ -40,4 +42,5 @@ public class ContestProblemVO implements Serializable {
 
     @ApiModelProperty(value = "该题目的总提交数")
     private Integer total;
+
 }

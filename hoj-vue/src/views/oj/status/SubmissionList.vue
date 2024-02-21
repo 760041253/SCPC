@@ -171,7 +171,7 @@
               <el-tooltip
                 effect="dark"
                 :content="$t('m.Click_to_Manually_Judge')"
-                :disabled="hideManuallyJugdeTooltip || disabledManualJudge(row.status)"
+                :disabled="hideManuallyJugdeTooltip || disabledManualJudge(row.status, row.synchronous)"
                 placement="top"
               >
                 <el-popover
@@ -180,7 +180,7 @@
                   trigger="click"
                   @show="hideManuallyJugdeTooltip = true"
                   @hide="hideManuallyJugdeTooltip = false"
-                  :disabled="disabledManualJudge(row.status)"
+                  :disabled="disabledManualJudge(row.status, row.synchronous)"
                 >
                   <div class="manual-judge-title">
                     <span>{{ $t('m.Manually_Jugde') }}</span>
@@ -243,20 +243,20 @@
                   height="16"
                 >
                   <path
-                    d="M706.1 489.4c24.3-36.7 38.6-80.6 38.6-128 0-128.1-103.9-232-232-232s-232 103.9-232 232c0 47.3 14.2 91.3 38.6 128C168.9 561.5 65 715.2 
+                    d="M706.1 489.4c24.3-36.7 38.6-80.6 38.6-128 0-128.1-103.9-232-232-232s-232 103.9-232 232c0 47.3 14.2 91.3 38.6 128C168.9 561.5 65 715.2
                   65 893.2h895.3c0.1-178-103.8-331.7-254.2-403.8z"
                     fill="#D6F3FA"
                     p-id="9873"
                   >
                   </path>
                   <path
-                    d="M587 800.7l86.3 61.1-72.6 33.4c-10.5 4.8-22.2-3.5-21.1-15l7.4-79.5z m274.9-205L685.4 844.8l-86.3-61.1 176.5-249.1 86.3 61.1zM825 612.3c3.1-4.4 
-                  2.1-10.5-2.3-13.6-4.4-3.1-10.5-2.1-13.6 2.3l-132 186.2c-3.1 4.4-2.1 10.5 2.3 13.6 4.4 3.1 10.5 2.1 13.6-2.3l132-186.2z m41.5-23.1c6.1-8.6 4-20.6-4.6-26.7l-55-39c-8.6-6.1-20.6-4-26.7 
-                  4.6l-1.6 2.2 86.3 61.1 1.6-2.2z m-75.4 200.1c0 10.4 8.5 19 19 19h78c10.4 0 19-8.5 19-19 0-10.4-8.5-19-19-19h-78c-10.5 0-19 8.5-19 19z m97 63.5H766.6c-10.4 0-19 8.5-19 19 0 10.4 8.5 
-                  19 19 19h121.5c10.4 0 19-8.5 19-19 0-10.4-8.6-19-19-19z m-231-275.2c-44.9-21-94.5-32.1-144.5-32.1-113.5 0-220.2 57.4-283.1 151.1-6.3 9.4-19 12-28.8 6.3-10.8-6.4-14-20.6-7-31 53.6-79.5 
-                  135.2-135.7 227-158.5-51.8-31.3-86.6-87.9-86.6-152.7 0-98.4 80.1-178.5 178.5-178.5s178.5 80.1 178.5 178.5c0 64.7-34.8 121.4-86.5 152.7 24.2 5.9 47.8 14.1 70.3 24.6 11.5 5.3 16.2 19.2 
-                  10.2 30.3-5.4 9.9-17.7 14.1-28 9.3z m-144.4-76.4c77.5 0 140.5-63 140.5-140.5s-63-140.5-140.5-140.5-140.5 63-140.5 140.5 63 140.5 140.5 140.5zM196.2 711c-11-6.1-24.9-1.7-30.3 9.7-3 6.2-5.8 
-                  12.5-8.4 18.8-4.8 11.6 1.2 24.9 13 29 10.8 3.7 22.7-1.6 27-12.2 2.4-5.8 4.9-11.5 7.6-17.1 5.1-10.3 1.1-22.7-8.9-28.2z m-28 64.5c-12.1-3.9-24.8 3.4-27.9 15.7-6 23.5-9.7 47.4-11.2 71.7-0.8 12.6 
+                    d="M587 800.7l86.3 61.1-72.6 33.4c-10.5 4.8-22.2-3.5-21.1-15l7.4-79.5z m274.9-205L685.4 844.8l-86.3-61.1 176.5-249.1 86.3 61.1zM825 612.3c3.1-4.4
+                  2.1-10.5-2.3-13.6-4.4-3.1-10.5-2.1-13.6 2.3l-132 186.2c-3.1 4.4-2.1 10.5 2.3 13.6 4.4 3.1 10.5 2.1 13.6-2.3l132-186.2z m41.5-23.1c6.1-8.6 4-20.6-4.6-26.7l-55-39c-8.6-6.1-20.6-4-26.7
+                  4.6l-1.6 2.2 86.3 61.1 1.6-2.2z m-75.4 200.1c0 10.4 8.5 19 19 19h78c10.4 0 19-8.5 19-19 0-10.4-8.5-19-19-19h-78c-10.5 0-19 8.5-19 19z m97 63.5H766.6c-10.4 0-19 8.5-19 19 0 10.4 8.5
+                  19 19 19h121.5c10.4 0 19-8.5 19-19 0-10.4-8.6-19-19-19z m-231-275.2c-44.9-21-94.5-32.1-144.5-32.1-113.5 0-220.2 57.4-283.1 151.1-6.3 9.4-19 12-28.8 6.3-10.8-6.4-14-20.6-7-31 53.6-79.5
+                  135.2-135.7 227-158.5-51.8-31.3-86.6-87.9-86.6-152.7 0-98.4 80.1-178.5 178.5-178.5s178.5 80.1 178.5 178.5c0 64.7-34.8 121.4-86.5 152.7 24.2 5.9 47.8 14.1 70.3 24.6 11.5 5.3 16.2 19.2
+                  10.2 30.3-5.4 9.9-17.7 14.1-28 9.3z m-144.4-76.4c77.5 0 140.5-63 140.5-140.5s-63-140.5-140.5-140.5-140.5 63-140.5 140.5 63 140.5 140.5 140.5zM196.2 711c-11-6.1-24.9-1.7-30.3 9.7-3 6.2-5.8
+                  12.5-8.4 18.8-4.8 11.6 1.2 24.9 13 29 10.8 3.7 22.7-1.6 27-12.2 2.4-5.8 4.9-11.5 7.6-17.1 5.1-10.3 1.1-22.7-8.9-28.2z m-28 64.5c-12.1-3.9-24.8 3.4-27.9 15.7-6 23.5-9.7 47.4-11.2 71.7-0.8 12.6
                   9.1 23.4 21.7 23.4 11.4 0 21-8.7 21.6-20.1 1.3-22 4.7-43.8 10.1-65.1 3-10.9-3.5-22.1-14.3-25.6z"
                     fill="#18BAE5"
                     p-id="9874"
@@ -392,7 +392,7 @@
           >
             <template v-slot="{ row }">
               <a
-                @click="goUserHome(row.username, row.uid)"
+                @click="goUserHome(row.username, row.uid, row.synchronous)"
                 style="color: rgb(87, 163, 243)"
               >{{ row.username }}</a>
             </template>
@@ -421,6 +421,7 @@
           >
             <template v-slot="{ row }">
               <vxe-button
+                v-if="!row.synchronous"
                 status="primary"
                 @click="handleRejudge(row)"
                 size="mini"
@@ -619,7 +620,7 @@ export default {
       return utils.submissionLengthFormat(length);
     },
     reSubmit(row) {
-      api.reSubmitRemoteJudge(row.submitId).then((res) => {
+      api.reSubmitsynchronousJudge(row.submitId).then((res) => {
         let xTable = this.$refs.xTable;
         // 重新提交开始，需要将该提交的部分参数初始化
         row.status = res.data.data.status;
@@ -671,35 +672,56 @@ export default {
       this.loadingTable = true;
       this.submissions = [];
       this.needCheckSubmitIds = {};
-      let func = this.contestID
-        ? "getContestSubmissionList"
-        : "getSubmissionList";
-      api[func](this.limit, utils.filterEmptyValue(params))
-        .then((res) => {
-          let data = res.data.data;
-          let index = 0;
-          for (let v of data.records) {
-            if (
-              v.status == JUDGE_STATUS_RESERVE["Pending"] ||
-              v.status == JUDGE_STATUS_RESERVE["Compiling"] ||
-              v.status == JUDGE_STATUS_RESERVE["Judging"]
-            ) {
-              this.needCheckSubmitIds[v.submitId] = index;
-            }
-            v.loading = false;
-            v.index = index;
-            index += 1;
+      const handleApiResponse = (res) => {
+        let data = res.data.data;
+        let index = 0;
+
+        for (let v of data.records) {
+          if (
+            v.status == JUDGE_STATUS_RESERVE["Pending"] ||
+            v.status == JUDGE_STATUS_RESERVE["Compiling"] ||
+            v.status == JUDGE_STATUS_RESERVE["Judging"]
+          ) {
+            this.needCheckSubmitIds[v.submitId] = index;
           }
-          this.loadingTable = false;
-          this.submissions = data.records;
-          this.total = data.total;
-          if (Object.keys(this.needCheckSubmitIds).length > 0) {
-            this.checkSubmissionsStatus();
-          }
-        })
-        .catch(() => {
-          this.loadingTable = false;
-        });
+          v.loading = false;
+          v.index = index;
+          index += 1;
+        }
+
+        this.loadingTable = false;
+        this.submissions = data.records;
+        this.total = data.total;
+
+        if (Object.keys(this.needCheckSubmitIds).length > 0) {
+          this.checkSubmissionsStatus();
+        }
+      };
+
+      const handleApiError = () => {
+        this.loadingTable = false;
+      };
+
+      if (this.contestID) {
+        api
+          .getContest(this.contestID)
+          .then((res) => {
+            const contest = res.data.data;
+            let func =
+              this.contestID && contest.synchronous
+                ? "getSynchronousSubmissionList"
+                : "getContestSubmissionList";
+
+            return api[func](this.limit, utils.filterEmptyValue(params));
+          })
+          .then(handleApiResponse)
+          .catch(handleApiError);
+      } else {
+        api
+          .getSubmissionList(this.limit, utils.filterEmptyValue(params))
+          .then(handleApiResponse)
+          .catch(handleApiError);
+      }
     },
     // 对当前提交列表 状态为Pending（6）和Judging（7）的提交记录每2秒查询一下最新结果
     checkSubmissionsStatus() {
@@ -813,11 +835,14 @@ export default {
     goRoute(route) {
       this.$router.push(route);
     },
-    goUserHome(username, uid) {
-      this.$router.push({
-        path: "/user-home",
-        query: { uid, username },
-      });
+    goUserHome(username, uid, synchronous) {
+      if(!synchronous)
+      {
+        this.$router.push({
+          path: "/user-home",
+          query: { uid, username },
+        });
+      }
     },
     handleStatusChange(status) {
       if (status == "All") {
@@ -942,10 +967,14 @@ export default {
         return "own-submit-row";
       }
     },
-    disabledManualJudge(status){
-      return !this.isSuperAdmin || status == JUDGE_STATUS_RESERVE['Judging'] 
-                || status == JUDGE_STATUS_RESERVE['Compiling']
-                || status == JUDGE_STATUS_RESERVE['ce']
+    disabledManualJudge(status, synchronous){
+      return (
+        !this.isMainAdminRole ||
+        synchronous ||
+        status == JUDGE_STATUS_RESERVE["Judging"] ||
+        status == JUDGE_STATUS_RESERVE["Compiling"] ||
+        status == JUDGE_STATUS_RESERVE["ce"]
+      );
     },
     openChangeJudgeStatusDialog(judge) {
       this.changeJudgeStatus = {

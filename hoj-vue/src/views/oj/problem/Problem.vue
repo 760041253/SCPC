@@ -2,7 +2,7 @@
   <div :class="bodyClass">
     <div id="problem-main">
       <!--problem main-->
-      <el-row class="problem-box" 
+      <el-row class="problem-box"
         :id="'problem-box' + '-' + $route.name">
         <el-col
           :sm="24"
@@ -111,7 +111,7 @@
                       }}</el-tag>
                     </span>
                   </div>
-                  
+
                   <div class="problem-menu">
                     <span v-if="isShowProblemDiscussion">
                       <el-link
@@ -209,27 +209,27 @@
                 <div id="problem-content">
                   <template v-if="problemData.problem.description">
                     <p class="title">{{ $t('m.Description') }}</p>
-                    <Markdown 
+                    <Markdown
                       class="md-content"
-                      :isAvoidXss="problemData.problem.gid != null" 
+                      :isAvoidXss="problemData.problem.gid != null"
                       :content="problemData.problem.description">
                     </Markdown>
                   </template>
 
                   <template v-if="problemData.problem.input">
                     <p class="title">{{ $t('m.Input') }}</p>
-                    <Markdown 
+                    <Markdown
                       class="md-content"
-                      :isAvoidXss="problemData.problem.gid != null" 
+                      :isAvoidXss="problemData.problem.gid != null"
                       :content="problemData.problem.input">
                     </Markdown>
                   </template>
 
                   <template v-if="problemData.problem.output">
                     <p class="title">{{ $t('m.Output') }}</p>
-                    <Markdown 
+                    <Markdown
                       class="md-content"
-                      :isAvoidXss="problemData.problem.gid != null" 
+                      :isAvoidXss="problemData.problem.gid != null"
                       :content="problemData.problem.output">
                     </Markdown>
                   </template>
@@ -275,9 +275,9 @@
                   <template v-if="problemData.problem.hint">
                     <p class="title">{{ $t('m.Hint') }}</p>
                     <el-card dis-hover>
-                      <Markdown 
+                      <Markdown
                       class="hint-content"
-                      :isAvoidXss="problemData.problem.gid != null" 
+                      :isAvoidXss="problemData.problem.gid != null"
                       :content="problemData.problem.hint">
                     </Markdown>
                     </el-card>
@@ -637,9 +637,9 @@
                           :color="submissionStatus.color"
                           @click.native="submissionRoute"
                         >
-                          <template v-if="this.result.status == JUDGE_STATUS_RESERVE['Pending'] 
-                          || this.result.status == JUDGE_STATUS_RESERVE['Compiling'] 
-                          || this.result.status == JUDGE_STATUS_RESERVE['Judging'] 
+                          <template v-if="this.result.status == JUDGE_STATUS_RESERVE['Pending']
+                          || this.result.status == JUDGE_STATUS_RESERVE['Compiling']
+                          || this.result.status == JUDGE_STATUS_RESERVE['Judging']
                           || this.result.status == JUDGE_STATUS_RESERVE['Submitting']">
                             <i class="el-icon-loading"></i> {{ submissionStatus.text }}
                           </template>
@@ -777,7 +777,7 @@
     </div>
     <ProblemHorizontalMenu
       v-if="showProblemHorizontalMenu"
-      :pid.sync="problemData.problem.id" 
+      :pid.sync="problemData.problem.id"
       :cid="contestID"
       :tid="trainingID"
       ref="problemHorizontalMenu"
@@ -1010,25 +1010,41 @@ export default {
         }
         params.containsEnd = true;
       }
-      let func = this.contestID
-        ? "getContestSubmissionList"
-        : "getSubmissionList";
-      this.loadingTable = true;
-      api[func](this.mySubmission_limit, utils.filterEmptyValue(params))
-        .then(
-          (res) => {
-            let data = res.data.data;
-            this.mySubmissions = data.records;
-            this.mySubmission_total = data.total;
-            this.loadingTable = false;
-          },
-          (err) => {
-            this.loadingTable = false;
-          }
-        )
-        .catch(() => {
-          this.loadingTable = false;
-        });
+
+      const handleApiResponse = (res) => {
+        let data = res.data.data;
+        this.mySubmissions = data.records;
+        this.mySubmission_total = data.total;
+        this.loadingTable = false;
+      };
+
+      const handleApiError = () => {
+        this.loadingTable = false;
+      };
+
+      if (this.contestID) {
+        api
+          .getContest(this.contestID)
+          .then((res) => {
+            const contest = res.data.data;
+            let func =
+              this.contestID && contest.synchronous
+                ? "getSynchronousSubmissionList"
+                : "getContestSubmissionList";
+
+            return api[func](
+              this.mySubmission_limit,
+              utils.filterEmptyValue(params)
+            );
+          })
+          .then(handleApiResponse)
+          .catch(handleApiError);
+      } else {
+        api
+          .getSubmissionList(this.limit, utils.filterEmptyValue(params))
+          .then(handleApiResponse)
+          .catch(handleApiError);
+      }
     },
     getStatusColor(status) {
       return "el-tag el-tag--medium status-" + JUDGE_STATUS[status].color;
@@ -1100,7 +1116,7 @@ export default {
           }
           if (moveLen > maxT - 580) moveLen = maxT - 580; //右边区域最小宽度为580px
           let leftRadio = (moveLen / box.offsetWidth) *100;
-          resize.style.left = leftRadio + "%"; 
+          resize.style.left = leftRadio + "%";
           left.style.width = leftRadio + "%"; // 设置左侧区域的宽度
           right.style.width = (100 - leftRadio) + "%";
           if (leftRadio < 100) {
@@ -1251,7 +1267,7 @@ export default {
           .getElementById("js-center" + "-" + this.$route.name)
           .setAttribute(
             "style",
-            "top:" + problemLeftHight * 0.5 + "px !important; left:" 
+            "top:" + problemLeftHight * 0.5 + "px !important; left:"
             + left.style.width
           );
       } catch (e) {
@@ -1347,7 +1363,7 @@ export default {
           this.loading = false;
         }
       );
-      
+
       if(this.activeName == "mySubmission"){
         this.getMySubmission();
       }

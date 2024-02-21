@@ -126,7 +126,8 @@ public class ContestFileManager {
                     null,
                     null,
                     null,
-                    isContainsAfterContestJudge);
+                    isContainsAfterContestJudge,
+                    null);
             EasyExcel.write(response.getOutputStream())
                     .head(fileEntityService.getContestRankExcelHead(contestProblemDisplayIDList, true))
                     .sheet("rank")
@@ -139,7 +140,8 @@ public class ContestFileManager {
                     null,
                     null,
                     null,
-                    isContainsAfterContestJudge);
+                    isContainsAfterContestJudge,
+                    null);
             EasyExcel.write(response.getOutputStream())
                     .head(fileEntityService.getContestRankExcelHead(contestProblemDisplayIDList, false))
                     .sheet("rank")

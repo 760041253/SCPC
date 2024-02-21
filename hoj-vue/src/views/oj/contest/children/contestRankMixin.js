@@ -8,7 +8,7 @@ export default {
       let key = buildContestRankConcernedKey(this.$route.params.contestID);
       this.concernedList = storage.get(key) || [];
     },
-    getContestRankData (page = 1, refresh = false) {
+    getContestRankData(page = 1, refresh = false, nowTime = null) {
       if (this.showChart && !refresh) {
         this.$refs.chart.showLoading({maskColor: 'rgba(250, 250, 250, 0.8)'})
       }
@@ -21,17 +21,32 @@ export default {
         concernedList:this.concernedList,
         keyword: this.keyword == null? null: this.keyword.trim(),
         containsEnd: this.isContainsAfterContestJudge,
+        time: nowTime
       }
-      api.getContestRank(data).then(res => {
-        if (this.showChart && !refresh) {
-          this.$refs.chart.hideLoading()
-        }
-        this.total = res.data.data.total
-        if (page === 1) {
-          this.applyToChart(res.data.data.records)
-        }
-        this.applyToTable(res.data.data.records)
+      api
+      .getContest(this.$route.params.contestID)
+      .then((res) => {
+        const contest = res.data.data;
+        const func =
+          contest.synchronous ?
+          "getSynchronousRank" :
+          "getContestRank";
+        this.loadingTable = true;
+
+        api[func](data).then(res => {
+          if (this.showChart && !refresh) {
+            this.$refs.chart.hideLoading()
+          }
+          this.total = res.data.data.total
+          if (page === 1) {
+            this.applyToChart(res.data.data.records)
+          }
+          this.applyToTable(res.data.data.records)
+        })
       })
+      .catch((err) => {
+        reject(err);
+      });
     },
     handleAutoRefresh (status) {
       if (status == true) {

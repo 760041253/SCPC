@@ -395,7 +395,7 @@ export const m = {
   Exclude_admin_submissions: 'Exclude admin submissions',
   SplitType_User: 'Split folders by username',
   SplitType_Problem: 'Split folders by problem id',
-  Delete_Contest_Tips: 'This operation will delete the contest and its submission, discussion, announcement, record and other data. Do you want to continue?',  
+  Delete_Contest_Tips: 'This operation will delete the contest and its submission, discussion, announcement, record and other data. Do you want to continue?',
 
   // /views/admin/contest/Contest.vue
   Contest_Title: 'Contest Title',
@@ -447,6 +447,10 @@ export const m = {
   Contest_Award_Number:'Number',
   Contest_Award_Proportion:'Proportion',
   Allow_Submission_After_The_Contest_Ends: 'Allow Submission after the contest ends',
+  Synchronous: 'Synchronous',
+  Synchronous_School: 'Synchronous School',
+  Synchronous_Link: 'Synchronous Link',
+  Synchronous_Authorization: 'Synchronous Authorization (used for web scraping)',
 
   // /views/admin/discussion/Discussion.vue
   Discussion_ID: 'Discussion ID',
