@@ -466,7 +466,7 @@ export const m = {
   Max_Participants_Check_Required:'请填写单只队伍成员上限',
   ContestType_Check_Required:'请选择赛制',
   Add_Sign_Up_Success:'添加报名成功',
-  Update_Sign_Up_Success:'我的报名成功',
+  Update_Sign_Up_Success:'修改报名成功',
   Edit_SignUp:'编辑报名',
   View_SignUp_List:'查看报名队伍信息',
   signUpTeam_List:'报名队伍列表',

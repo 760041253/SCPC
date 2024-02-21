@@ -1984,6 +1984,17 @@ const adminApi = {
       }
     })
   },
+  // 管理员新建报名
+  admin_addSignUp(data){ 
+    return ajax('/api/signup/add-new-sign-up-contest', 'post', {
+      data
+    })
+  },
+  admin_updateSignUp(data){ 
+    return ajax('/api/signup/update-sign-up-contest', 'put', {
+      data
+    })
+  },
   admin_createContestAnnouncement(data) {
     return ajax('/api/admin/contest/announcement', 'post', {
       data
