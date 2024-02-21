@@ -3,21 +3,11 @@
     <div slot="header">
       <span class="panel-title">{{ $t('m.Contest_Rank') }}</span>
     </div>
-    <div
-      v-show="showChart"
-      class="echarts"
-    >
-      <ECharts
-        :options="options"
-        ref="chart"
-        :autoresize="true"
-      ></ECharts>
+    <div v-show="showChart" class="echarts">
+      <ECharts :options="options" ref="chart" :autoresize="true"></ECharts>
     </div>
     <el-row>
-      <el-col
-        :xs="24"
-        :md="8"
-      >
+      <el-col :xs="24" :md="8">
         <div class="contest-rank-search contest-rank-filter">
           <el-input
             :placeholder="$t('m.Contest_Rank_Search_Placeholder')"
@@ -33,22 +23,10 @@
           </el-input>
         </div>
       </el-col>
-      <el-col
-        :xs="24"
-        :md="16"
-      >
+      <el-col :xs="24" :md="16">
         <div class="contest-rank-config">
-          <el-popover
-            trigger="hover"
-            placement="left-start"
-          >
-            <el-button
-              round
-              size="small"
-              slot="reference"
-            >
-              {{$t('m.Contest_Rank_Setting')}}
-            </el-button>
+          <el-popover trigger="hover" placement="left-start">
+            <el-button round size="small" slot="reference">{{$t('m.Contest_Rank_Setting')}}</el-button>
             <div id="switches">
               <p>
                 <span>{{ $t('m.Chart') }}</span>
@@ -60,10 +38,7 @@
               </p>
               <p>
                 <span>{{ $t('m.Star_User') }}</span>
-                <el-switch
-                  v-model="showStarUser"
-                  @change="getContestRankData(page)"
-                ></el-switch>
+                <el-switch v-model="showStarUser" @change="getContestRankData(page)"></el-switch>
               </p>
               <p>
                 <span>{{ $t('m.Auto_Refresh') }}(10s)</span>
@@ -76,20 +51,15 @@
               <template v-if="isContestAdmin">
                 <p>
                   <span>{{ $t('m.Force_Update') }}</span>
-                  <el-switch
-                    v-model="forceUpdate"
-                    @change="getContestRankData(page)"
-                  ></el-switch>
+                  <el-switch v-model="forceUpdate" @change="getContestRankData(page)"></el-switch>
                 </p>
               </template>
               <template v-if="isContestAdmin">
-                <el-button
-                  type="primary"
-                  size="small"
-                  @click="downloadRankCSV"
-                >{{
-                    $t('m.Download_as_CSV')
-                  }}</el-button>
+                <el-button type="primary" size="small" @click="downloadRankCSV">
+                  {{
+                  $t('m.Download_as_CSV')
+                  }}
+                </el-button>
               </template>
             </div>
           </el-popover>
@@ -109,12 +79,7 @@
         :cell-class-name="cellClassName"
         @cell-click="getUserProblemSubmission"
       >
-        <vxe-table-column
-          field="rank"
-          width="50"
-          fixed="left"
-          :title="$t('m.Contest_Rank_Seq')"
-        >
+        <vxe-table-column field="rank" width="50" fixed="left" :title="$t('m.Contest_Rank_Seq')">
           <template v-slot="{ row }">
             <template v-if="row.rank == -1">
               <span>*</span>
@@ -158,50 +123,30 @@
               <el-tooltip placement="top">
                 <div slot="content">
                   {{
-                    row.isConcerned ? $t('m.Unfollow') : $t('m.Top_And_Follow')
+                  row.isConcerned ? $t('m.Unfollow') : $t('m.Top_And_Follow')
                   }}
                 </div>
                 <span
                   class="contest-rank-concerned"
                   @click="updateConcernedList(row.uid, !row.isConcerned)"
                 >
-                  <i
-                    class="fa fa-star"
-                    v-if="row.isConcerned"
-                    style="color: red;"
-                  ></i>
-                  <i
-                    class="el-icon-star-off"
-                    v-else
-                  ></i>
+                  <i class="fa fa-star" v-if="row.isConcerned" style="color: red;"></i>
+                  <i class="el-icon-star-off" v-else></i>
                 </span>
               </el-tooltip>
               <span class="contest-rank-user-info">
                 <a @click="getUserHomeByUsername(row.uid, row.username)">
-                  <span
-                    class="contest-username"
-                    :title="row.rankShowName"
-                  >
-                    <span
-                      class="contest-rank-flag"
-                      v-if="row.uid == userInfo.uid"
-                    >Own</span>
-                    <span
-                      class="contest-rank-flag"
-                      v-if="row.rank == -1"
-                    >Star</span>
-                    <span
-                      class="contest-rank-flag"
-                      v-if="row.gender == 'female'"
-                    >Girl</span>
-                    {{ row.rankShowName }}</span>
-                  <span
-                    class="contest-school"
-                    v-if="row.school"
-                    :title="row.school"
-                  >{{
+                  <span class="contest-username" :title="row.rankShowName">
+                    <span class="contest-rank-flag" v-if="row.uid == userInfo.uid">Own</span>
+                    <span class="contest-rank-flag" v-if="row.rank == -1">Star</span>
+                    <span class="contest-rank-flag" v-if="row.gender == 'female'">Girl</span>
+                    {{ row.rankShowName }}
+                  </span>
+                  <span class="contest-school" v-if="row.school" :title="row.school">
+                    {{
                     row.school
-                  }}</span>
+                    }}
+                  </span>
                 </a>
               </span>
             </div>
@@ -230,50 +175,30 @@
               <el-tooltip placement="top">
                 <div slot="content">
                   {{
-                    row.isConcerned ? $t('m.Unfollow') : $t('m.Top_And_Follow')
+                  row.isConcerned ? $t('m.Unfollow') : $t('m.Top_And_Follow')
                   }}
                 </div>
                 <span
                   class="contest-rank-concerned"
                   @click="updateConcernedList(row.uid, !row.isConcerned)"
                 >
-                  <i
-                    class="fa fa-star"
-                    v-if="row.isConcerned"
-                    style="color: red;"
-                  ></i>
-                  <i
-                    class="el-icon-star-off"
-                    v-else
-                  ></i>
+                  <i class="fa fa-star" v-if="row.isConcerned" style="color: red;"></i>
+                  <i class="el-icon-star-off" v-else></i>
                 </span>
               </el-tooltip>
               <span class="contest-rank-user-info">
                 <a @click="getUserHomeByUsername(row.uid, row.username)">
-                  <span
-                    class="contest-username"
-                    :title="row.rankShowName"
-                  >
-                    <span
-                      class="contest-rank-flag"
-                      v-if="row.uid == userInfo.uid"
-                    >Own</span>
-                    <span
-                      class="contest-rank-flag"
-                      v-if="row.rank == -1"
-                    >Star</span>
-                    <span
-                      class="contest-rank-flag"
-                      v-if="row.gender == 'female'"
-                    >Girl</span>
-                    {{ row.rankShowName }}</span>
-                  <span
-                    class="contest-school"
-                    v-if="row.school"
-                    :title="row.school"
-                  >{{
+                  <span class="contest-username" :title="row.rankShowName">
+                    <span class="contest-rank-flag" v-if="row.uid == userInfo.uid">Own</span>
+                    <span class="contest-rank-flag" v-if="row.rank == -1">Star</span>
+                    <span class="contest-rank-flag" v-if="row.gender == 'female'">Girl</span>
+                    {{ row.rankShowName }}
+                  </span>
+                  <span class="contest-school" v-if="row.school" :title="row.school">
+                    {{
                     row.school
-                  }}</span>
+                    }}
+                  </span>
                 </a>
               </span>
             </div>
@@ -285,36 +210,21 @@
           :title="$t('m.RealName')"
           show-overflow
           v-if="isContestAdmin"
-        >
-        </vxe-table-column>
-        <vxe-table-column
-          field="rating"
-          :title="$t('m.AC')"
-          min-width="60"
-        >
+        ></vxe-table-column>
+        <vxe-table-column field="rating" :title="$t('m.AC')" min-width="60">
           <template v-slot="{ row }">
             <span>
               <a
                 @click="getUserACSubmit(row.username)"
                 style="color:rgb(87, 163, 243);font-weight: 600;font-size: 14px;"
-              >{{ row.ac }}
-              </a>
+              >{{ row.ac }}</a>
             </span>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          field="totalTime"
-          :title="$t('m.TotalTime')"
-          min-width="60"
-        >
+        <vxe-table-column field="totalTime" :title="$t('m.TotalTime')" min-width="60">
           <template v-slot="{ row }">
-            <el-tooltip
-              effect="dark"
-              placement="top"
-            >
-              <div slot="content">
-                {{ parseTimeToSpecific(row.totalTime) }}
-              </div>
+            <el-tooltip effect="dark" placement="top">
+              <div slot="content">{{ parseTimeToSpecific(row.totalTime) }}</div>
               <span>{{ parseInt(row.totalTime / 60) }}</span>
             </el-tooltip>
           </template>
@@ -326,10 +236,7 @@
           :field="problem.displayId"
         >
           <template v-slot:header>
-            <span
-              class="contest-rank-balloon"
-              v-if="problem.color"
-            >
+            <span class="contest-rank-balloon" v-if="problem.color">
               <svg
                 t="1633685184463"
                 class="icon"
@@ -344,7 +251,7 @@
                   d="M575.872 849.408c-104.576 0-117.632-26.56-119.232-31.808-6.528-22.528 32.896-70.592 63.744-96.768l-1.728-2.624c137.6-42.688 243.648-290.112 243.648-433.472A284.544 284.544 0 0 0 478.016 0a284.544 284.544 0 0 0-284.288 284.736c0 150.4 116.352 415.104 263.744 438.336-25.152 29.568-50.368 70.784-39.104 108.928 12.608 43.136 62.72 63.232 157.632 63.232 7.872 0 11.52 9.408 4.352 19.52-21.248 29.248-77.888 63.424-167.68 63.424V1024c138.944 0 215.936-74.816 215.936-126.528a46.72 46.72 0 0 0-16.32-36.608 56.32 56.32 0 0 0-36.416-11.456zM297.152 297.472c0 44.032-38.144 25.344-38.144-38.656 0-108.032 85.248-195.712 190.592-195.712 62.592 0 81.216 39.232 38.08 39.232-105.152 0.064-190.528 87.04-190.528 195.136z"
                   :fill="problem.color"
                   p-id="5841"
-                ></path>
+                />
               </svg>
             </span>
             <span>
@@ -352,16 +259,11 @@
                 @click="getContestProblemById(problem.displayId)"
                 class="emphasis"
                 style="color:#495060;"
-              >
-                {{ problem.displayId }}
-              </a>
+              >{{ problem.displayId }}</a>
             </span>
             <br />
             <span>
-              <el-tooltip
-                effect="dark"
-                placement="top"
-              >
+              <el-tooltip effect="dark" placement="top">
                 <div slot="content">
                   {{ problem.displayId + '. ' + problem.displayTitle }}
                   <br />
@@ -369,26 +271,17 @@
                   <br />
                   {{ 'Rejected: ' + (problem.total - problem.ac) }}
                 </div>
-                <span>({{ problem.ac }}/{{ problem.total }}) </span>
+                <span>({{ problem.ac }}/{{ problem.total }})</span>
               </el-tooltip>
             </span>
           </template>
           <template v-slot="{ row }">
-            <span
-              v-if="row.submissionInfo[problem.displayId]"
-              class="submission-hover"
-            >
-              <el-tooltip
-                effect="dark"
-                placement="top"
-              >
-                <div slot="content">
-                  {{ row.submissionInfo[problem.displayId].specificTime }}
-                </div>
-                <span
-                  v-if="row.submissionInfo[problem.displayId].isAC"
-                  class="submission-time"
-                >{{ row.submissionInfo[problem.displayId].isAfterContest?'*': row.submissionInfo[problem.displayId].ACTime}}<br />
+            <span v-if="row.submissionInfo[problem.displayId]" class="submission-hover">
+              <el-tooltip effect="dark" placement="top">
+                <div slot="content">{{ row.submissionInfo[problem.displayId].specificTime }}</div>
+                <span v-if="row.submissionInfo[problem.displayId].isAC" class="submission-time">
+                  {{ row.submissionInfo[problem.displayId].isAfterContest?'*': row.submissionInfo[problem.displayId].ACTime}}
+                  <br />
                 </span>
               </el-tooltip>
 
@@ -400,21 +293,24 @@
                 "
               >
                 {{
-                  row.submissionInfo[problem.displayId].errorNum > 1
-                    ? row.submissionInfo[problem.displayId].errorNum + ' tries'
-                    : row.submissionInfo[problem.displayId].errorNum + ' try'
+                row.submissionInfo[problem.displayId].errorNum > 1
+                ? row.submissionInfo[problem.displayId].errorNum + ' tries'
+                : row.submissionInfo[problem.displayId].errorNum + ' try'
                 }}
               </span>
-              <span v-if="row.submissionInfo[problem.displayId].tryNum != null"><template v-if="row.submissionInfo[problem.displayId].errorNum > 0">
+              <span v-if="row.submissionInfo[problem.displayId].tryNum != null">
+                <template v-if="row.submissionInfo[problem.displayId].errorNum > 0">
                   {{
-                    row.submissionInfo[problem.displayId].errorNum
-                  }}+</template>{{ row.submissionInfo[problem.displayId].tryNum
+                  row.submissionInfo[problem.displayId].errorNum
+                  }}+
+                </template>
+                {{ row.submissionInfo[problem.displayId].tryNum
                 }}{{
-                  row.submissionInfo[problem.displayId].errorNum +
-                    row.submissionInfo[problem.displayId].tryNum >
-                  1
-                    ? ' tries'
-                    : ' try'
+                row.submissionInfo[problem.displayId].errorNum +
+                row.submissionInfo[problem.displayId].tryNum >
+                1
+                ? ' tries'
+                : ' try'
                 }}
               </span>
             </span>
@@ -576,7 +472,11 @@ export default {
       ) {
         this.$router.push({
           name: "ContestSubmissionList",
-          query: { username: row.username, problemID: column.property, completeProblemID: true },
+          query: {
+            username: row.username,
+            problemID: column.property,
+            completeProblemID: true,
+          },
         });
       }
     },
@@ -636,7 +536,7 @@ export default {
             rank[problemID].ACTime = parseInt(rank[problemID].ACTime / 60);
           }
           let status = info[problemID];
-          if(status.isAfterContest && status.isAC){
+          if (status.isAfterContest && status.isAC) {
             cellClass[problemID] = "after-ac";
           } else if (status.isFirstAC) {
             cellClass[problemID] = "first-ac";
@@ -722,7 +622,9 @@ export default {
       utils.downloadFile(
         `/api/file/download-contest-rank?cid=${
           this.$route.params.contestID
-        }&forceRefresh=${this.forceUpdate ? true : false}&containEnd=${this.isContainsAfterContestJudge}`
+        }&forceRefresh=${this.forceUpdate ? true : false}&containEnd=${
+          this.isContainsAfterContestJudge
+        }`
       );
     },
   },

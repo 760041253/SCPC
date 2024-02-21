@@ -21,28 +21,25 @@
             size="small"
             @click="handleCreatePage"
             :icon="createPage ? 'el-icon-back' : 'el-icon-plus'"
-            >{{ createPage ? $t('m.Back_To_Admin_Contest_List') : $t('m.Create') }}</el-button
-          >
+          >{{ createPage ? $t('m.Back_To_Admin_Contest_List') : $t('m.Create') }}</el-button>
           <el-button
             v-if="editPage && adminPage"
             type="warning"
             size="small"
             @click="handleEditPage"
             icon="el-icon-back"
-            >{{ $t('m.Back_To_Admin_Contest_List') }}</el-button
-          >
+          >{{ $t('m.Back_To_Admin_Contest_List') }}</el-button>
           <el-button
             v-if="!editPage&&!createPage"
             :type="adminPage ? 'danger' : 'success'"
             size="small"
             @click="handleAdminPage"
             :icon="adminPage ? 'el-icon-back' : 'el-icon-s-opportunity'"
-            >{{ adminPage ? $t('m.Back_To_Contest_List') : $t('m.Contest_Admin') }}</el-button
-          >
+          >{{ adminPage ? $t('m.Back_To_Contest_List') : $t('m.Contest_Admin') }}</el-button>
         </el-col>
         <el-col
-         :md="18"
-         :xs="24"
+          :md="18"
+          :xs="24"
           v-else-if="
             (isSuperAdmin || isGroupAdmin) &&
               problemPage &&
@@ -56,33 +53,29 @@
             size="small"
             @click="handleCreateProblemPage"
             icon="el-icon-plus"
-            >{{ $t('m.Create') }}</el-button
-          >
+          >{{ $t('m.Create') }}</el-button>
           <el-button
             type="primary"
             size="small"
             @click="publicPage = true"
             icon="el-icon-plus"
-            >{{ $t('m.Add_From_Public_Problem') }}</el-button
-          >
+          >{{ $t('m.Add_From_Public_Problem') }}</el-button>
           <el-button
             type="success"
             size="small"
             @click="handleGroupPage"
             icon="el-icon-plus"
-            >{{ $t('m.Add_From_Group_Problem') }}</el-button
-          >
+          >{{ $t('m.Add_From_Group_Problem') }}</el-button>
           <el-button
             type="warning"
             size="small"
             @click="handleProblemPage(null)"
             icon="el-icon-back"
-            >{{ $t('m.Back_To_Admin_Contest_List') }}</el-button
-          >
+          >{{ $t('m.Back_To_Admin_Contest_List') }}</el-button>
         </el-col>
         <el-col
-         :md="18"
-         :xs="24"
+          :md="18"
+          :xs="24"
           v-else-if="
             (isSuperAdmin || isGroupAdmin) &&
               (editProblemPage || createProblemPage)
@@ -94,36 +87,28 @@
             size="small"
             @click="handleEditProblemPage"
             icon="el-icon-back"
-            >{{ $t('m.Back_Admin_Contest_Problem_List') }}</el-button
-          >`
+          >{{ $t('m.Back_Admin_Contest_Problem_List') }}</el-button>`
           <el-button
             v-if="createProblemPage"
             type="primary"
             size="small"
             @click="handleCreateProblemPage"
             icon="el-icon-back"
-            >{{ $t('m.Back_Admin_Contest_Problem_List') }}</el-button
-          >`
+          >{{ $t('m.Back_Admin_Contest_Problem_List') }}</el-button>`
         </el-col>
-        <el-col
-          :md="18"
-          :xs="24"
-          v-else-if="(isSuperAdmin || isGroupAdmin) && announcementPage"
-        >
+        <el-col :md="18" :xs="24" v-else-if="(isSuperAdmin || isGroupAdmin) && announcementPage">
           <el-button
             type="primary"
             size="small"
             @click="handleCreateAnnouncementPage"
             icon="el-icon-plus"
-            >{{ $t('m.Create') }}</el-button
-          >
+          >{{ $t('m.Create') }}</el-button>
           <el-button
             type="warning"
             size="small"
             @click="handleAnnouncementPage"
             icon="el-icon-back"
-            >{{ $t('m.Back_To_Admin_Contest_List') }}</el-button
-          >
+          >{{ $t('m.Back_To_Admin_Contest_List') }}</el-button>
         </el-col>
       </el-row>
     </div>
@@ -132,31 +117,15 @@
         <el-empty :description="$t('m.No_contest')"></el-empty>
       </p>
       <ol id="contest-list">
-        <li
-          v-for="contest in contestList"
-          :key="contest.title"
-          :style="getborderColor(contest)"
-        >
+        <li v-for="contest in contestList" :key="contest.title" :style="getborderColor(contest)">
           <el-row type="flex" justify="space-between" align="middle">
             <el-col :xs="10" :sm="4" :md="3" :lg="2">
-              <img
-                v-show="contest.type == 0"
-                class="trophy"
-                :src="acmSrc"
-                width="95px"
-              />
-              <img
-                v-show="contest.type == 1"
-                class="trophy"
-                :src="oiSrc"
-                width="95px"
-              />
+              <img v-show="contest.type == 0" class="trophy" :src="acmSrc" width="95px" />
+              <img v-show="contest.type == 1" class="trophy" :src="oiSrc" width="95px" />
             </el-col>
             <el-col :xs="10" :sm="16" :md="19" :lg="20" class="contest-main">
               <p class="contest-title">
-                <a class="entry" @click.stop="goGroupContest(contest.id)">
-                  {{ contest.title }}
-                </a>
+                <a class="entry" @click.stop="goGroupContest(contest.id)">{{ contest.title }}</a>
                 <template v-if="contest.auth == 1">
                   <i class="el-icon-lock" size="20" style="color:#d9534f"></i>
                 </template>
@@ -166,19 +135,11 @@
               </p>
               <ul class="detail">
                 <li>
-                  <i
-                    class="fa fa-calendar"
-                    aria-hidden="true"
-                    style="color: #3091f2"
-                  ></i>
+                  <i class="fa fa-calendar" aria-hidden="true" style="color: #3091f2"></i>
                   {{ contest.startTime | localtime }}
                 </li>
                 <li>
-                  <i
-                    class="fa fa-clock-o"
-                    aria-hidden="true"
-                    style="color: #3091f2"
-                  ></i>
+                  <i class="fa fa-clock-o" aria-hidden="true" style="color: #3091f2"></i>
                   {{ getDuration(contest.startTime, contest.endTime) }}
                 </li>
                 <li>
@@ -188,7 +149,8 @@
                       round
                       :type="'primary'"
                       @click="onRuleChange(contest.type)"
-                      ><i class="fa fa-trophy"></i>
+                    >
+                      <i class="fa fa-trophy"></i>
                       {{ contest.type | parseContestType }}
                     </el-button>
                   </template>
@@ -212,7 +174,8 @@
                         round
                         :type="'warning'"
                         @click="onRuleChange(contest.type)"
-                        ><i class="fa fa-trophy"></i>
+                      >
+                        <i class="fa fa-trophy"></i>
                         {{ contest.type | parseContestType }}
                       </el-button>
                     </el-tooltip>
@@ -226,22 +189,16 @@
                     placement="top"
                     effect="light"
                   >
-                    <el-tag
-                      :type="CONTEST_TYPE_REVERSE[contest.auth]['color']"
-                      effect="plain"
-                    >
+                    <el-tag :type="CONTEST_TYPE_REVERSE[contest.auth]['color']" effect="plain">
                       {{
-                        $t('m.' + CONTEST_TYPE_REVERSE[contest.auth]['name'])
+                      $t('m.' + CONTEST_TYPE_REVERSE[contest.auth]['name'])
                       }}
                     </el-tag>
                   </el-tooltip>
                 </li>
                 <li v-if="contest.auth != CONTEST_TYPE.PUBLIC">
-                  <i
-                    class="el-icon-user-solid"
-                    style="color:rgb(48, 145, 242);"
-                  ></i
-                  >x{{ contest.count != null ? contest.count : 0 }}
+                  <i class="el-icon-user-solid" style="color:rgb(48, 145, 242);"></i>
+                  x{{ contest.count != null ? contest.count : 0 }}
                 </li>
                 <li v-if="contest.openRank">
                   <el-tooltip
@@ -299,14 +256,8 @@
       @currentChangeProblem="currentChangeProblem"
       @handleEditProblemPage="handleEditProblemPage"
       ref="contestProblemList"
-    >
-    </ProblemList>
-    <AnnouncementList
-      v-if="announcementPage"
-      :contestId="contestId"
-      ref="contestAnnouncementList"
-    >
-    </AnnouncementList>
+    ></ProblemList>
+    <AnnouncementList v-if="announcementPage" :contestId="contestId" ref="contestAnnouncementList"></AnnouncementList>
     <Contest
       v-if="createPage && !editPage && !problemPage"
       mode="add"
@@ -354,25 +305,25 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import Pagination from '@/components/oj/common/Pagination';
-import ContestList from '@/components/oj/group/ContestList';
-import Contest from '@/components/oj/group/Contest';
-import Problem from '@/components/oj/group/Problem';
-import ProblemList from '@/components/oj/group/ProblemList';
-import AddPublicProblem from '@/components/oj/group/AddPublicProblem.vue';
-import AddGroupProblem from '@/components/oj/group/AddGroupProblem.vue';
-import AnnouncementList from '@/components/oj/group/AnnouncementList';
-import api from '@/common/api';
-import time from '@/common/time';
+import { mapGetters } from "vuex";
+import Pagination from "@/components/oj/common/Pagination";
+import ContestList from "@/components/oj/group/ContestList";
+import Contest from "@/components/oj/group/Contest";
+import Problem from "@/components/oj/group/Problem";
+import ProblemList from "@/components/oj/group/ProblemList";
+import AddPublicProblem from "@/components/oj/group/AddPublicProblem.vue";
+import AddGroupProblem from "@/components/oj/group/AddGroupProblem.vue";
+import AnnouncementList from "@/components/oj/group/AnnouncementList";
+import api from "@/common/api";
+import time from "@/common/time";
 import {
   CONTEST_STATUS_REVERSE,
   CONTEST_TYPE,
   CONTEST_TYPE_REVERSE,
   CONTEST_STATUS,
-} from '@/common/constants';
+} from "@/common/constants";
 export default {
-  name: 'GroupContestList',
+  name: "GroupContestList",
   components: {
     Pagination,
     ContestList,
@@ -400,8 +351,8 @@ export default {
       createProblemPage: false,
       announcementPage: false,
       contestId: null,
-      acmSrc: require('@/assets/acm.jpg'),
-      oiSrc: require('@/assets/oi.jpg'),
+      acmSrc: require("@/assets/acm.jpg"),
+      oiSrc: require("@/assets/oi.jpg"),
     };
   },
   mounted() {
@@ -447,7 +398,7 @@ export default {
     },
     goGroupContest(contestId) {
       this.$router.push({
-        name: 'ContestDetails',
+        name: "ContestDetails",
         params: {
           contestID: contestId,
         },
@@ -456,12 +407,12 @@ export default {
     goContestOutsideScoreBoard(cid, type) {
       if (type == 0) {
         this.$router.push({
-          name: 'ACMScoreBoard',
+          name: "ACMScoreBoard",
           params: { contestID: cid },
         });
       } else if (type == 1) {
         this.$router.push({
-          name: 'OIScoreBoard',
+          name: "OIScoreBoard",
           params: { contestID: cid },
         });
       }
@@ -471,8 +422,8 @@ export default {
     },
     getborderColor(contest) {
       return (
-        'border-left: 4px solid ' +
-        CONTEST_STATUS_REVERSE[contest.status]['color']
+        "border-left: 4px solid " +
+        CONTEST_STATUS_REVERSE[contest.status]["color"]
       );
     },
     handleCreatePage() {
@@ -511,7 +462,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'isSuperAdmin', 'isGroupAdmin']),
+    ...mapGetters(["isAuthenticated", "isSuperAdmin", "isGroupAdmin"]),
   },
 };
 </script>

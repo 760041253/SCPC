@@ -2,9 +2,11 @@
   <div>
     <el-card>
       <div slot="header">
-        <span class="panel-title home-title">{{
+        <span class="panel-title home-title">
+          {{
           $t('m.Training_Problem_List')
-        }}</span>
+          }}
+        </span>
         <div class="filter-row">
           <span>
             <el-button
@@ -12,8 +14,7 @@
               size="small"
               icon="el-icon-plus"
               @click="addProblemDialogVisible = true"
-              >{{ $t('m.Add_From_Public_Problem') }}
-            </el-button>
+            >{{ $t('m.Add_From_Public_Problem') }}</el-button>
           </span>
           <span>
             <el-button
@@ -21,8 +22,7 @@
               size="small"
               @click="AddRemoteOJProblemDialogVisible = true"
               icon="el-icon-plus"
-              >{{ $t('m.Add_Rmote_OJ_Problem') }}
-            </el-button>
+            >{{ $t('m.Add_Rmote_OJ_Problem') }}</el-button>
           </span>
           <span>
             <vxe-input
@@ -44,33 +44,12 @@
         :loading="loading"
         align="center"
       >
-        <vxe-table-column min-width="64" field="id" title="ID">
-        </vxe-table-column>
-        <vxe-table-column
-          min-width="100"
-          field="problemId"
-          :title="$t('m.Display_ID')"
-        >
-        </vxe-table-column>
-        <vxe-table-column
-          field="title"
-          min-width="150"
-          :title="$t('m.Title')"
-          show-overflow
-        >
-        </vxe-table-column>
+        <vxe-table-column min-width="64" field="id" title="ID"></vxe-table-column>
+        <vxe-table-column min-width="100" field="problemId" :title="$t('m.Display_ID')"></vxe-table-column>
+        <vxe-table-column field="title" min-width="150" :title="$t('m.Title')" show-overflow></vxe-table-column>
 
-        <vxe-table-column
-          field="author"
-          min-width="100"
-          :title="$t('m.Author')"
-          show-overflow
-        >
-        </vxe-table-column>
-        <vxe-table-column
-          min-width="200"
-          :title="$t('m.Training_Problem_Rank')"
-        >
+        <vxe-table-column field="author" min-width="100" :title="$t('m.Author')" show-overflow></vxe-table-column>
+        <vxe-table-column min-width="200" :title="$t('m.Training_Problem_Rank')">
           <template v-slot="{ row }">
             <el-input-number
               v-model="trainingProblemMap[row.id].rank"
@@ -93,15 +72,8 @@
                 :value="1"
                 :disabled="!isSuperAdmin && !isProblemAdmin"
               ></el-option>
-              <el-option
-                :label="$t('m.Private_Problem')"
-                :value="2"
-              ></el-option>
-              <el-option
-                :label="$t('m.Contest_Problem')"
-                :value="3"
-                :disabled="true"
-              ></el-option>
+              <el-option :label="$t('m.Private_Problem')" :value="2"></el-option>
+              <el-option :label="$t('m.Contest_Problem')" :value="3" :disabled="true"></el-option>
             </el-select>
           </template>
         </vxe-table-column>
@@ -122,8 +94,7 @@
                 size="mini"
                 @click.native="goEdit(row.id)"
                 type="primary"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
 
             <el-tooltip
@@ -137,8 +108,7 @@
                 size="mini"
                 @click.native="downloadTestCase(row.id)"
                 type="success"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
 
             <el-tooltip effect="dark" :content="$t('m.Remove')" placement="top">
@@ -147,8 +117,7 @@
                 size="mini"
                 @click.native="removeProblem(row.id)"
                 type="warning"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
 
             <el-tooltip
@@ -162,8 +131,7 @@
                 size="mini"
                 @click.native="deleteProblem(row.id)"
                 type="danger"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
           </template>
         </vxe-table-column>
@@ -178,8 +146,7 @@
           :total="total"
           @size-change="onPageSizeChange"
           :page-sizes="[10, 30, 50, 100]"
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </el-card>
 
@@ -189,10 +156,7 @@
       :visible.sync="addProblemDialogVisible"
       :close-on-click-modal="false"
     >
-      <AddPublicProblem
-        :trainingID="trainingId"
-        @on-change="getProblemList"
-      ></AddPublicProblem>
+      <AddPublicProblem :trainingID="trainingId" @on-change="getProblemList"></AddPublicProblem>
     </el-dialog>
 
     <el-dialog
@@ -222,8 +186,7 @@
             icon="el-icon-plus"
             @click="addRemoteOJProblem"
             :loading="addRemoteOJproblemLoading"
-            >{{ $t('m.Add') }}
-          </el-button>
+          >{{ $t('m.Add') }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -231,47 +194,47 @@
 </template>
 
 <script>
-import api from '@/common/api';
-import AddPublicProblem from '@/components/admin/AddPublicProblem.vue';
-import myMessage from '@/common/message';
-import { REMOTE_OJ } from '@/common/constants';
-import { mapGetters } from 'vuex';
-import utils from '@/common/utils';
+import api from "@/common/api";
+import AddPublicProblem from "@/components/admin/AddPublicProblem.vue";
+import myMessage from "@/common/message";
+import { REMOTE_OJ } from "@/common/constants";
+import { mapGetters } from "vuex";
+import utils from "@/common/utils";
 export default {
-  name: 'ProblemList',
+  name: "ProblemList",
   components: {
     AddPublicProblem,
   },
   data() {
     return {
       problemListAuth: 0,
-      oj: 'All',
+      oj: "All",
       pageSize: 10,
       total: 0,
       problemList: [],
       trainingProblemMap: {},
-      keyword: '',
+      keyword: "",
       loading: false,
       currentPage: 1,
-      routeName: '',
-      trainingId: '',
+      routeName: "",
+      trainingId: "",
       // for make public use
-      currentProblemID: '',
+      currentProblemID: "",
       currentRow: {},
       addProblemDialogVisible: false,
       AddRemoteOJProblemDialogVisible: false,
       addRemoteOJproblemLoading: false,
-      otherOJName: 'HDU',
-      otherOJProblemId: '',
+      otherOJName: "HDU",
+      otherOJProblemId: "",
       REMOTE_OJ: {},
-      displayId: '',
+      displayId: "",
     };
   },
   mounted() {
     this.init();
   },
   computed: {
-    ...mapGetters(['userInfo', 'isSuperAdmin', 'isProblemAdmin']),
+    ...mapGetters(["userInfo", "isSuperAdmin", "isProblemAdmin"]),
   },
   methods: {
     init() {
@@ -283,7 +246,7 @@ export default {
 
     goEdit(problemId) {
       this.$router.push({
-        name: 'admin-edit-problem',
+        name: "admin-edit-problem",
         params: { problemId: problemId },
       });
     },
@@ -306,7 +269,7 @@ export default {
         queryExisted: true,
       };
       if (this.problemListAuth != 0) {
-        params['auth'] = this.problemListAuth;
+        params["auth"] = this.problemListAuth;
       }
       api.admin_getTrainingProblemList(params).then(
         (res) => {
@@ -322,25 +285,25 @@ export default {
     },
     handleChangeRank(data) {
       api.admin_updateTrainingProblem(data).then((res) => {
-        myMessage.success(this.$i18n.t('m.Update_Successfully'));
+        myMessage.success(this.$i18n.t("m.Update_Successfully"));
         this.getProblemList(1);
       });
     },
     changeProblemAuth(row) {
       api.admin_changeProblemAuth(row).then((res) => {
-        myMessage.success(this.$i18n.t('m.Update_Successfully'));
+        myMessage.success(this.$i18n.t("m.Update_Successfully"));
       });
     },
 
     deleteProblem(id) {
-      this.$confirm(this.$i18n.t('m.Delete_Problem_Tips'), 'Tips', {
-        type: 'warning',
+      this.$confirm(this.$i18n.t("m.Delete_Problem_Tips"), "Tips", {
+        type: "warning",
       }).then(
         () => {
           api
             .admin_deleteTrainingProblem(id, null)
             .then((res) => {
-              myMessage.success(this.$i18n.t('m.Delete_successfully'));
+              myMessage.success(this.$i18n.t("m.Delete_successfully"));
               this.getProblemList(this.currentPage);
             })
             .catch(() => {});
@@ -349,14 +312,14 @@ export default {
       );
     },
     removeProblem(pid) {
-      this.$confirm(this.$i18n.t('m.Remove_Training_Problem_Tips'), 'Tips', {
-        type: 'warning',
+      this.$confirm(this.$i18n.t("m.Remove_Training_Problem_Tips"), "Tips", {
+        type: "warning",
       }).then(
         () => {
           api
             .admin_deleteTrainingProblem(pid, this.trainingId)
             .then((res) => {
-              myMessage.success('success');
+              myMessage.success("success");
               this.getProblemList(this.currentPage);
             })
             .catch(() => {});
@@ -365,9 +328,9 @@ export default {
       );
     },
     downloadTestCase(problemID) {
-      let url = '/api/file/download-testcase?pid=' + problemID;
+      let url = "/api/file/download-testcase?pid=" + problemID;
       utils.downloadFile(url).then(() => {
-        this.$alert(this.$i18n.t('m.Download_Testcase_Success'), 'Tips');
+        this.$alert(this.$i18n.t("m.Download_Testcase_Success"), "Tips");
       });
     },
     filterByKeyword() {
@@ -375,7 +338,7 @@ export default {
     },
     addRemoteOJProblem() {
       if (!this.otherOJProblemId) {
-        myMessage.error(this.$i18n.t('m.Problem_ID_is_required'));
+        myMessage.error(this.$i18n.t("m.Problem_ID_is_required"));
         return;
       }
       this.addRemoteOJproblemLoading = true;
@@ -389,7 +352,7 @@ export default {
           (res) => {
             this.addRemoteOJproblemLoading = false;
             this.AddRemoteOJProblemDialogVisible = false;
-            myMessage.success(this.$i18n.t('m.Add_Successfully'));
+            myMessage.success(this.$i18n.t("m.Add_Successfully"));
             this.currentChange(1);
           },
           (err) => {

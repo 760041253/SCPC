@@ -3,13 +3,13 @@
     <el-collapse v-model="activeName" accordion>
       <el-collapse-item name="Account">
         <template slot="title">
-          <i class="fa fa-gear"> {{ $t('m.Account_Setting') }}</i>
+          <i class="fa fa-gear">{{ $t('m.Account_Setting') }}</i>
         </template>
         <component :is="Account"></component>
       </el-collapse-item>
       <el-collapse-item name="UserInfo">
         <template slot="title">
-          <i class="fa fa-gear"> {{ $t('m.UserInfo_Setting') }}</i>
+          <i class="fa fa-gear">{{ $t('m.UserInfo_Setting') }}</i>
         </template>
         <component :is="UserInfo"></component>
       </el-collapse-item>
@@ -17,8 +17,8 @@
   </el-card>
 </template>
 <script>
-const Account = () => import('@/components/oj/setting/Account');
-const UserInfo = () => import('@/components/oj/setting/UserInfo');
+const Account = () => import("@/components/oj/setting/Account");
+const UserInfo = () => import("@/components/oj/setting/UserInfo");
 export default {
   components: {
     Account,
@@ -26,9 +26,9 @@ export default {
   },
   data() {
     return {
-      Account: 'Account',
-      UserInfo: 'UserInfo',
-      activeName: 'Account',
+      Account: "Account",
+      UserInfo: "UserInfo",
+      activeName: "Account",
     };
   },
 };
