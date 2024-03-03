@@ -55,9 +55,9 @@ public class GroupDiscussionManager {
     private CommonValidator commonValidator;
 
     public IPage<Discussion> getDiscussionList(Integer limit,
-                                               Integer currentPage,
-                                               Long gid,
-                                               String pid) throws StatusNotFoundException, StatusForbiddenException {
+            Integer currentPage,
+            Long gid,
+            String pid) throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -91,7 +91,8 @@ public class GroupDiscussionManager {
         return discussionEntityService.page(iPage, discussionQueryWrapper);
     }
 
-    public IPage<Discussion> getAdminDiscussionList(Integer limit, Integer currentPage, Long gid) throws StatusNotFoundException, StatusForbiddenException {
+    public IPage<Discussion> getAdminDiscussionList(Integer limit, Integer currentPage, Long gid)
+            throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -120,7 +121,8 @@ public class GroupDiscussionManager {
         return discussionEntityService.page(iPage, discussionQueryWrapper);
     }
 
-    public void addDiscussion(Discussion discussion) throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
+    public void addDiscussion(Discussion discussion)
+            throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
 
         commonValidator.validateContent(discussion.getTitle(), "讨论标题", 255);
         commonValidator.validateContent(discussion.getDescription(), "讨论描述", 255);
@@ -196,7 +198,8 @@ public class GroupDiscussionManager {
         }
     }
 
-    public void updateDiscussion(Discussion discussion) throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
+    public void updateDiscussion(Discussion discussion)
+            throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
 
         commonValidator.validateNotEmpty(discussion.getId(), "讨论ID");
         commonValidator.validateContent(discussion.getTitle(), "讨论标题", 255);
@@ -251,7 +254,8 @@ public class GroupDiscussionManager {
         }
     }
 
-    public void deleteDiscussion(Long did) throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
+    public void deleteDiscussion(Long did)
+            throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -268,7 +272,8 @@ public class GroupDiscussionManager {
             throw new StatusNotFoundException("删除失败，该团队不存在或已被封禁！");
         }
 
-        if (!groupValidator.isGroupAdmin(userRolesVo.getUid(), gid) && !discussion.getUid().equals(userRolesVo.getUid()) && !isRoot) {
+        if (!groupValidator.isGroupAdmin(userRolesVo.getUid(), gid) && !discussion.getUid().equals(userRolesVo.getUid())
+                && !isRoot) {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 

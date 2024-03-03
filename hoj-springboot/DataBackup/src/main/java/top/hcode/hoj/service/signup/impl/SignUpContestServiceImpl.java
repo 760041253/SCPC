@@ -38,23 +38,25 @@ public class SignUpContestServiceImpl implements SignUpContestService {
     private ContestMapper contestMapper;
 
     @Override
-    public CommonResult<List<SignUpContest>> getContestSignList(Integer pageSize, Integer pageNum) throws StatusForbiddenException {
-        List<SignUpContest> signUpContests = signUpContestMapper.selectPage(new Page<SignUpContest>(pageSize,pageNum),
+    public CommonResult<List<SignUpContest>> getContestSignList(Integer pageSize, Integer pageNum)
+            throws StatusForbiddenException {
+        List<SignUpContest> signUpContests = signUpContestMapper.selectPage(new Page<SignUpContest>(pageSize, pageNum),
                 null).getRecords();
         return CommonResult.successResponse(signUpContests);
     }
 
     @Override
-    public CommonResult<Void> addNewContestSignUp(SignUpContestDTO signUpContestDTO) throws StatusForbiddenException, StatusFailException {
+    public CommonResult<Void> addNewContestSignUp(SignUpContestDTO signUpContestDTO)
+            throws StatusForbiddenException, StatusFailException {
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-        if(!isRoot){
+        if (!isRoot) {
             throw new StatusForbiddenException("您没有权限创建比赛报名!");
         }
 
         Long cid = signUpContestDTO.getContestId();
-        if(cid != null){
+        if (cid != null) {
             Contest contest = contestMapper.selectById(cid);
-            if(contest == null){
+            if (contest == null) {
                 throw new StatusFailException("比赛不存在");
             }
             signUpContestDTO.setStartTime(contest.getStartTime());
@@ -62,7 +64,7 @@ public class SignUpContestServiceImpl implements SignUpContestService {
         }
         signUpContestDTO.setCreateTime(new Date());
         SignUpContest signUpContest = new SignUpContest();
-        BeanUtil.copyProperties(signUpContestDTO,signUpContest);
+        BeanUtil.copyProperties(signUpContestDTO, signUpContest);
         signUpContestMapper.insert(signUpContest);
         return CommonResult.successResponse();
     }
@@ -71,30 +73,30 @@ public class SignUpContestServiceImpl implements SignUpContestService {
     public CommonResult<Void> deleteContestSignUp(Long id) throws StatusForbiddenException, StatusFailException {
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-        if(!isRoot){
+        if (!isRoot) {
             throw new StatusForbiddenException("您没有权限删除比赛报名!");
         }
         SignUpContest signUpContest = signUpContestMapper.selectById(id);
-        if(signUpContest == null){
+        if (signUpContest == null) {
             throw new StatusFailException("比赛不存在");
         }
         signUpContestMapper.deleteById(id);
-        //删除报名内容
-        teamInfoMapper.delete(new QueryWrapper<TeamInfo>().eq("sign_up_contest_id",signUpContest.getId()));
-
+        // 删除报名内容
+        teamInfoMapper.delete(new QueryWrapper<TeamInfo>().eq("sign_up_contest_id", signUpContest.getId()));
 
         return CommonResult.successResponse();
     }
 
     @Override
-    public CommonResult<Void> updateContestSignUp(SignUpContestDTO signUpContestDTO) throws StatusForbiddenException, StatusFailException {
+    public CommonResult<Void> updateContestSignUp(SignUpContestDTO signUpContestDTO)
+            throws StatusForbiddenException, StatusFailException {
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-        if(!isRoot){
+        if (!isRoot) {
             throw new StatusForbiddenException("您没有权限删除比赛报名!");
         }
         SignUpContest signUpContest = signUpContestMapper.selectById(signUpContestDTO.getId());
-        if(signUpContest == null){
+        if (signUpContest == null) {
             throw new StatusFailException("该报名收集表不存在");
         }
         BeanUtil.copyProperties(signUpContestDTO, signUpContest);

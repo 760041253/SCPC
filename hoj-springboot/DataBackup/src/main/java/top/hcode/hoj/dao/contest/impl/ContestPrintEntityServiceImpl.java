@@ -13,5 +13,6 @@ import top.hcode.hoj.dao.contest.ContestPrintEntityService;
  * @Description:
  */
 @Service
-public class ContestPrintEntityServiceImpl extends ServiceImpl<ContestPrintMapper, ContestPrint> implements ContestPrintEntityService {
+public class ContestPrintEntityServiceImpl extends ServiceImpl<ContestPrintMapper, ContestPrint>
+        implements ContestPrintEntityService {
 }

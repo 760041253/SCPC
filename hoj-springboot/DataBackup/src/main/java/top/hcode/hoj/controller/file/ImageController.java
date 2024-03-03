@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller.file;
 
-
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
-
     @RequestMapping(value = "/upload-avatar", method = RequestMethod.POST)
     @RequiresAuthentication
     @ResponseBody
@@ -40,7 +38,7 @@ public class ImageController {
     @RequiresAuthentication
     @ResponseBody
     public CommonResult<Group> uploadGroupAvatar(@RequestParam(value = "image", required = true) MultipartFile image,
-                                                 @RequestParam(value = "gid", required = true) Long gid) {
+            @RequestParam(value = "gid", required = true) Long gid) {
         return imageService.uploadGroupAvatar(image, gid);
     }
 

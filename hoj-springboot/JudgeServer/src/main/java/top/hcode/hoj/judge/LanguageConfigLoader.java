@@ -125,7 +125,6 @@ public class LanguageConfigLoader {
         return languageConfig;
     }
 
-
     private Long parseTimeStr(String timeStr) {
         if (StrUtil.isBlank(timeStr)) {
             return 3000L;

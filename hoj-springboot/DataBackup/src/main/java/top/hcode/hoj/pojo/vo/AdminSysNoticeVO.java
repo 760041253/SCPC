@@ -12,7 +12,7 @@ import java.util.Date;
  * @Description:
  */
 @Data
-@ApiModel(value="系统通知消息", description="")
+@ApiModel(value = "系统通知消息", description = "")
 public class AdminSysNoticeVO {
 
     private Long id;

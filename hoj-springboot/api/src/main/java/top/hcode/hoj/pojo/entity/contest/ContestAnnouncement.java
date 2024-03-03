@@ -15,7 +15,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author Himit_ZH
@@ -24,7 +24,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="ContestAnnouncement对象", description="")
+@ApiModel(value = "ContestAnnouncement对象", description = "")
 public class ContestAnnouncement implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,6 +43,5 @@ public class ContestAnnouncement implements Serializable {
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
-
 
 }

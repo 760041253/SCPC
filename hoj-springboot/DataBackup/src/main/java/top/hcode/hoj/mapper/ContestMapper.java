@@ -24,9 +24,9 @@ import java.util.List;
 public interface ContestMapper extends BaseMapper<Contest> {
 
     List<ContestVO> getContestList(IPage page,
-                                   @Param("type") Integer type,
-                                   @Param("status") Integer status,
-                                   @Param("keyword") String keyword);
+            @Param("type") Integer type,
+            @Param("status") Integer status,
+            @Param("keyword") String keyword);
 
     List<ContestRegisterCountVO> getContestRegisterCount(@Param("cidList") List<Long> cidList);
 

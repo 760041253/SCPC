@@ -56,8 +56,10 @@ public class AdminUserManager {
     private RedisUtils redisUtils;
 
     public IPage<UserRolesVO> getUserList(Integer limit, Integer currentPage, Boolean onlyAdmin, String keyword) {
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
         if (keyword != null) {
             keyword = keyword.trim();
         }
@@ -229,7 +231,6 @@ public class AdminUserManager {
                 userInfo.setSchool(school);
             }
         }
-
 
         boolean result1 = userInfoEntityService.save(userInfo);
         UserRole userRole = new UserRole()

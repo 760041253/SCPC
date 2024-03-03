@@ -106,7 +106,7 @@ public class RemoteJudgeReceiver extends AbstractReceiver {
     }
 
     private void dispatchRemoteJudge(Judge judge, String token, String remoteJudgeProblem,
-                                     Boolean isHasSubmitIdRemoteReJudge, String remoteOJName) {
+            Boolean isHasSubmitIdRemoteReJudge, String remoteOJName) {
 
         ToJudgeDTO toJudgeDTO = new ToJudgeDTO();
         toJudgeDTO.setJudge(judge)
@@ -115,8 +115,9 @@ public class RemoteJudgeReceiver extends AbstractReceiver {
         Constants.RemoteOJ remoteOJ = Constants.RemoteOJ.getRemoteOJ(remoteOJName);
         if (!checkExistedAccountByOJ(remoteOJ)) {
             judge.setStatus(Constants.Judge.STATUS_SYSTEM_ERROR.getStatus());
-            judge.setErrorMessage("System Error! Cause: The System does not have [" + remoteOJ + "] account configured. " +
-                    "Please report the matter to the administrator!");
+            judge.setErrorMessage(
+                    "System Error! Cause: The System does not have [" + remoteOJ + "] account configured. " +
+                            "Please report the matter to the administrator!");
             judgeEntityService.updateById(judge);
         } else {
             if (remoteOJName.equals(Constants.RemoteOJ.CODEFORCES.getName())
@@ -135,7 +136,6 @@ public class RemoteJudgeReceiver extends AbstractReceiver {
         // 如果队列中还有任务，则继续处理
         processWaitingTask();
     }
-
 
     private void commonJudge(String OJName, Boolean isHasSubmitIdRemoteReJudge, ToJudgeDTO toJudgeDTO, Judge judge) {
 
@@ -189,9 +189,7 @@ public class RemoteJudgeReceiver extends AbstractReceiver {
         futureTaskMap.put(key, scheduledFuture);
     }
 
-
     private void pojJudge(Boolean isHasSubmitIdRemoteReJudge, ToJudgeDTO toJudgeDTO, Judge judge) {
-
 
         if (StringUtils.isEmpty(judge.getVjudgeUsername())) {
             isHasSubmitIdRemoteReJudge = false;
@@ -231,8 +229,8 @@ public class RemoteJudgeReceiver extends AbstractReceiver {
                     return;
                 }
                 tryNum.getAndIncrement();
-                RemoteJudgeAccount account = chooseUtils.chooseRemoteAccount(Constants.RemoteOJ.POJ.getName()
-                        , judge.getVjudgeUsername(), finalIsHasSubmitIdRemoteReJudge);
+                RemoteJudgeAccount account = chooseUtils.chooseRemoteAccount(Constants.RemoteOJ.POJ.getName(),
+                        judge.getVjudgeUsername(), finalIsHasSubmitIdRemoteReJudge);
                 if (account != null) {
                     toJudgeDTO.setUsername(account.getUsername())
                             .setPassword(account.getPassword());
@@ -284,7 +282,8 @@ public class RemoteJudgeReceiver extends AbstractReceiver {
                     return;
                 }
                 tryNum.getAndIncrement();
-                HashMap<String, Object> result = chooseUtils.chooseFixedAccount(Constants.RemoteOJ.CODEFORCES.getName());
+                HashMap<String, Object> result = chooseUtils
+                        .chooseFixedAccount(Constants.RemoteOJ.CODEFORCES.getName());
                 if (result != null) {
                     RemoteJudgeAccount account = (RemoteJudgeAccount) result.get("account");
                     int index = (int) result.get("index");

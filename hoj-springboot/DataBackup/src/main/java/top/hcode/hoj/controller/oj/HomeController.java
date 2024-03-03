@@ -43,7 +43,6 @@ public class HomeController {
         return homeService.getRecentContest();
     }
 
-
     /**
      * @MethodName getHomeCarousel
      * @Params
@@ -55,7 +54,6 @@ public class HomeController {
     public CommonResult<List<HashMap<String, Object>>> getHomeCarousel() {
         return homeService.getHomeCarousel();
     }
-
 
     /**
      * @MethodName getRecentSevenACRank
@@ -69,7 +67,6 @@ public class HomeController {
         return homeService.getRecentSevenACRank();
     }
 
-
     /**
      * @MethodName getRecentOtherContest
      * @Params
@@ -82,7 +79,6 @@ public class HomeController {
         return homeService.getRecentOtherContest();
     }
 
-
     /**
      * @MethodName getCommonAnnouncement
      * @Params
@@ -91,8 +87,9 @@ public class HomeController {
      * @Since 2020/12/29
      */
     @GetMapping("/get-common-announcement")
-    public CommonResult<IPage<AnnouncementVO>> getCommonAnnouncement(@RequestParam(value = "limit", required = false) Integer limit,
-                                                                     @RequestParam(value = "currentPage", required = false) Integer currentPage) {
+    public CommonResult<IPage<AnnouncementVO>> getCommonAnnouncement(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage) {
         return homeService.getCommonAnnouncement(limit, currentPage);
     }
 
@@ -107,7 +104,6 @@ public class HomeController {
     public CommonResult<Map<Object, Object>> getWebConfig() {
         return homeService.getWebConfig();
     }
-
 
     /**
      * @MethodName getRecentUpdatedProblemList

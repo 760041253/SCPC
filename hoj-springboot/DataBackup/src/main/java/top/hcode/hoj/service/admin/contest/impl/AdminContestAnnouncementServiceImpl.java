@@ -24,7 +24,8 @@ public class AdminContestAnnouncementServiceImpl implements AdminContestAnnounce
 
     @Override
     public CommonResult<IPage<AnnouncementVO>> getAnnouncementList(Integer limit, Integer currentPage, Long cid) {
-        IPage<AnnouncementVO> announcementList = adminContestAnnouncementManager.getAnnouncementList(limit, currentPage, cid);
+        IPage<AnnouncementVO> announcementList = adminContestAnnouncementManager.getAnnouncementList(limit, currentPage,
+                cid);
         return CommonResult.successResponse(announcementList);
     }
 

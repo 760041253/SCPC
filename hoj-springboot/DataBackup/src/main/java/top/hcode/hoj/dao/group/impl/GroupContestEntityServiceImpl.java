@@ -18,7 +18,8 @@ import java.util.List;
  * @Description:
  */
 @Service
-public class GroupContestEntityServiceImpl extends ServiceImpl<GroupContestMapper, Contest> implements GroupContestEntityService {
+public class GroupContestEntityServiceImpl extends ServiceImpl<GroupContestMapper, Contest>
+        implements GroupContestEntityService {
 
     @Autowired
     private GroupContestMapper groupContestMapper;

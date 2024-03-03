@@ -39,8 +39,9 @@ public class ContestEntityServiceImpl extends ServiceImpl<ContestMapper, Contest
     }
 
     @Override
-    public IPage<ContestVO> getContestList(Integer limit, Integer currentPage, Integer type, Integer status, String keyword) {
-        //新建分页
+    public IPage<ContestVO> getContestList(Integer limit, Integer currentPage, Integer type, Integer status,
+            String keyword) {
+        // 新建分页
         IPage<ContestVO> page = new Page<>(currentPage, limit);
 
         List<ContestVO> contestList = contestMapper.getContestList(page, type, status, keyword);
@@ -55,7 +56,7 @@ public class ContestEntityServiceImpl extends ServiceImpl<ContestMapper, Contest
         ContestVO contestVo = contestMapper.getContestInfoById(cid);
         if (contestVo != null) {
             List<ContestRegisterCountVO> contestRegisterCountVOList = contestMapper.getContestRegisterCount(cidList);
-            if(!CollectionUtils.isEmpty(contestRegisterCountVOList)) {
+            if (!CollectionUtils.isEmpty(contestRegisterCountVOList)) {
                 ContestRegisterCountVO contestRegisterCountVo = contestRegisterCountVOList.get(0);
                 contestVo.setCount(contestRegisterCountVo.getCount());
             }
@@ -63,8 +64,7 @@ public class ContestEntityServiceImpl extends ServiceImpl<ContestMapper, Contest
         return contestVo;
     }
 
-
-    private void setRegisterCount(List<ContestVO> contestList){
+    private void setRegisterCount(List<ContestVO> contestList) {
         List<Long> cidList = contestList.stream().map(ContestVO::getId).collect(Collectors.toList());
         if (!CollectionUtils.isEmpty(cidList)) {
             List<ContestRegisterCountVO> contestRegisterCountVOList = contestMapper.getContestRegisterCount(cidList);
@@ -78,6 +78,5 @@ public class ContestEntityServiceImpl extends ServiceImpl<ContestMapper, Contest
             }
         }
     }
-
 
 }

@@ -18,7 +18,8 @@ import java.util.List;
  * @Description:
  */
 @Service
-public class GroupProblemEntityServiceImpl extends ServiceImpl<GroupProblemMapper, Problem> implements GroupProblemEntityService {
+public class GroupProblemEntityServiceImpl extends ServiceImpl<GroupProblemMapper, Problem>
+        implements GroupProblemEntityService {
 
     @Autowired
     private GroupProblemMapper groupProblemMapper;

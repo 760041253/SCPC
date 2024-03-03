@@ -12,5 +12,6 @@ import top.hcode.hoj.dao.problem.CodeTemplateEntityService;
  * @Description:
  */
 @Service
-public class CodeTemplateEntityServiceImpl extends ServiceImpl<CodeTemplateMapper, CodeTemplate> implements CodeTemplateEntityService {
+public class CodeTemplateEntityServiceImpl extends ServiceImpl<CodeTemplateMapper, CodeTemplate>
+        implements CodeTemplateEntityService {
 }

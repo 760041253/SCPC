@@ -31,7 +31,8 @@ public class HydroConfigYamlBO {
 
     /**
      * # 此部分设置当题目类型为 default 时生效
-     * # 比较器类型，支持的值有 default（直接比对，忽略行末空格和文件末换行）, ccr, cena, hustoj, lemon, qduoj, syzoj, testlib(比较常用)
+     * # 比较器类型，支持的值有 default（直接比对，忽略行末空格和文件末换行）, ccr, cena, hustoj, lemon, qduoj,
+     * syzoj, testlib(比较常用)
      */
     private String checker_type;
 
@@ -58,12 +59,12 @@ public class HydroConfigYamlBO {
     private List<HashMap<String, String>> cases;
 
     /**
-     *  # 单个测试点分数
+     * # 单个测试点分数
      */
     private Integer score;
 
     private List<String> langs;
 
-    private List<HashMap<String,Object>> subtasks;
+    private List<HashMap<String, Object>> subtasks;
 
 }

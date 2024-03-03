@@ -12,5 +12,6 @@ import org.springframework.stereotype.Service;
  * @Description:
  */
 @Service
-public class GroupDiscussionEntityServiceImpl extends ServiceImpl<GroupDiscussionMapper, Discussion> implements GroupDiscussionEntityService {
+public class GroupDiscussionEntityServiceImpl extends ServiceImpl<GroupDiscussionMapper, Discussion>
+        implements GroupDiscussionEntityService {
 }

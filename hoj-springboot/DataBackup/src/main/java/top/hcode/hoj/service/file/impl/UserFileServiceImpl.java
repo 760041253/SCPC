@@ -19,7 +19,6 @@ public class UserFileServiceImpl implements UserFileService {
     @Resource
     private UserFileManager userFileManager;
 
-
     @Override
     public void generateUserExcel(String key, HttpServletResponse response) throws IOException {
         userFileManager.generateUserExcel(key, response);

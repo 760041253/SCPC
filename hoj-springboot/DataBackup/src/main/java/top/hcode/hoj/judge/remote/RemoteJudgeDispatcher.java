@@ -1,6 +1,5 @@
 package top.hcode.hoj.judge.remote;
 
-
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,6 @@ import top.hcode.hoj.dao.judge.JudgeEntityService;
 import top.hcode.hoj.pojo.entity.judge.Judge;
 import top.hcode.hoj.utils.Constants;
 import top.hcode.hoj.utils.RedisUtils;
-
 
 @Component
 @Slf4j(topic = "hoj")
@@ -31,7 +29,8 @@ public class RemoteJudgeDispatcher {
     @Value("${hoj.judge.token}")
     private String judgeToken;
 
-    public void sendTask(Long judgeId, Long pid, String remoteJudgeProblem, Boolean isContest, Boolean isHasSubmitIdRemoteReJudge) {
+    public void sendTask(Long judgeId, Long pid, String remoteJudgeProblem, Boolean isContest,
+            Boolean isHasSubmitIdRemoteReJudge) {
         JSONObject task = new JSONObject();
         task.set("judgeId", judgeId);
         task.set("remoteJudgeProblem", remoteJudgeProblem);
@@ -41,16 +40,17 @@ public class RemoteJudgeDispatcher {
         try {
             boolean isOk;
             if (isContest) {
-                isOk = redisUtils.llPush(Constants.Queue.CONTEST_REMOTE_JUDGE_WAITING_HANDLE.getName(), JSONUtil.toJsonStr(task));
+                isOk = redisUtils.llPush(Constants.Queue.CONTEST_REMOTE_JUDGE_WAITING_HANDLE.getName(),
+                        JSONUtil.toJsonStr(task));
             } else {
-                isOk = redisUtils.llPush(Constants.Queue.GENERAL_REMOTE_JUDGE_WAITING_HANDLE.getName(), JSONUtil.toJsonStr(task));
+                isOk = redisUtils.llPush(Constants.Queue.GENERAL_REMOTE_JUDGE_WAITING_HANDLE.getName(),
+                        JSONUtil.toJsonStr(task));
             }
             if (!isOk) {
                 judgeEntityService.updateById(new Judge()
                         .setSubmitId(judgeId)
                         .setStatus(Constants.Judge.STATUS_SUBMITTED_FAILED.getStatus())
-                        .setErrorMessage("Call Redis to push task error. Please try to submit again!")
-                );
+                        .setErrorMessage("Call Redis to push task error. Please try to submit again!"));
             }
             remoteJudgeReceiver.processWaitingTask();
         } catch (Exception e) {

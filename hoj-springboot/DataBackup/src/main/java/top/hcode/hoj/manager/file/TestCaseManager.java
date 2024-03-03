@@ -50,7 +50,8 @@ public class TestCaseManager {
     @Autowired
     private GroupValidator groupValidator;
 
-    public Map<Object, Object> uploadTestcaseZip(MultipartFile file, Long gid, String mode) throws StatusFailException, StatusSystemErrorException, StatusForbiddenException {
+    public Map<Object, Object> uploadTestcaseZip(MultipartFile file, Long gid, String mode)
+            throws StatusFailException, StatusSystemErrorException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -62,7 +63,7 @@ public class TestCaseManager {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
-        //获取文件后缀
+        // 获取文件后缀
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
         if (!"zip".toUpperCase().contains(suffix.toUpperCase())) {
             throw new StatusFailException("请上传zip格式的测试数据压缩包！");
@@ -163,8 +164,8 @@ public class TestCaseManager {
                 .map();
     }
 
-
-    public void downloadTestcase(Long pid, HttpServletResponse response) throws StatusFailException, StatusForbiddenException {
+    public void downloadTestcase(Long pid, HttpServletResponse response)
+            throws StatusFailException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -197,8 +198,9 @@ public class TestCaseManager {
             }
 
             boolean hasTestCase = true;
-            if (problemCaseList.get(0).getInput().endsWith(".in") && (problemCaseList.get(0).getOutput().endsWith(".out") ||
-                    problemCaseList.get(0).getOutput().endsWith(".ans"))) {
+            if (problemCaseList.get(0).getInput().endsWith(".in")
+                    && (problemCaseList.get(0).getOutput().endsWith(".out") ||
+                            problemCaseList.get(0).getOutput().endsWith(".ans"))) {
                 hasTestCase = false;
             }
             if (!hasTestCase) {
@@ -222,9 +224,10 @@ public class TestCaseManager {
         // 将对应文件夹的文件压缩成zip
         ZipUtil.zip(workDir, Constants.File.FILE_DOWNLOAD_TMP_FOLDER.getPath() + File.separator + fileName);
         // 将zip变成io流返回给前端
-        FileReader fileReader = new FileReader(Constants.File.FILE_DOWNLOAD_TMP_FOLDER.getPath() + File.separator + fileName);
-        BufferedInputStream bins = new BufferedInputStream(fileReader.getInputStream());//放到缓冲流里面
-        OutputStream outs = null;//获取文件输出IO流
+        FileReader fileReader = new FileReader(
+                Constants.File.FILE_DOWNLOAD_TMP_FOLDER.getPath() + File.separator + fileName);
+        BufferedInputStream bins = new BufferedInputStream(fileReader.getInputStream());// 放到缓冲流里面
+        OutputStream outs = null;// 获取文件输出IO流
         BufferedOutputStream bouts = null;
         try {
             outs = response.getOutputStream();
@@ -233,7 +236,7 @@ public class TestCaseManager {
             response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
             int bytesRead = 0;
             byte[] buffer = new byte[1024 * 10];
-            //开始向网络传输文件流
+            // 开始向网络传输文件流
             while ((bytesRead = bins.read(buffer, 0, 1024 * 10)) != -1) {
                 bouts.write(buffer, 0, bytesRead);
             }

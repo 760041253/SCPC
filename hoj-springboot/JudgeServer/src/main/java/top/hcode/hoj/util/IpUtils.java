@@ -50,14 +50,14 @@ public class IpUtils {
         }
     }
 
-    public static String getServiceIp(){
+    public static String getServiceIp() {
         InetAddress address = null;
         try {
             address = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
             log.error("本地ip获取异常---------->{}", e.getMessage());
         }
-        return address.getHostAddress(); //返回IP地址
+        return address.getHostAddress(); // 返回IP地址
     }
 
     public static String getLocalIpv4Address() {

@@ -51,8 +51,10 @@ public class AdminContestManager {
 
     public IPage<Contest> getContestList(Integer limit, Integer currentPage, String keyword) {
 
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
         IPage<Contest> iPage = new Page<>(currentPage, limit);
         QueryWrapper<Contest> queryWrapper = new QueryWrapper<>();
         // 过滤密码
@@ -113,7 +115,7 @@ public class AdminContestManager {
     public void deleteContest(Long cid) throws StatusFailException {
         boolean isOk = contestEntityService.removeById(cid);
         /*
-        contest的id为其他表的外键的表中的对应数据都会被一起删除！
+         * contest的id为其他表的外键的表中的对应数据都会被一起删除！
          */
         if (!isOk) { // 删除成功
             throw new StatusFailException("删除失败");
@@ -191,7 +193,6 @@ public class AdminContestManager {
             contest.setAwardConfig(awardConfigJson.toString());
         }
 
-
         Contest oldContest = contestEntityService.getById(contest.getId());
         boolean isOk = contestEntityService.saveOrUpdate(contest);
         if (isOk) {
@@ -207,7 +208,8 @@ public class AdminContestManager {
         }
     }
 
-    public void changeContestVisible(Long cid, String uid, Boolean visible) throws StatusFailException, StatusForbiddenException {
+    public void changeContestVisible(Long cid, String uid, Boolean visible)
+            throws StatusFailException, StatusForbiddenException {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         // 是否为超级管理员

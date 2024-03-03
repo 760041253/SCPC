@@ -12,7 +12,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author Himit_ZH
@@ -21,7 +21,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="Problem对象", description="")
+@ApiModel(value = "Problem对象", description = "")
 public class Problem implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -90,19 +90,19 @@ public class Problem implements Serializable {
     private Boolean codeShare;
 
     @ApiModelProperty(value = "特判程序或交互程序的代码")
-    @TableField(value="spj_code",updateStrategy = FieldStrategy.IGNORED)
+    @TableField(value = "spj_code", updateStrategy = FieldStrategy.IGNORED)
     private String spjCode;
 
     @ApiModelProperty(value = "特判程序或交互程序的语言")
-    @TableField(value="spj_language",updateStrategy = FieldStrategy.IGNORED)
+    @TableField(value = "spj_language", updateStrategy = FieldStrategy.IGNORED)
     private String spjLanguage;
 
     @ApiModelProperty(value = "特判程序或交互程序的额外文件 json key:name value:content")
-    @TableField(value="user_extra_file",updateStrategy = FieldStrategy.IGNORED)
+    @TableField(value = "user_extra_file", updateStrategy = FieldStrategy.IGNORED)
     private String userExtraFile;
 
     @ApiModelProperty(value = "特判程序或交互程序的额外文件 json key:name value:content")
-    @TableField(value="judge_extra_file",updateStrategy = FieldStrategy.IGNORED)
+    @TableField(value = "judge_extra_file", updateStrategy = FieldStrategy.IGNORED)
     private String judgeExtraFile;
 
     @ApiModelProperty(value = "是否默认去除用户代码的每行末尾空白符")
@@ -130,15 +130,15 @@ public class Problem implements Serializable {
     private Integer applyPublicProgress;
 
     @ApiModelProperty(value = "是否是file io自定义输入输出文件模式")
-    @TableField(value="is_file_io")
+    @TableField(value = "is_file_io")
     private Boolean isFileIO;
 
     @ApiModelProperty(value = "题目指定的file io输入文件的名称")
-    @TableField(value="io_read_file_name")
+    @TableField(value = "io_read_file_name")
     private String ioReadFileName;
 
     @ApiModelProperty(value = "题目指定的file io输出文件的名称")
-    @TableField(value="io_write_file_name")
+    @TableField(value = "io_write_file_name")
     private String ioWriteFileName;
 
     @TableField(fill = FieldFill.INSERT)
@@ -146,6 +146,5 @@ public class Problem implements Serializable {
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
-
 
 }

@@ -12,7 +12,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author Himit_ZH
@@ -21,7 +21,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="UserRecord对象", description="")
+@ApiModel(value = "UserRecord对象", description = "")
 public class UserRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;

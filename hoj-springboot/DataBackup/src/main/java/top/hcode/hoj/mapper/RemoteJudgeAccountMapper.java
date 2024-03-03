@@ -14,10 +14,8 @@ import java.util.List;
 @Repository
 public interface RemoteJudgeAccountMapper extends BaseMapper<RemoteJudgeAccount> {
 
-
     @Select("select * from `remote_judge_account` where `oj` = #{oj} and `status` = 1 for update")
     public List<RemoteJudgeAccount> getAvailableAccount(@Param("oj") String oj);
-
 
     @Update("update `remote_judge_account` set `status` = 0 where `id` = #{id} and `status` = 1")
     public int updateAccountStatusById(@Param("id") Integer id);

@@ -20,7 +20,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @ApiModel(value = "Group对象", description = "")
 @TableName("`group`")
-public class Group implements Serializable  {
+public class Group implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)

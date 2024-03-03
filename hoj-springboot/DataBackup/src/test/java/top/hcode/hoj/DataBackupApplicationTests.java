@@ -58,7 +58,6 @@ public class DataBackupApplicationTests {
     @Autowired
     private UserInfoEntityServiceImpl userInfoService;
 
-
     @Autowired
     private AnnouncementEntityServiceImpl announcementService;
 
@@ -96,7 +95,6 @@ public class DataBackupApplicationTests {
         String serviceIp = IpUtils.getServiceIp();
         System.out.println(serviceIp);
     }
-
 
     @Autowired
     private RestTemplate restTemplate;
@@ -143,7 +141,8 @@ public class DataBackupApplicationTests {
         Connection connection = JsoupUtils.getConnectionFromUrl(url, null, null);
         Document document = JsoupUtils.getDocument(connection, null);
         String html = document.html();
-        info.setDescription(ReUtil.get(">Problem Description</div> <div class=.*?>([\\s\\S]*?)</div>", html, 1).replaceAll("src=\"../../", "src=\"" + HOST + "/"));
+        info.setDescription(ReUtil.get(">Problem Description</div> <div class=.*?>([\\s\\S]*?)</div>", html, 1)
+                .replaceAll("src=\"../../", "src=\"" + HOST + "/"));
         info.setInput(ReUtil.get(">Input</div> <div class=.*?>([\\s\\S]*?)</div>", html, 1));
         info.setOutput(ReUtil.get(">Output</div> <div class=.*?>([\\s\\S]*?)</div>", html, 1));
         info.setIsRemote(true);
@@ -162,7 +161,6 @@ public class DataBackupApplicationTests {
         String contestId = ReUtil.get("([0-9]+)[A-Z]{1}[0-9]{0,1}", problemId, 1);
         String problemNum = ReUtil.get("[0-9]+([A-Z]{1}[0-9]{0,1})", problemId, 1);
 
-
         String url = HOST + String.format(PROBLEM_URL, contestId, problemNum);
         Connection connection = JsoupUtils.getConnectionFromUrl(url, null, null);
         Document document = JsoupUtils.getDocument(connection, null);
@@ -176,23 +174,31 @@ public class DataBackupApplicationTests {
 
         info.setMemoryLimit(Integer.parseInt(ReUtil.get("</div>(\\d+) (megabytes|MB)\\s*</div>", html, 1)));
 
-        String tmpDesc = ReUtil.get("standard output\\s*</div></div><div>([\\s\\S]*?)</div><div class=\"input-specification",
+        String tmpDesc = ReUtil.get(
+                "standard output\\s*</div></div><div>([\\s\\S]*?)</div><div class=\"input-specification",
                 html, 1);
         if (StringUtils.isEmpty(tmpDesc)) {
-            tmpDesc = "<div>" + ReUtil.get("(<div class=\"input-file\">[\\s\\S]*?)</div><div class=\"input-specification", html, 1);
+            tmpDesc = "<div>" + ReUtil
+                    .get("(<div class=\"input-file\">[\\s\\S]*?)</div><div class=\"input-specification", html, 1);
         }
 
         info.setDescription(tmpDesc.replaceAll("src=\"../../", "src=\"" + HOST + "/"));
 
-        info.setInput(ReUtil.get("<div class=\"section-title\">\\s*Input\\s*</div>([\\s\\S]*?)</div><div class=\"output-specification\">", html, 1));
+        info.setInput(ReUtil.get(
+                "<div class=\"section-title\">\\s*Input\\s*</div>([\\s\\S]*?)</div><div class=\"output-specification\">",
+                html, 1));
 
-        info.setOutput(ReUtil.get("<div class=\"section-title\">\\s*Output\\s*</div>([\\s\\S]*?)</div><div class=\"sample-tests\">", html, 1));
+        info.setOutput(ReUtil.get(
+                "<div class=\"section-title\">\\s*Output\\s*</div>([\\s\\S]*?)</div><div class=\"sample-tests\">", html,
+                1));
 
+        List<String> inputExampleList = ReUtil.findAll(
+                Pattern.compile("<div class=\"input\"><div class=\"title\">Input</div><pre>([\\s\\S]*?)</pre></div>"),
+                html, 1);
 
-        List<String> inputExampleList = ReUtil.findAll(Pattern.compile("<div class=\"input\"><div class=\"title\">Input</div><pre>([\\s\\S]*?)</pre></div>"), html, 1);
-
-        List<String> outputExampleList = ReUtil.findAll(Pattern.compile("<div class=\"output\"><div class=\"title\">Output</div><pre>([\\s\\S]*?)</pre></div>"), html, 1);
-
+        List<String> outputExampleList = ReUtil.findAll(
+                Pattern.compile("<div class=\"output\"><div class=\"title\">Output</div><pre>([\\s\\S]*?)</pre></div>"),
+                html, 1);
 
         StringBuilder sb = new StringBuilder();
 
@@ -209,14 +215,20 @@ public class DataBackupApplicationTests {
 
         info.setHint(ReUtil.get("<div class=\"section-title\">\\s*Note\\s*</div>([\\s\\S]*?)</div></div>", html, 1));
         info.setIsRemote(true);
-        info.setSource(String.format("<p>Problem：<a style='color:#1A5CC8' href='https://codeforces.com/problemset/problem/%s/%s'>%s</a></p><p>" +
-                        "Contest：" + ReUtil.get("(<a[^<>]+/contest/\\d+\">.+?</a>)", html, 1).replace("/contest", HOST + "/contest")
-                        .replace("color: black", "color: #009688;") + "</p>",
+        info.setSource(String.format(
+                "<p>Problem：<a style='color:#1A5CC8' href='https://codeforces.com/problemset/problem/%s/%s'>%s</a></p><p>"
+                        +
+                        "Contest："
+                        + ReUtil.get("(<a[^<>]+/contest/\\d+\">.+?</a>)", html, 1)
+                                .replace("/contest", HOST + "/contest")
+                                .replace("color: black", "color: #009688;")
+                        + "</p>",
                 contestId, problemNum, JUDGE_NAME + "-" + problemId));
 
-        List<String> all = ReUtil.findAll(Pattern.compile("<span class=\"tag-box\" style=\"font-size:1\\.2rem;\" title=\"[\\s\\S]*?\">([\\s\\S]*?)</span>"), html, 1);
+        List<String> all = ReUtil.findAll(Pattern.compile(
+                "<span class=\"tag-box\" style=\"font-size:1\\.2rem;\" title=\"[\\s\\S]*?\">([\\s\\S]*?)</span>"), html,
+                1);
     }
-
 
     @Autowired
     private LanguageEntityServiceImpl languageService;
@@ -258,12 +270,12 @@ public class DataBackupApplicationTests {
         List<Language> languageList1 = new LinkedList<>();
         for (String key : languageList.keySet()) {
             String tmp = languageList.get(key);
-            languageList1.add(new Language().setName(key).setDescription(key).setOj("CF").setIsSpj(false).setContentType(tmp));
+            languageList1.add(
+                    new Language().setName(key).setDescription(key).setOj("CF").setIsSpj(false).setContentType(tmp));
 
         }
         boolean b = languageService.saveOrUpdateBatch(languageList1);
         System.out.println(b);
     }
-
 
 }

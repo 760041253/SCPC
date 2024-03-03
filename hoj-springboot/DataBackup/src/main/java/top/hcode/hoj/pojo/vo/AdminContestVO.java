@@ -12,7 +12,7 @@ import java.util.List;
  * @Date: 2021/12/7 19:45
  * @Description:
  */
-@ApiModel(value="管理比赛的回传实体", description="")
+@ApiModel(value = "管理比赛的回传实体", description = "")
 @Data
 public class AdminContestVO {
 

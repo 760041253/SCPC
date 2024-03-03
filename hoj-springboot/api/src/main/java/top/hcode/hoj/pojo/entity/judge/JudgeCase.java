@@ -15,7 +15,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author Himit_ZH
@@ -24,7 +24,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="JudgeCase对象", description="")
+@ApiModel(value = "JudgeCase对象", description = "")
 public class JudgeCase implements Serializable {
 
     private static final long serialVersionUID = 1L;

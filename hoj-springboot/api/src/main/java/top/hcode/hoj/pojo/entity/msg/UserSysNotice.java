@@ -20,7 +20,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="UserSysNotice", description="")
+@ApiModel(value = "UserSysNotice", description = "")
 public class UserSysNotice {
     private static final long serialVersionUID = 1L;
 

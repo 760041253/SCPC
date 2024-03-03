@@ -31,6 +31,7 @@ public interface UserRecordEntityService extends IService<UserRecord> {
 
     IPage<ACMRankVO> getACMRankList(Page<ACMRankVO> page, List<String> uidList);
 
-    IPage<OIRankVO> getGroupRankList(Page<OIRankVO> page, Long gid, List<String> uidList, String rankType, Boolean useCache);
+    IPage<OIRankVO> getGroupRankList(Page<OIRankVO> page, Long gid, List<String> uidList, String rankType,
+            Boolean useCache);
 
 }

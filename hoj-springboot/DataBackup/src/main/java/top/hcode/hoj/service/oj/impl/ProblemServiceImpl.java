@@ -33,8 +33,10 @@ public class ProblemServiceImpl implements ProblemService {
     private ProblemManager problemManager;
 
     @Override
-    public CommonResult<Page<ProblemVO>> getProblemList(Integer limit, Integer currentPage, String keyword, List<Long> tagId, Integer difficulty, String oj) {
-        return CommonResult.successResponse(problemManager.getProblemList(limit, currentPage, keyword, tagId, difficulty, oj));
+    public CommonResult<Page<ProblemVO>> getProblemList(Integer limit, Integer currentPage, String keyword,
+            List<Long> tagId, Integer difficulty, String oj) {
+        return CommonResult
+                .successResponse(problemManager.getProblemList(limit, currentPage, keyword, tagId, difficulty, oj));
     }
 
     @Override

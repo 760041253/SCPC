@@ -13,7 +13,8 @@ import java.util.HashMap;
  */
 public interface GroupTrainingProblemService {
 
-    public CommonResult<HashMap<String, Object>> getTrainingProblemList(Integer limit, Integer currentPage, String keyword, Boolean queryExisted, Long tid);
+    public CommonResult<HashMap<String, Object>> getTrainingProblemList(Integer limit, Integer currentPage,
+            String keyword, Boolean queryExisted, Long tid);
 
     public CommonResult<Void> updateTrainingProblem(TrainingProblem trainingProblem);
 

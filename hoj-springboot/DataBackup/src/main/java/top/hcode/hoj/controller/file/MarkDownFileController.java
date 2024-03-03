@@ -22,7 +22,6 @@ import java.util.Map;
 @RequestMapping("/api/file")
 public class MarkDownFileController {
 
-
     @Resource
     private MarkDownFileService markDownFileService;
 
@@ -30,10 +29,9 @@ public class MarkDownFileController {
     @RequiresAuthentication
     @ResponseBody
     public CommonResult<Map<Object, Object>> uploadMDImg(@RequestParam("image") MultipartFile image,
-                                                         @RequestParam(value = "gid", required = false) Long gid) {
+            @RequestParam(value = "gid", required = false) Long gid) {
         return markDownFileService.uploadMDImg(image, gid);
     }
-
 
     @RequestMapping(value = "/delete-md-img", method = RequestMethod.GET)
     @RequiresAuthentication
@@ -42,12 +40,11 @@ public class MarkDownFileController {
         return markDownFileService.deleteMDImg(fileId);
     }
 
-
     @RequestMapping(value = "/upload-md-file", method = RequestMethod.POST)
     @RequiresAuthentication
     @ResponseBody
     public CommonResult<Map<Object, Object>> uploadMd(@RequestParam("file") MultipartFile file,
-                                                      @RequestParam(value = "gid", required = false) Long gid) {
+            @RequestParam(value = "gid", required = false) Long gid) {
         return markDownFileService.uploadMd(file, gid);
     }
 

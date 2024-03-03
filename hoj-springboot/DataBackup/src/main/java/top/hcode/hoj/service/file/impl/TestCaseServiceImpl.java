@@ -39,7 +39,8 @@ public class TestCaseServiceImpl implements TestCaseService {
     }
 
     @Override
-    public void downloadTestcase(Long pid, HttpServletResponse response) throws StatusFailException, StatusForbiddenException {
+    public void downloadTestcase(Long pid, HttpServletResponse response)
+            throws StatusFailException, StatusForbiddenException {
         testCaseManager.downloadTestcase(pid, response);
     }
 }

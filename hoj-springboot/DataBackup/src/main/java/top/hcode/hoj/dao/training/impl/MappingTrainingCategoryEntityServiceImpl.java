@@ -12,5 +12,7 @@ import top.hcode.hoj.dao.training.MappingTrainingCategoryEntityService;
  * @Description:
  */
 @Service
-public class MappingTrainingCategoryEntityServiceImpl extends ServiceImpl<MappingTrainingCategoryMapper, MappingTrainingCategory> implements MappingTrainingCategoryEntityService {
+public class MappingTrainingCategoryEntityServiceImpl
+        extends ServiceImpl<MappingTrainingCategoryMapper, MappingTrainingCategory>
+        implements MappingTrainingCategoryEntityService {
 }

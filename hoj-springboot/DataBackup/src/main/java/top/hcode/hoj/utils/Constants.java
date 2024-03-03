@@ -120,7 +120,6 @@ public class Constants {
         }
     }
 
-
     /**
      * @Description 比赛相关的常量
      * @Since 2021/1/7
@@ -206,13 +205,11 @@ public class Constants {
         }
     }
 
-
     /**
      * @Description 文件操作的一些常量
      * @Since 2021/1/10
      */
     public enum File {
-
 
         USER_AVATAR_FOLDER("/hoj/file/avatar"),
 
@@ -248,7 +245,6 @@ public class Constants {
             return path;
         }
     }
-
 
     /**
      * @Description 邮件任务的一些常量
@@ -318,6 +314,7 @@ public class Constants {
     public enum ProblemType {
         ACM(0),
         OI(1);
+
         private final Integer type;
 
         ProblemType(Integer type) {
@@ -404,7 +401,6 @@ public class Constants {
             return mode;
         }
 
-
         public static JudgeCaseMode getJudgeCaseMode(String mode) {
             for (JudgeCaseMode judgeCaseMode : JudgeCaseMode.values()) {
                 if (judgeCaseMode.getMode().equals(mode)) {
@@ -453,11 +449,12 @@ public class Constants {
 
     @Getter
     @AllArgsConstructor
-    public enum Team{
+    public enum Team {
         ACCEPT(200),
         PENDING(500),
         REJECT(400),
         APPLY_FOR_UPDATE(300);
+
         Integer status;
     }
 }

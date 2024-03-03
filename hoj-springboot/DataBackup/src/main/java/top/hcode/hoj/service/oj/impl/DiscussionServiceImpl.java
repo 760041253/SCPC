@@ -30,8 +30,10 @@ public class DiscussionServiceImpl implements DiscussionService {
     private DiscussionManager discussionManager;
 
     @Override
-    public CommonResult<IPage<Discussion>> getDiscussionList(Integer limit, Integer currentPage, Integer categoryId, String pid, Boolean onlyMine, String keyword, Boolean admin) {
-        return CommonResult.successResponse(discussionManager.getDiscussionList(limit, currentPage, categoryId, pid, onlyMine, keyword, admin));
+    public CommonResult<IPage<Discussion>> getDiscussionList(Integer limit, Integer currentPage, Integer categoryId,
+            String pid, Boolean onlyMine, String keyword, Boolean admin) {
+        return CommonResult.successResponse(
+                discussionManager.getDiscussionList(limit, currentPage, categoryId, pid, onlyMine, keyword, admin));
     }
 
     @Override

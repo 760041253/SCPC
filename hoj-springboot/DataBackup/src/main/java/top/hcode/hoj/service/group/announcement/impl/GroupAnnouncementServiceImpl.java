@@ -38,7 +38,8 @@ public class GroupAnnouncementServiceImpl implements GroupAnnouncementService {
     @Override
     public CommonResult<IPage<AnnouncementVO>> getAdminAnnouncementList(Integer limit, Integer currentPage, Long gid) {
         try {
-            return CommonResult.successResponse(groupAnnouncementManager.getAdminAnnouncementList(limit, currentPage, gid));
+            return CommonResult
+                    .successResponse(groupAnnouncementManager.getAdminAnnouncementList(limit, currentPage, gid));
         } catch (StatusForbiddenException e) {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         } catch (StatusNotFoundException e) {

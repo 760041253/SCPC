@@ -12,7 +12,6 @@ import java.util.List;
 @Data
 public class SubTaskJudgeCaseVO {
 
-
     /**
      * 该subtask的分组编号
      */

@@ -20,7 +20,8 @@ public class JsoupUtils {
      * @return 返回一个object
      * @throws IOException
      */
-    public static Connection getConnectionFromUrl(String url, Map<String, String> params, Map<String, String> headers) throws IOException {
+    public static Connection getConnectionFromUrl(String url, Map<String, String> params, Map<String, String> headers)
+            throws IOException {
         // 给url添加参数
         if (params != null) {
             StringBuilder sb = new StringBuilder();
@@ -35,7 +36,8 @@ public class JsoupUtils {
         }
         Connection connection = Jsoup.connect(url);
         // 设置用户代理
-        connection.userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
+        connection.userAgent(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36");
         // 设置超时时间30秒
         connection.timeout(30000);
         // 设置请求头
@@ -59,20 +61,23 @@ public class JsoupUtils {
         return new JSONObject(body);
     }
 
-    public static Connection.Response postResponse(Connection connection, Map<String, String> postData) throws IOException {
+    public static Connection.Response postResponse(Connection connection, Map<String, String> postData)
+            throws IOException {
         connection.data(postData);
         return connection.method(Connection.Method.POST).execute();
     }
 
-    public static Connection.Response getResponse(Connection connection, Map<String, String> getData) throws IOException {
-        //添加参数
+    public static Connection.Response getResponse(Connection connection, Map<String, String> getData)
+            throws IOException {
+        // 添加参数
         if (getData != null) {
             connection.data(getData);
         }
         return connection.method(Connection.Method.GET).execute();
     }
+
     public static Document getDocument(Connection connection, Map<String, String> getData) throws IOException {
-        //添加参数
+        // 添加参数
         if (getData != null) {
             connection.data(getData);
         }

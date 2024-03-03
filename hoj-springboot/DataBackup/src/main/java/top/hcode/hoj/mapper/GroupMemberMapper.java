@@ -18,6 +18,9 @@ import java.util.List;
 @Mapper
 @Repository
 public interface GroupMemberMapper extends BaseMapper<GroupMember> {
-    List<GroupMemberVO> getMemberList(IPage iPage, @Param("keyword") String keyword, @Param("auth") Integer auth, @Param("gid") Long gid);
-    List<GroupMemberVO> getApplyList(IPage iPage, @Param("keyword") String keyword, @Param("auth") Integer auth, @Param("gid") Long gid);
+    List<GroupMemberVO> getMemberList(IPage iPage, @Param("keyword") String keyword, @Param("auth") Integer auth,
+            @Param("gid") Long gid);
+
+    List<GroupMemberVO> getApplyList(IPage iPage, @Param("keyword") String keyword, @Param("auth") Integer auth,
+            @Param("gid") Long gid);
 }

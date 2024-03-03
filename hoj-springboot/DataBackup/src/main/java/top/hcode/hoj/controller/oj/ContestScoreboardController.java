@@ -32,7 +32,8 @@ public class ContestScoreboardController {
      * @Since 2021/12/8
      */
     @GetMapping("/get-contest-outsize-info")
-    public CommonResult<ContestOutsideInfoVO> getContestOutsideInfo(@RequestParam(value = "cid", required = true) Long cid) {
+    public CommonResult<ContestOutsideInfoVO> getContestOutsideInfo(
+            @RequestParam(value = "cid", required = true) Long cid) {
         return contestScoreboardService.getContestOutsideInfo(cid);
     }
 

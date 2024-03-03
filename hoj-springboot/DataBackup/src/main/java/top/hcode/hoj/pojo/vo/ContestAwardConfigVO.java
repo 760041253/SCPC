@@ -8,7 +8,7 @@ import lombok.Data;
  * @Author Himit_ZH
  * @Date 2022/10/2
  */
-@ApiModel(value="比赛奖项配置", description="")
+@ApiModel(value = "比赛奖项配置", description = "")
 @Data
 public class ContestAwardConfigVO {
 

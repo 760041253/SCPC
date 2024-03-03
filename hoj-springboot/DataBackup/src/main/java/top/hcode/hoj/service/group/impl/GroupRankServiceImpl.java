@@ -23,12 +23,13 @@ public class GroupRankServiceImpl implements GroupRankService {
 
     @Override
     public CommonResult<IPage<OIRankVO>> getGroupRankList(Integer limit,
-                                                          Integer currentPage,
-                                                          String searchUser,
-                                                          Integer type,
-                                                          Long gid) {
+            Integer currentPage,
+            String searchUser,
+            Integer type,
+            Long gid) {
         try {
-            return CommonResult.successResponse(groupRankManager.getGroupRankList(limit, currentPage, searchUser, type, gid));
+            return CommonResult
+                    .successResponse(groupRankManager.getGroupRankList(limit, currentPage, searchUser, type, gid));
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         }

@@ -105,7 +105,8 @@ public class JudgeManager {
      * @Description 核心方法 判题通过openfeign调用判题系统服务
      * @Since 2020/10/30
      */
-    public Judge submitProblemJudge(SubmitJudgeDTO judgeDto) throws StatusForbiddenException, StatusFailException, StatusNotFoundException, StatusAccessDeniedException, AccessException {
+    public Judge submitProblemJudge(SubmitJudgeDTO judgeDto) throws StatusForbiddenException, StatusFailException,
+            StatusNotFoundException, StatusAccessDeniedException, AccessException {
 
         judgeValidator.validateSubmissionInfo(judgeDto);
 
@@ -125,7 +126,8 @@ public class JudgeManager {
             redisUtils.expire(lockKey, switchConfig.getDefaultSubmitInterval());
         }
 
-        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes()))
+                .getRequest();
         // 将提交先写入数据库，准备调用判题服务器
         Judge judge = new Judge();
         judge.setShare(false) // 默认设置代码为单独自己可见
@@ -211,7 +213,6 @@ public class JudgeManager {
         return uniqueKey;
     }
 
-
     public TestJudgeVO getTestJudgeResult(String testJudgeKey) throws StatusFailException {
         TestJudgeRes testJudgeRes = (TestJudgeRes) redisUtils.get(testJudgeKey);
         if (testJudgeRes == null) {
@@ -232,7 +233,6 @@ public class JudgeManager {
         redisUtils.del(testJudgeKey);
         return testJudgeVo;
     }
-
 
     /**
      * @MethodName resubmit
@@ -308,7 +308,6 @@ public class JudgeManager {
         return judge;
     }
 
-
     /**
      * @MethodName getSubmission
      * @Description 获取单个提交记录的详情
@@ -347,7 +346,8 @@ public class JudgeManager {
                 // 如果是比赛,那么还需要判断是否为封榜,比赛管理员和超级管理员可以有权限查看(ACM题目除外)
                 if (contest.getType().intValue() == Constants.Contest.TYPE_OI.getCode()
                         && contestValidator.isSealRank(userRolesVo.getUid(), contest, true, false)) {
-                    submissionInfoVo.setSubmission(new Judge().setStatus(Constants.Judge.STATUS_SUBMITTED_UNKNOWN_RESULT.getStatus()));
+                    submissionInfoVo.setSubmission(
+                            new Judge().setStatus(Constants.Judge.STATUS_SUBMITTED_UNKNOWN_RESULT.getStatus()));
                     return submissionInfoVo;
                 }
                 // 不是本人的话不能查看代码、时间，空间，长度
@@ -358,7 +358,8 @@ public class JudgeManager {
                         judge.setTime(null);
                         judge.setMemory(null);
                         judge.setLength(null);
-                        judge.setErrorMessage("The contest is in progress. You are not allowed to view other people's error information.");
+                        judge.setErrorMessage(
+                                "The contest is in progress. You are not allowed to view other people's error information.");
                     }
                 }
             }
@@ -380,7 +381,7 @@ public class JudgeManager {
                     && !isRoot
                     && !isProblemAdmin
                     && !(judge.getGid() != null
-                    && groupValidator.isGroupRoot(userRolesVo.getUid(), judge.getGid()))) {
+                            && groupValidator.isGroupRoot(userRolesVo.getUid(), judge.getGid()))) {
                 if (userRolesVo != null) { // 当前是登陆状态
                     // 需要判断是否为当前登陆用户自己的提交代码
                     if (!judge.getUid().equals(userRolesVo.getUid())) {
@@ -459,16 +460,18 @@ public class JudgeManager {
      * @Since 2020/10/29
      */
     public IPage<JudgeVO> getJudgeList(Integer limit,
-                                       Integer currentPage,
-                                       Boolean onlyMine,
-                                       String searchPid,
-                                       Integer searchStatus,
-                                       String searchUsername,
-                                       Boolean completeProblemID,
-                                       Long gid) throws StatusAccessDeniedException {
+            Integer currentPage,
+            Boolean onlyMine,
+            String searchPid,
+            Integer searchStatus,
+            String searchUsername,
+            Boolean completeProblemID,
+            Long gid) throws StatusAccessDeniedException {
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 30;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 30;
 
         String uid = null;
         // 只查看当前用户的提交
@@ -497,7 +500,6 @@ public class JudgeManager {
                 completeProblemID,
                 gid);
     }
-
 
     /**
      * @MethodName checkJudgeResult
@@ -533,7 +535,8 @@ public class JudgeManager {
      * @Description 需要检查是否为封榜，是否可以查询结果，避免有人恶意查询
      * @Since 2021/6/11
      */
-    public HashMap<Long, Object> checkContestJudgeResult(SubmitIdListDTO submitIdListDto) throws StatusNotFoundException {
+    public HashMap<Long, Object> checkContestJudgeResult(SubmitIdListDTO submitIdListDto)
+            throws StatusNotFoundException {
 
         if (submitIdListDto.getCid() == null) {
             throw new StatusNotFoundException("查询比赛id不能为空");
@@ -578,7 +581,6 @@ public class JudgeManager {
         }
         return result;
     }
-
 
     /**
      * @MethodName getJudgeCase
@@ -632,7 +634,8 @@ public class JudgeManager {
                         }
                     } else {
                         // 当前是oi比赛期间 同时处于封榜时间
-                        if (contest.getSealRank() && contest.getStatus().intValue() == Constants.Contest.STATUS_RUNNING.getCode()
+                        if (contest.getSealRank()
+                                && contest.getStatus().intValue() == Constants.Contest.STATUS_RUNNING.getCode()
                                 && contest.getSealRankTime().before(new Date())) {
                             return null;
                         }
@@ -671,7 +674,8 @@ public class JudgeManager {
         return judgeCaseVo;
     }
 
-    private List<SubTaskJudgeCaseVO> buildSubTaskDetail(List<JudgeCase> judgeCaseList, Constants.JudgeCaseMode judgeCaseMode) {
+    private List<SubTaskJudgeCaseVO> buildSubTaskDetail(List<JudgeCase> judgeCaseList,
+            Constants.JudgeCaseMode judgeCaseMode) {
         List<SubTaskJudgeCaseVO> subTaskJudgeCaseVOS = new ArrayList<>();
         LinkedHashMap<Integer, List<JudgeCase>> groupJudgeCaseMap = judgeCaseList.stream()
                 .sorted(Comparator.comparingInt(JudgeCase::getGroupNum).thenComparingInt(JudgeCase::getSeq))
@@ -697,9 +701,9 @@ public class JudgeManager {
                 int score = (int) Math.round(sumScore * 1.0 / entry.getValue().size());
                 subTaskJudgeCaseVo.setScore(score);
                 if (hasNotACJudgeCase) {
-                    if (score == 0){
+                    if (score == 0) {
                         subTaskJudgeCaseVo.setStatus(Constants.Judge.STATUS_WRONG_ANSWER.getStatus());
-                    }else{
+                    } else {
                         subTaskJudgeCaseVo.setStatus(Constants.Judge.STATUS_PARTIAL_ACCEPTED.getStatus());
                     }
                 } else {

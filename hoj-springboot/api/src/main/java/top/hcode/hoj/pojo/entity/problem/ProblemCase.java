@@ -20,7 +20,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="Case对象", description="题目测试样例")
+@ApiModel(value = "Case对象", description = "题目测试样例")
 public class ProblemCase {
     private static final long serialVersionUID = 1L;
 

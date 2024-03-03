@@ -54,12 +54,16 @@ public class GroupManager {
     @Autowired
     private NacosSwitchConfig nacosSwitchConfig;
 
-    public IPage<GroupVO> getGroupList(Integer limit, Integer currentPage, String keyword, Integer auth, boolean onlyMine) {
+    public IPage<GroupVO> getGroupList(Integer limit, Integer currentPage, String keyword, Integer auth,
+            boolean onlyMine) {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
-        if (auth == null || auth < 1) auth = 0;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
+        if (auth == null || auth < 1)
+            auth = 0;
 
         if (!StringUtils.isEmpty(keyword)) {
             keyword = keyword.trim();
@@ -94,7 +98,8 @@ public class GroupManager {
         return group;
     }
 
-    public AccessVO getGroupAccess(Long gid) throws StatusFailException, StatusNotFoundException, StatusForbiddenException {
+    public AccessVO getGroupAccess(Long gid)
+            throws StatusFailException, StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -156,7 +161,8 @@ public class GroupManager {
             if (num == null) {
                 redisUtils.set(lockKey, 1, 3600 * 24);
             } else if (num >= switchConfig.getDefaultCreateGroupDailyLimit()) {
-                throw new StatusForbiddenException("对不起，您今天创建团队次数已超过" + switchConfig.getDefaultCreateGroupDailyLimit() + "次，已被限制！");
+                throw new StatusForbiddenException(
+                        "对不起，您今天创建团队次数已超过" + switchConfig.getDefaultCreateGroupDailyLimit() + "次，已被限制！");
             } else {
                 redisUtils.incr(lockKey, 1);
             }
@@ -166,7 +172,8 @@ public class GroupManager {
             int existedGroupNum = groupEntityService.count(existedGroupQueryWrapper);
 
             if (existedGroupNum >= switchConfig.getDefaultCreateGroupLimit()) {
-                throw new StatusForbiddenException("对不起，您总共已创建了" + switchConfig.getDefaultCreateGroupLimit() + "个团队，不可再创建，已被限制！");
+                throw new StatusForbiddenException(
+                        "对不起，您总共已创建了" + switchConfig.getDefaultCreateGroupLimit() + "个团队，不可再创建，已被限制！");
             }
 
         }
@@ -177,11 +184,13 @@ public class GroupManager {
             throw new StatusFailException("团队名称的长度应为 5 到 25！");
         }
 
-        if (!StringUtils.isEmpty(group.getShortName()) && (group.getShortName().length() < 5 || group.getShortName().length() > 10)) {
+        if (!StringUtils.isEmpty(group.getShortName())
+                && (group.getShortName().length() < 5 || group.getShortName().length() > 10)) {
             throw new StatusFailException("团队简称的长度应为 5 到 10！");
         }
 
-        if (!StringUtils.isEmpty(group.getBrief()) && (group.getBrief().length() < 5 || group.getBrief().length() > 50)) {
+        if (!StringUtils.isEmpty(group.getBrief())
+                && (group.getBrief().length() < 5 || group.getBrief().length() > 50)) {
             throw new StatusFailException("团队简介的长度应为 5 到 50！");
         }
 
@@ -195,7 +204,8 @@ public class GroupManager {
             }
         }
 
-        if (!StringUtils.isEmpty(group.getDescription()) && (group.getDescription().length() < 5 || group.getDescription().length() > 1000)) {
+        if (!StringUtils.isEmpty(group.getDescription())
+                && (group.getDescription().length() < 5 || group.getDescription().length() > 1000)) {
             throw new StatusFailException("团队描述的长度应为 5 到 1000！");
         }
 
@@ -237,11 +247,13 @@ public class GroupManager {
             throw new StatusFailException("团队名称的长度应为 5 到 25！");
         }
 
-        if (!StringUtils.isEmpty(group.getShortName()) && (group.getShortName().length() < 5 || group.getShortName().length() > 10)) {
+        if (!StringUtils.isEmpty(group.getShortName())
+                && (group.getShortName().length() < 5 || group.getShortName().length() > 10)) {
             throw new StatusFailException("团队简称的长度应为 5 到 10！");
         }
 
-        if (!StringUtils.isEmpty(group.getBrief()) && (group.getBrief().length() < 5 || group.getBrief().length() > 50)) {
+        if (!StringUtils.isEmpty(group.getBrief())
+                && (group.getBrief().length() < 5 || group.getBrief().length() > 50)) {
             throw new StatusFailException("团队简介的长度应为 5 到 50！");
         }
 
@@ -249,7 +261,8 @@ public class GroupManager {
             throw new StatusFailException("团队邀请码的长度应为 6！");
         }
 
-        if (!StringUtils.isEmpty(group.getDescription()) && (group.getDescription().length() < 5 || group.getDescription().length() > 1000)) {
+        if (!StringUtils.isEmpty(group.getDescription())
+                && (group.getDescription().length() < 5 || group.getDescription().length() > 1000)) {
             throw new StatusFailException("团队描述的长度应为 5 到 1000！");
         }
 

@@ -9,20 +9,21 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author Himit_ZH
  * @since 2020-10-23
  */
 @Service
-public class ProblemCountServiceImpl extends ServiceImpl<ProblemCountMapper, ProblemCount> implements ProblemCountEntityService {
+public class ProblemCountServiceImpl extends ServiceImpl<ProblemCountMapper, ProblemCount>
+        implements ProblemCountEntityService {
 
     @Autowired
     private ProblemCountMapper problemCountMapper;
 
     @Override
     public ProblemCount getContestProblemCount(Long pid, Long cpid, Long cid) {
-        return problemCountMapper.getContestProblemCount(pid,cpid, cid);
+        return problemCountMapper.getContestProblemCount(pid, cpid, cid);
     }
 }

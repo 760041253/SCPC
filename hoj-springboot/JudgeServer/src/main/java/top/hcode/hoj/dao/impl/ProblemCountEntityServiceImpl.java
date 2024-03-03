@@ -12,7 +12,6 @@ import top.hcode.hoj.pojo.entity.problem.ProblemCount;
 import top.hcode.hoj.dao.ProblemCountEntityService;
 import top.hcode.hoj.util.Constants;
 
-
 /**
  * <p>
  * 服务实现类
@@ -22,7 +21,8 @@ import top.hcode.hoj.util.Constants;
  * @since 2020-10-23
  */
 @Service
-public class ProblemCountEntityServiceImpl extends ServiceImpl<ProblemCountMapper, ProblemCount> implements ProblemCountEntityService {
+public class ProblemCountEntityServiceImpl extends ServiceImpl<ProblemCountMapper, ProblemCount>
+        implements ProblemCountEntityService {
 
     @Autowired
     private ProblemCountMapper problemCountMapper;
@@ -39,7 +39,6 @@ public class ProblemCountEntityServiceImpl extends ServiceImpl<ProblemCountMappe
         ProblemCount newProblemCount = getNewProblemCount(status, problemCount);
         newProblemCount.setVersion(problemCount.getVersion());
         int num = problemCountMapper.updateById(newProblemCount);
-
 
         if (num == 1) {
             return;
@@ -64,7 +63,6 @@ public class ProblemCountEntityServiceImpl extends ServiceImpl<ProblemCountMappe
             ProblemCount newProblemCount = getNewProblemCount(status, problemCount);
             newProblemCount.setVersion(problemCount.getVersion());
             boolean success = problemCountMapper.updateById(newProblemCount) == 1;
-
 
             if (success) {
                 return true;

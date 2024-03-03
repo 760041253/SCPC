@@ -31,9 +31,11 @@ public class ContestScrollBoardServiceImpl implements ContestScrollBoardService 
     }
 
     @Override
-    public CommonResult<List<ContestScrollBoardSubmissionVO>> getContestScrollBoardSubmission(Long cid, Boolean removeStar) {
+    public CommonResult<List<ContestScrollBoardSubmissionVO>> getContestScrollBoardSubmission(Long cid,
+            Boolean removeStar) {
         try {
-            return CommonResult.successResponse(contestScrollBoardManager.getContestScrollBoardSubmission(cid, removeStar));
+            return CommonResult
+                    .successResponse(contestScrollBoardManager.getContestScrollBoardSubmission(cid, removeStar));
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         }

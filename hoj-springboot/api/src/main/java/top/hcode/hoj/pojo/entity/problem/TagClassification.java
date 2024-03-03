@@ -19,7 +19,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="TagClassification对象", description="标签分类")
+@ApiModel(value = "TagClassification对象", description = "标签分类")
 public class TagClassification {
 
     private static final long serialVersionUID = 1L;

@@ -55,7 +55,8 @@ public class GroupTrainingProblemManager {
     @Autowired
     private GroupValidator groupValidator;
 
-    public HashMap<String, Object> getTrainingProblemList(Integer limit, Integer currentPage, String keyword, Boolean queryExisted, Long tid) throws StatusNotFoundException, StatusForbiddenException {
+    public HashMap<String, Object> getTrainingProblemList(Integer limit, Integer currentPage, String keyword,
+            Boolean queryExisted, Long tid) throws StatusNotFoundException, StatusForbiddenException {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
@@ -83,7 +84,8 @@ public class GroupTrainingProblemManager {
         return adminTrainingProblemManager.getProblemList(limit, currentPage, keyword, queryExisted, tid);
     }
 
-    public void updateTrainingProblem(TrainingProblem trainingProblem) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void updateTrainingProblem(TrainingProblem trainingProblem)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -96,7 +98,7 @@ public class GroupTrainingProblemManager {
 
         Long gid = training.getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("更新失败，不可操作非团队内的训练题目！");
         }
 
@@ -117,7 +119,8 @@ public class GroupTrainingProblemManager {
         }
     }
 
-    public void deleteTrainingProblem(Long pid, Long tid) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void deleteTrainingProblem(Long pid, Long tid)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -130,7 +133,7 @@ public class GroupTrainingProblemManager {
 
         Long gid = training.getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("删除失败，不可操作非团队内的训练题目！");
         }
 
@@ -155,7 +158,8 @@ public class GroupTrainingProblemManager {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addProblemFromPublic(TrainingProblemDTO trainingProblemDto) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void addProblemFromPublic(TrainingProblemDTO trainingProblemDto)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -178,7 +182,7 @@ public class GroupTrainingProblemManager {
 
         Long gid = training.getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("添加失败，不可操作非团队内的训练题目！");
         }
 
@@ -224,7 +228,8 @@ public class GroupTrainingProblemManager {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addProblemFromGroup(String problemId, Long tid) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void addProblemFromGroup(String problemId, Long tid)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -237,7 +242,7 @@ public class GroupTrainingProblemManager {
 
         Long gid = training.getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("添加失败，不可操作非团队内的训练题目！");
         }
 

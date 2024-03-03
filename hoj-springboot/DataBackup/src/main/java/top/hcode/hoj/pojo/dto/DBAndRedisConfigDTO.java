@@ -38,7 +38,7 @@ public class DBAndRedisConfigDTO {
     /**
      * MySQL 密码
      */
-    private String dbPassword ;
+    private String dbPassword;
 
     /**
      * Redis 主机
@@ -53,5 +53,5 @@ public class DBAndRedisConfigDTO {
     /**
      * Redis 密码
      */
-    private String redisPassword ;
+    private String redisPassword;
 }

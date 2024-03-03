@@ -5,10 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import top.hcode.hoj.pojo.entity.contest.ContestRecord;
 
-
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author Himit_ZH

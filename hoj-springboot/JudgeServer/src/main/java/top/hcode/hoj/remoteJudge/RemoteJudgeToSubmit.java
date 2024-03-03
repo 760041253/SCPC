@@ -52,12 +52,15 @@ public class RemoteJudgeToSubmit {
                 if (remoteJudgeDTO.getOj().equals(Constants.RemoteJudge.GYM_JUDGE.getName())
                         || remoteJudgeDTO.getOj().equals(Constants.RemoteJudge.CF_JUDGE.getName())) {
                     // 对CF特殊，归还判题机权限
-                    log.error("[{}] Submit Failed! Begin to return the Server Status to other task!", remoteJudgeDTO.getOj());
-                    remoteJudgeService.changeServerSubmitCFStatus(remoteJudgeDTO.getServerIp(), remoteJudgeDTO.getServerPort());
+                    log.error("[{}] Submit Failed! Begin to return the Server Status to other task!",
+                            remoteJudgeDTO.getOj());
+                    remoteJudgeService.changeServerSubmitCFStatus(remoteJudgeDTO.getServerIp(),
+                            remoteJudgeDTO.getServerPort());
                 }
             }
 
-            errLog = "[" + remoteJudgeDTO.getOj() + "] Submitted Failed! Failed to obtain the ID submitted by the platform!";
+            errLog = "[" + remoteJudgeDTO.getOj()
+                    + "] Submitted Failed! Failed to obtain the ID submitted by the platform!";
 
             // 更新此次提交状态为提交失败！
             UpdateWrapper<Judge> judgeUpdateWrapper = new UpdateWrapper<>();
@@ -83,8 +86,7 @@ public class RemoteJudgeToSubmit {
                 .setStatus(Constants.Judge.STATUS_PENDING.getStatus())
                 .setVjudgeSubmitId(submitId)
                 .setVjudgeUsername(remoteJudgeDTO.getUsername())
-                .setVjudgePassword(remoteJudgeDTO.getPassword())
-        );
+                .setVjudgePassword(remoteJudgeDTO.getPassword()));
 
         log.info("[{}] Submit Successfully! The submit_id of remote judge is [{}]. Waiting the result of the task!",
                 submitId, remoteJudgeDTO.getOj());

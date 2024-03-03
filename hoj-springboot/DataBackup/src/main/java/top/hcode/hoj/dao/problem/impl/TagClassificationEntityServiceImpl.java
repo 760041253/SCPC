@@ -11,5 +11,6 @@ import top.hcode.hoj.pojo.entity.problem.TagClassification;
  * @Date 2022/8/3
  */
 @Service
-public class TagClassificationEntityServiceImpl extends ServiceImpl<TagClassificationMapper, TagClassification> implements TagClassificationEntityService {
+public class TagClassificationEntityServiceImpl extends ServiceImpl<TagClassificationMapper, TagClassification>
+        implements TagClassificationEntityService {
 }

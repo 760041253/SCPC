@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller.file;
 
-
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ public class ProblemFileController {
     @Autowired
     private ProblemFileService problemFileService;
 
-
     /**
      * @param file
      * @MethodName importProblem
@@ -39,7 +37,6 @@ public class ProblemFileController {
     public CommonResult<Void> importProblem(@RequestParam("file") MultipartFile file) {
         return problemFileService.importProblem(file);
     }
-
 
     /**
      * @param pidList

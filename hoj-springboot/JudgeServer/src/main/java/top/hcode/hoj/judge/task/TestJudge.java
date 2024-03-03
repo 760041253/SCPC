@@ -44,7 +44,8 @@ public class TestJudge extends AbstractJudge {
     }
 
     @Override
-    public JSONObject checkResult(SandBoxRes sandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) throws SystemError {
+    public JSONObject checkResult(SandBoxRes sandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO)
+            throws SystemError {
         JSONObject result = new JSONObject();
         StringBuilder errMsg = new StringBuilder();
         // 如果测试跑题无异常
@@ -80,7 +81,8 @@ public class TestJudge extends AbstractJudge {
         } else if (sandBoxRes.getExitCode() != 0) {
             result.set("status", Constants.Judge.STATUS_RUNTIME_ERROR.getStatus());
             if (sandBoxRes.getExitCode() < 32) {
-                errMsg.append(String.format("ExitCode: %s (%s)\n", sandBoxRes.getExitCode(), SandboxRun.signals.get(sandBoxRes.getExitCode())));
+                errMsg.append(String.format("ExitCode: %s (%s)\n", sandBoxRes.getExitCode(),
+                        SandboxRun.signals.get(sandBoxRes.getExitCode())));
             } else {
                 errMsg.append(String.format("ExitCode: %s\n", sandBoxRes.getExitCode()));
             }
@@ -117,7 +119,8 @@ public class TestJudge extends AbstractJudge {
     }
 
     @Override
-    public JSONObject checkMultipleResult(SandBoxRes userSandBoxRes, SandBoxRes interactiveSandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) {
+    public JSONObject checkMultipleResult(SandBoxRes userSandBoxRes, SandBoxRes interactiveSandBoxRes,
+            JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) {
         return null;
     }
 }

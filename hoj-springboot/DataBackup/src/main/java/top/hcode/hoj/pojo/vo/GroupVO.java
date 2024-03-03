@@ -12,7 +12,7 @@ import java.util.Date;
  * @Description:
  */
 
-@ApiModel(value="团队查询对象GroupVo", description="")
+@ApiModel(value = "团队查询对象GroupVo", description = "")
 @Data
 public class GroupVO {
     @ApiModelProperty(value = "团队id")

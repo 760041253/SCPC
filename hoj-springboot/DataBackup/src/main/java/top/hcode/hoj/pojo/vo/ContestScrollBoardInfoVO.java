@@ -27,7 +27,7 @@ public class ContestScrollBoardInfoVO {
     private Integer problemCount;
 
     @ApiModelProperty(value = "比赛题目对应气球颜色")
-    private HashMap<String,String> balloonColor;
+    private HashMap<String, String> balloonColor;
 
     @ApiModelProperty(value = "比赛开始时间")
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss", timezone = "GMT+8")

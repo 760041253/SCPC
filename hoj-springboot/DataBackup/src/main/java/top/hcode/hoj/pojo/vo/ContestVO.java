@@ -14,7 +14,7 @@ import java.util.Date;
  * @Date: 2020/10/27 21:53
  * @Description:
  */
-@ApiModel(value="比赛信息", description="")
+@ApiModel(value = "比赛信息", description = "")
 @Data
 public class ContestVO implements Serializable {
 

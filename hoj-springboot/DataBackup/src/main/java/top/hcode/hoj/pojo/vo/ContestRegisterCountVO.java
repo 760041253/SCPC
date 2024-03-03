@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @Description:
  */
 @Data
-@ApiModel(value="比赛报名统计", description="")
+@ApiModel(value = "比赛报名统计", description = "")
 public class ContestRegisterCountVO implements Serializable {
 
     @ApiModelProperty(value = "比赛id")

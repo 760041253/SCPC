@@ -12,5 +12,6 @@ import top.hcode.hoj.dao.discussion.DiscussionLikeEntityService;
  * @Description:
  */
 @Service
-public class DiscussionLikeEntityServiceImpl extends ServiceImpl<DiscussionLikeMapper, DiscussionLike> implements DiscussionLikeEntityService {
+public class DiscussionLikeEntityServiceImpl extends ServiceImpl<DiscussionLikeMapper, DiscussionLike>
+        implements DiscussionLikeEntityService {
 }

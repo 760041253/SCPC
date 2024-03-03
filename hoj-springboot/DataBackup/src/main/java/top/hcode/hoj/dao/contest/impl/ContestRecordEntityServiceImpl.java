@@ -28,7 +28,8 @@ import java.util.*;
  * @since 2020-10-23
  */
 @Service
-public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMapper, ContestRecord> implements ContestRecordEntityService {
+public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMapper, ContestRecord>
+        implements ContestRecordEntityService {
 
     @Autowired
     private ContestRecordMapper contestRecordMapper;
@@ -41,12 +42,12 @@ public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMap
 
     @Override
     public IPage<ContestRecord> getACInfo(Integer currentPage,
-                                          Integer limit,
-                                          Integer status,
-                                          Long cid,
-                                          String contestCreatorId,
-                                          Date startTime,
-                                          Date endTime) {
+            Integer limit,
+            Integer status,
+            Long cid,
+            String contestCreatorId,
+            Date startTime,
+            Date endTime) {
 
         List<ContestRecord> acInfo = contestRecordMapper.getACInfo(status, cid);
 
@@ -64,8 +65,7 @@ public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMap
                 continue;
             }
 
-
-            if (!DateUtil.isIn(contestRecord.getSubmitTime(), startTime, endTime)){ // 非比赛期间的不记录
+            if (!DateUtil.isIn(contestRecord.getSubmitTime(), startTime, endTime)) { // 非比赛期间的不记录
                 continue;
             }
 
@@ -85,12 +85,11 @@ public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMap
             userACInfo.add(contestRecord);
         }
 
-
         List<ContestRecord> pageList = new ArrayList<>();
 
         int count = userACInfo.size();
 
-        //计算当前页第一条数据的下标
+        // 计算当前页第一条数据的下标
         int currId = currentPage > 1 ? (currentPage - 1) * limit : 0;
         for (int i = 0; i < limit && i < count - currId; i++) {
             ContestRecord contestRecord = userACInfo.get(currId + i);
@@ -99,7 +98,6 @@ public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMap
             }
             pageList.add(contestRecord);
         }
-
 
         Page<ContestRecord> page = new Page<>(currentPage, limit);
         page.setSize(limit);
@@ -110,10 +108,9 @@ public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMap
         return page;
     }
 
-
     @Override
     public List<ContestRecordVO> getOIContestRecord(Contest contest, List<Integer> externalCidList,
-                                                    Boolean isOpenSealRank, Boolean isContainsAfterContestJudge) {
+            Boolean isOpenSealRank, Boolean isContainsAfterContestJudge) {
 
         String oiRankScoreType = contest.getOiRankScoreType();
         Long cid = contest.getId();
@@ -144,7 +141,8 @@ public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMap
         } else {
             String key = null;
             if (isContainsAfterContestJudge) {
-                key = Constants.Contest.OI_CONTEST_RANK_CACHE.getName() + "_contains_after_" + oiRankScoreType + "_" + cid;
+                key = Constants.Contest.OI_CONTEST_RANK_CACHE.getName() + "_contains_after_" + oiRankScoreType + "_"
+                        + cid;
             } else {
                 key = Constants.Contest.OI_CONTEST_RANK_CACHE.getName() + "_" + oiRankScoreType + "_" + cid;
             }
@@ -179,7 +177,8 @@ public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMap
     }
 
     @Override
-    public List<ContestRecordVO> getACMContestRecord(String contestCreatorUid, Long cid, List<Integer> externalCidList, Date startTime) {
+    public List<ContestRecordVO> getACMContestRecord(String contestCreatorUid, Long cid, List<Integer> externalCidList,
+            Date startTime) {
         if (CollectionUtil.isEmpty(externalCidList)) {
             return contestRecordMapper.getACMContestRecord(contestCreatorUid, cid, null, null);
         } else {

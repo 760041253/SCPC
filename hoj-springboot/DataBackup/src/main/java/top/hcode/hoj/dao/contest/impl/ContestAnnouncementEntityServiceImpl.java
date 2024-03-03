@@ -12,5 +12,6 @@ import top.hcode.hoj.dao.contest.ContestAnnouncementEntityService;
  * @Description:
  */
 @Service
-public class ContestAnnouncementEntityServiceImpl extends ServiceImpl<ContestAnnouncementMapper, ContestAnnouncement> implements ContestAnnouncementEntityService {
+public class ContestAnnouncementEntityServiceImpl extends ServiceImpl<ContestAnnouncementMapper, ContestAnnouncement>
+        implements ContestAnnouncementEntityService {
 }

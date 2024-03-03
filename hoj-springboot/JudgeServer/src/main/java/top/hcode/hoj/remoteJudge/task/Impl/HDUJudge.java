@@ -37,7 +37,8 @@ public class HDUJudge extends RemoteJudgeStrategy {
             .put("Host", "acm.hdu.edu.cn")
             .put("origin", "https://acm.hdu.edu.cn")
             .put("referer", "https://acm.hdu.edu.cn")
-            .put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
+            .put("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
             .map();
 
     @Override
@@ -60,14 +61,16 @@ public class HDUJudge extends RemoteJudgeStrategy {
                         .put("check", "0")
                         .put("language", getLanguage(remoteJudgeDTO.getLanguage()))
                         .put("problemid", remoteJudgeDTO.getCompleteProblemId())
-                        .put("_usercode", Base64.encode(URLEncoder.encode(remoteJudgeDTO.getUserCode() + getRandomBlankString())))
+                        .put("_usercode",
+                                Base64.encode(URLEncoder.encode(remoteJudgeDTO.getUserCode() + getRandomBlankString())))
                         .map())
                 .cookie(cookies);
 
         HttpResponse response = request.execute();
         remoteJudgeDTO.setSubmitStatus(response.getStatus());
         // 提交频率限制了 等待5秒再次提交
-        if (response.getStatus() == 200 && response.body() != null && response.body().contains("Please don't re-submit")) {
+        if (response.getStatus() == 200 && response.body() != null
+                && response.body().contains("Please don't re-submit")) {
             try {
                 TimeUnit.SECONDS.sleep(5);
             } catch (InterruptedException e) {
@@ -76,11 +79,13 @@ public class HDUJudge extends RemoteJudgeStrategy {
             response = request.execute();
             remoteJudgeDTO.setSubmitStatus(response.getStatus());
             if (response.getStatus() != 302) {
-                String log = String.format("[HDU] [%s]: Failed to submit code, the http response status is [%s].", remoteJudgeDTO.getCompleteProblemId(), response.getStatus());
+                String log = String.format("[HDU] [%s]: Failed to submit code, the http response status is [%s].",
+                        remoteJudgeDTO.getCompleteProblemId(), response.getStatus());
                 throw new RuntimeException(log);
             }
         } else if (response.getStatus() != 302) {
-            String log = String.format("[HDU] [%s]: Failed to submit code, the http response status is [%s].", remoteJudgeDTO.getCompleteProblemId(), response.getStatus());
+            String log = String.format("[HDU] [%s]: Failed to submit code, the http response status is [%s].",
+                    remoteJudgeDTO.getCompleteProblemId(), response.getStatus());
             throw new RuntimeException(log);
         }
         // 获取提交的题目id
@@ -107,15 +112,16 @@ public class HDUJudge extends RemoteJudgeStrategy {
         HttpResponse response = request.execute();
         // 1提交时间 2结果 3执行时间 4执行空间 5代码长度
         // 一般情况下 代码长度和提交时间不需要，想要也行，自行添加
-        Pattern pattern = Pattern.compile(">" + remoteJudgeDTO.getSubmitId() + "</td><td>[\\s\\S]*?</td><td>([\\s\\S]*?)</td><td>[\\s\\S]*?</td><td>(\\d*?)MS</td><td>(\\d*?)K</td>");
+        Pattern pattern = Pattern.compile(">" + remoteJudgeDTO.getSubmitId()
+                + "</td><td>[\\s\\S]*?</td><td>([\\s\\S]*?)</td><td>[\\s\\S]*?</td><td>(\\d*?)MS</td><td>(\\d*?)K</td>");
         Matcher matcher = pattern.matcher(response.body());
         // 找到时
         Validate.isTrue(matcher.find());
         String rawStatus = matcher.group(1).replaceAll("<[\\s\\S]*?>", "").trim();
         Constants.Judge judgeStatus;
-        if (rawStatus.contains("Runtime Error")){
+        if (rawStatus.contains("Runtime Error")) {
             judgeStatus = Constants.Judge.STATUS_RUNTIME_ERROR;
-        }else{
+        } else {
             judgeStatus = statusTypeMap.getOrDefault(rawStatus, Constants.Judge.STATUS_PENDING);
         }
         RemoteJudgeRes remoteJudgeRes = RemoteJudgeRes.builder()
@@ -125,7 +131,6 @@ public class HDUJudge extends RemoteJudgeStrategy {
         if (judgeStatus == Constants.Judge.STATUS_PENDING) {
             return remoteJudgeRes;
         }
-
 
         // 获取其他信息
         String executionTime = matcher.group(2);
@@ -143,7 +148,6 @@ public class HDUJudge extends RemoteJudgeStrategy {
         return remoteJudgeRes;
     }
 
-
     @Override
     public void login() {
         // 清除当前线程的cookies缓存
@@ -151,18 +155,19 @@ public class HDUJudge extends RemoteJudgeStrategy {
         RemoteJudgeDTO remoteJudgeDTO = getRemoteJudgeDTO();
         HttpRequest request = HttpUtil.createPost(HOST + LOGIN_URL).addHeaders(headers);
         HttpResponse response = request.form(MapUtil
-                        .builder(new HashMap<String, Object>())
-                        .put("username", remoteJudgeDTO.getUsername())
-                        .put("login", "Sign In")
-                        .put("userpass", remoteJudgeDTO.getPassword()).map())
+                .builder(new HashMap<String, Object>())
+                .put("username", remoteJudgeDTO.getUsername())
+                .put("login", "Sign In")
+                .put("userpass", remoteJudgeDTO.getPassword()).map())
                 .execute();
         if (response.getStatus() != 302) {
-            throw new RuntimeException("[HDU] Failed to login! The possible cause is connection failure, and the returned status code is " + response.getStatus());
+            throw new RuntimeException(
+                    "[HDU] Failed to login! The possible cause is connection failure, and the returned status code is "
+                            + response.getStatus());
         }
         remoteJudgeDTO.setLoginStatus(response.getStatus());
         remoteJudgeDTO.setCookies(response.getCookies());
     }
-
 
     @Override
     public String getLanguage(String language) {
@@ -187,14 +192,12 @@ public class HDUJudge extends RemoteJudgeStrategy {
         }
     }
 
-
     public Long getMaxRunId(String userName, String problemId) {
         String url = HOST + String.format(STATUS_URL, userName, problemId);
         HttpResponse response = HttpUtil.createGet(url).addHeaders(headers).execute();
         String maxRunId = ReUtil.get("<td height=22px>(\\d+)", response.body(), 1);
         return maxRunId != null ? Long.parseLong(maxRunId) : -1L;
     }
-
 
     // TODO 添加结果对应的状态
     private static final Map<String, Constants.Judge> statusTypeMap = new HashMap<String, Constants.Judge>() {

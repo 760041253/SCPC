@@ -14,7 +14,6 @@ import java.util.List;
  */
 public abstract class LanguageStrategy {
 
-
     public abstract String getLanguageNameById(String id);
 
     public abstract List<Language> buildLanguageListByIds(List<Language> allLanguageList, List<String> langIdList);

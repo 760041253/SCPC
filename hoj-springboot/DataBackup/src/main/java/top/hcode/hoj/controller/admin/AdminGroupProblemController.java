@@ -19,17 +19,18 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/api/admin/group-problem")
 @RequiresAuthentication
-@RequiresRoles(value = {"root", "problem_admin"}, logical = Logical.OR)
+@RequiresRoles(value = { "root", "problem_admin" }, logical = Logical.OR)
 public class AdminGroupProblemController {
 
     @Resource
     private AdminGroupProblemService adminGroupProblemService;
 
     @GetMapping("/list")
-    public CommonResult<IPage<Problem>> getProblemList(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
-                                                       @RequestParam(value = "limit", defaultValue = "10") Integer limit,
-                                                       @RequestParam(value = "keyword", required = false) String keyword,
-                                                       @RequestParam(value = "gid", required = false) Long gid) {
+    public CommonResult<IPage<Problem>> getProblemList(
+            @RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
+            @RequestParam(value = "limit", defaultValue = "10") Integer limit,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "gid", required = false) Long gid) {
         return adminGroupProblemService.getProblemList(currentPage, limit, keyword, gid);
     }
 

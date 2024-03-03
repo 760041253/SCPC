@@ -11,7 +11,7 @@ import top.hcode.hoj.pojo.vo.AnnouncementVO;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author Himit_ZH
@@ -21,5 +21,7 @@ import top.hcode.hoj.pojo.vo.AnnouncementVO;
 @Repository
 public interface AnnouncementMapper extends BaseMapper<Announcement> {
     IPage<AnnouncementVO> getAnnouncementList(Page<AnnouncementVO> page, @Param("notAdmin") Boolean notAdmin);
-    IPage<AnnouncementVO> getContestAnnouncement(Page<AnnouncementVO> page, @Param("cid")Long cid, @Param("notAdmin") Boolean notAdmin);
+
+    IPage<AnnouncementVO> getContestAnnouncement(Page<AnnouncementVO> page, @Param("cid") Long cid,
+            @Param("notAdmin") Boolean notAdmin);
 }

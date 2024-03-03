@@ -89,7 +89,6 @@ public class SwitchConfigDTO {
      */
     private Integer defaultCreateCommentACInitValue;
 
-
     /**
      * 各个remote judge 的账号与密码列表
      */

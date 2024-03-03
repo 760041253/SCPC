@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface TrainingRegisterEntityService extends IService<TrainingRegister> {
 
-
     public List<String> getAlreadyRegisterUidList(Long tid);
 
 }

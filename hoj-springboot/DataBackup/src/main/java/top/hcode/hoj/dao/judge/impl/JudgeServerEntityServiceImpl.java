@@ -14,6 +14,7 @@ import top.hcode.hoj.dao.judge.JudgeServerEntityService;
  * @Description:
  */
 @Service
-public class JudgeServerEntityServiceImpl extends ServiceImpl<JudgeServerMapper, JudgeServer> implements JudgeServerEntityService {
+public class JudgeServerEntityServiceImpl extends ServiceImpl<JudgeServerMapper, JudgeServer>
+        implements JudgeServerEntityService {
 
 }

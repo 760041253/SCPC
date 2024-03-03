@@ -57,8 +57,10 @@ public class AdminTrainingManager {
 
     public IPage<Training> getTrainingList(Integer limit, Integer currentPage, String keyword) {
 
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
         IPage<Training> iPage = new Page<>(currentPage, limit);
         QueryWrapper<Training> queryWrapper = new QueryWrapper<>();
         // 过滤密码
@@ -75,7 +77,6 @@ public class AdminTrainingManager {
 
         return trainingEntityService.page(iPage, queryWrapper);
     }
-
 
     public TrainingDTO getTraining(Long tid) throws StatusFailException, StatusForbiddenException {
         // 获取本场训练的信息
@@ -98,7 +99,8 @@ public class AdminTrainingManager {
 
         QueryWrapper<MappingTrainingCategory> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("tid", tid);
-        MappingTrainingCategory mappingTrainingCategory = mappingTrainingCategoryEntityService.getOne(queryWrapper, false);
+        MappingTrainingCategory mappingTrainingCategory = mappingTrainingCategoryEntityService.getOne(queryWrapper,
+                false);
         TrainingCategory trainingCategory = null;
         if (mappingTrainingCategory != null) {
             trainingCategory = trainingCategoryEntityService.getById(mappingTrainingCategory.getCid());
@@ -107,12 +109,11 @@ public class AdminTrainingManager {
         return trainingDto;
     }
 
-
     public void deleteTraining(Long tid) throws StatusFailException {
 
         boolean isOk = trainingEntityService.removeById(tid);
         /*
-        Training的id为其他表的外键的表中的对应数据都会被一起删除！
+         * Training的id为其他表的外键的表中的对应数据都会被一起删除！
          */
         if (!isOk) {
             throw new StatusFailException("删除失败！");
@@ -172,7 +173,6 @@ public class AdminTrainingManager {
             }
         }
 
-
         TrainingCategory trainingCategory = trainingDto.getTrainingCategory();
         if (trainingCategory.getId() == null) {
             try {
@@ -207,7 +207,8 @@ public class AdminTrainingManager {
 
     }
 
-    public void changeTrainingStatus(Long tid, String author, Boolean status) throws StatusForbiddenException, StatusFailException {
+    public void changeTrainingStatus(Long tid, String author, Boolean status)
+            throws StatusForbiddenException, StatusFailException {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         // 是否为超级管理员
@@ -222,6 +223,5 @@ public class AdminTrainingManager {
             throw new StatusFailException("修改失败");
         }
     }
-
 
 }

@@ -14,7 +14,7 @@ import java.util.List;
  * @Date: 2020/12/5 13:30
  * @Description:
  */
-@ApiModel(value="用户信息以及其对应的角色", description="")
+@ApiModel(value = "用户信息以及其对应的角色", description = "")
 @Data
 public class UserRolesVO implements Serializable {
 

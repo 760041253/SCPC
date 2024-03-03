@@ -90,13 +90,13 @@ public class JudgeServiceImpl implements JudgeService {
 
     @Override
     public CommonResult<IPage<JudgeVO>> getJudgeList(Integer limit,
-                                                     Integer currentPage,
-                                                     Boolean onlyMine,
-                                                     String searchPid,
-                                                     Integer searchStatus,
-                                                     String searchUsername,
-                                                     Boolean completeProblemID,
-                                                     Long gid) {
+            Integer currentPage,
+            Boolean onlyMine,
+            String searchPid,
+            Integer searchStatus,
+            String searchUsername,
+            Boolean completeProblemID,
+            Long gid) {
         try {
             return CommonResult.successResponse(judgeManager.getJudgeList(limit,
                     currentPage,

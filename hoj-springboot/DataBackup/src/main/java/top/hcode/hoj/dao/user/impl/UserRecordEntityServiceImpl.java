@@ -27,7 +27,8 @@ import java.util.List;
  * @since 2020-10-23
  */
 @Service
-public class UserRecordEntityServiceImpl extends ServiceImpl<UserRecordMapper, UserRecord> implements UserRecordEntityService {
+public class UserRecordEntityServiceImpl extends ServiceImpl<UserRecordMapper, UserRecord>
+        implements UserRecordEntityService {
 
     @Autowired
     private UserRecordMapper userRecordMapper;
@@ -67,10 +68,12 @@ public class UserRecordEntityServiceImpl extends ServiceImpl<UserRecordMapper, U
     }
 
     @Override
-    public IPage<OIRankVO> getGroupRankList(Page<OIRankVO> page, Long gid, List<String> uidList, String rankType, Boolean useCache) {
+    public IPage<OIRankVO> getGroupRankList(Page<OIRankVO> page, Long gid, List<String> uidList, String rankType,
+            Boolean useCache) {
         if (useCache) {
             IPage<OIRankVO> data = null;
-            String key = Constants.Account.GROUP_RANK_CACHE.getCode() + "_" + gid + "_" + rankType + "_" + page.getCurrent() + "_" + page.getSize();
+            String key = Constants.Account.GROUP_RANK_CACHE.getCode() + "_" + gid + "_" + rankType + "_"
+                    + page.getCurrent() + "_" + page.getSize();
             data = (IPage<OIRankVO>) redisUtils.get(key);
             if (data == null) {
                 data = userRecordMapper.getGroupRankList(page, gid, uidList, rankType);

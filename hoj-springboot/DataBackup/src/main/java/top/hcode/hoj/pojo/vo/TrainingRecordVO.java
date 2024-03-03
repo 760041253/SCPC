@@ -10,7 +10,7 @@ import lombok.Data;
  * @Description:
  */
 @Data
-@ApiModel(value="用户在训练的记录", description="")
+@ApiModel(value = "用户在训练的记录", description = "")
 public class TrainingRecordVO {
 
     private Long id;

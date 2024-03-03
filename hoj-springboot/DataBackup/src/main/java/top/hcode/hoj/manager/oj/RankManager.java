@@ -45,11 +45,14 @@ public class RankManager {
      * @Return CommonResult
      * @Since 2020/10/27
      */
-    public IPage getRankList(Integer limit, Integer currentPage, String searchUser, Integer type) throws StatusFailException {
+    public IPage getRankList(Integer limit, Integer currentPage, String searchUser, Integer type)
+            throws StatusFailException {
 
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 30;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 30;
 
         List<String> uidList = null;
         if (!StringUtils.isEmpty(searchUser)) {
@@ -84,7 +87,6 @@ public class RankManager {
         return rankList;
     }
 
-
     private IPage<ACMRankVO> getACMRankList(int limit, int currentPage, List<String> uidList) {
 
         IPage<ACMRankVO> data = null;
@@ -107,7 +109,6 @@ public class RankManager {
 
         return data;
     }
-
 
     private IPage<OIRankVO> getOIRankList(int limit, int currentPage, List<String> uidList) {
 

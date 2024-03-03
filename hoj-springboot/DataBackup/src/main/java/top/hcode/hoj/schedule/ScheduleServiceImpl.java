@@ -44,22 +44,21 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-
 /**
  * 一个cron表达式有至少6个（也可能7个）有空格分隔的时间元素。按顺序依次为：
  * <p>
- * 字段	允许值	允许的特殊字符
- * 秒	0~59	, - * /
- * 分	0~59	, - * /
- * 小时	0~23	, - * /
- * 日期	1-31	, - * ? / L W C
- * 月份	1~12或者JAN~DEC	, - * /
- * 星期	1~7或者SUN~SAT	, - * ? / L C #
- * 年（可选）	留空，1970~2099	, - * /
+ * 字段 允许值 允许的特殊字符
+ * 秒 0~59 , - * /
+ * 分 0~59 , - * /
+ * 小时 0~23 , - * /
+ * 日期 1-31 , - * ? / L W C
+ * 月份 1~12或者JAN~DEC , - * /
+ * 星期 1~7或者SUN~SAT , - * ? / L C #
+ * 年（可选） 留空，1970~2099 , - * /
  * <p>
- * “*”  字符代表所有可能的值
- * “-”  字符代表数字范围 例如1-5
- * “/”  字符用来指定数值的增量
+ * “*” 字符代表所有可能的值
+ * “-” 字符代表数字范围 例如1-5
+ * “/” 字符用来指定数值的增量
  * “？” 字符仅被用于天（月）和天（星期）两个子表达式，表示不指定值。
  * 当2个子表达式其中之一被指定了值以后，为了避免冲突，需要将另一个子表达式的值设为“？”
  * “L” 字符仅被用于天（月）和天（星期）两个子表达式，它是单词“last”的缩写
@@ -139,7 +138,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
-
     /**
      * @MethodName deleteTestCase
      * @Params * @param null
@@ -148,7 +146,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @Since 2021/2/7
      */
     @Scheduled(cron = "0 0 3 * * *")
-//    @Scheduled(cron = "0/5 * * * * *")
+    // @Scheduled(cron = "0/5 * * * * *")
     @Override
     public void deleteTestCase() {
         boolean result = FileUtil.del(Constants.File.TESTCASE_TMP_FOLDER.getPath());
@@ -182,7 +180,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * endTime: "2020-11-08T08:00:00Z",
      */
     @Scheduled(cron = "0 0 0/2 * * *")
-//    @Scheduled(cron = "0/5 * * * * *")
+    // @Scheduled(cron = "0/5 * * * * *")
     @Override
     public void getOjContestsList() {
         // 待格式化的API，需要填充年月查询
@@ -199,7 +197,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             String contestAPI = String.format(nowcoderContestAPI, newDate.year(), newDate.month() + 1);
             try {
                 // 连接api，获取json格式对象
-                JSONObject resultObject = JsoupUtils.getJsonFromConnection(JsoupUtils.getConnectionFromUrl(contestAPI, null, null));
+                JSONObject resultObject = JsoupUtils
+                        .getJsonFromConnection(JsoupUtils.getConnectionFromUrl(contestAPI, null, null));
                 // 比赛列表存放在data字段中
                 JSONArray contestsArray = resultObject.getJSONArray("data");
                 // 牛客比赛列表按时间顺序排序，所以从后向前取可以减少不必要的遍历
@@ -238,12 +237,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("获取牛客API的比赛列表成功！共获取数据" + contestsList.size() + "条");
     }
 
-
     /**
      * 每天3点获取codeforces的rating分数
      */
     @Scheduled(cron = "0 0 3 * * *")
-//    @Scheduled(cron = "0/5 * * * * *")
+    // @Scheduled(cron = "0/5 * * * * *")
     @Override
     public void getCodeforcesRating() {
         String codeforcesUserInfoAPI = "https://codeforces.com/api/user.info?handles=%s";
@@ -292,13 +290,10 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("获取Codeforces Rating成功！");
     }
 
-    @Retryable(value = Exception.class,
-            maxAttempts = 5,
-            backoff = @Backoff(delay = 1000, multiplier = 1.4))
+    @Retryable(value = Exception.class, maxAttempts = 5, backoff = @Backoff(delay = 1000, multiplier = 1.4))
     public JSONObject getCFUserInfo(String url) throws Exception {
         return JsoupUtils.getJsonFromConnection(JsoupUtils.getConnectionFromUrl(url, null, null));
     }
-
 
     /**
      * @MethodName deleteUserSession
@@ -308,7 +303,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @Since 2021/9/6
      */
     @Scheduled(cron = "0 0 3 * * *")
-//    @Scheduled(cron = "0/5 * * * * *")
+    // @Scheduled(cron = "0/5 * * * * *")
     @Override
     public void deleteUserSession() {
         QueryWrapper<Session> sessionQueryWrapper = new QueryWrapper<>();
@@ -324,7 +319,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                     .apply("UNIX_TIMESTAMP('" + strTime + "') > UNIX_TIMESTAMP(gmt_create)");
             List<Session> needDeletedSessionList = sessionEntityService.list(queryWrapper);
             if (needDeletedSessionList.size() > 0) {
-                List<Long> needDeletedIdList = needDeletedSessionList.stream().map(Session::getId).collect(Collectors.toList());
+                List<Long> needDeletedIdList = needDeletedSessionList.stream().map(Session::getId)
+                        .collect(Collectors.toList());
                 boolean isOk = sessionEntityService.removeByIds(needDeletedIdList);
                 if (!isOk) {
                     log.error("=============数据库session表定时删除用户6个月前的记录失败===============");
@@ -332,7 +328,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         }
     }
-
 
     /**
      * @MethodName syncNoticeToUser
@@ -418,7 +413,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     @Scheduled(cron = "0 0 6 * * *")
-//    @Scheduled(cron = "0/5 * * * * *")
+    // @Scheduled(cron = "0/5 * * * * *")
     public void checkUnHandleGroupProblemApplyProgress() {
         QueryWrapper<Problem> problemQueryWrapper = new QueryWrapper<>();
         problemQueryWrapper.eq("apply_public_progress", 1).isNotNull("gid");

@@ -8,10 +8,10 @@ import top.hcode.hoj.pojo.vo.TrainingVO;
 public interface TrainingEntityService extends IService<Training> {
 
     public Page<TrainingVO> getTrainingList(int limit,
-                                            int currentPage,
-                                            Long categoryId,
-                                            String auth,
-                                            String keyword,
-                                            String currentUid);
+            int currentPage,
+            Long categoryId,
+            String auth,
+            String keyword,
+            String currentUid);
 
 }

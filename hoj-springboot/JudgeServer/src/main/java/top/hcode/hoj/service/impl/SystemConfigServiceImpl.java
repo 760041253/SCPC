@@ -1,6 +1,5 @@
 package top.hcode.hoj.service.impl;
 
-
 import cn.hutool.system.oshi.OshiUtil;
 import org.springframework.stereotype.Service;
 import top.hcode.hoj.service.SystemConfigService;

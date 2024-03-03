@@ -1,6 +1,5 @@
 package top.hcode.hoj.dao.impl;
 
-
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.context.ApplicationContext;
@@ -25,7 +24,8 @@ import java.util.List;
  * @since 2020-10-23
  */
 @Service
-public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMapper, ContestRecord> implements ContestRecordEntityService {
+public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMapper, ContestRecord>
+        implements ContestRecordEntityService {
 
     @Resource
     private ApplicationContext applicationContext;
@@ -37,10 +37,7 @@ public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMap
             Constants.Judge.STATUS_MEMORY_LIMIT_EXCEEDED.getStatus(),
             Constants.Judge.STATUS_RUNTIME_ERROR.getStatus());
 
-
-    @Retryable(value = Exception.class,
-            maxAttempts = 5,
-            backoff = @Backoff(delay = 500, multiplier = 1.4))
+    @Retryable(value = Exception.class, maxAttempts = 5, backoff = @Backoff(delay = 500, multiplier = 1.4))
     public void updateContestRecordWithRetry(Integer score, Integer status, Long submitId, Integer useTime) {
         UpdateWrapper<ContestRecord> updateWrapper = new UpdateWrapper<>();
         // 如果是AC
@@ -66,7 +63,8 @@ public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMap
         updateWrapper.eq("submit_id", submitId); // submit_id一定只有一个
         boolean isOk = update(null, updateWrapper);
         if (!isOk) {
-            String log = String.format("[contest_record] update contest record failed, submit_id:%s, status:%s, score:%s, useTime:%s",
+            String log = String.format(
+                    "[contest_record] update contest record failed, submit_id:%s, status:%s, score:%s, useTime:%s",
                     submitId, status, score, useTime);
             throw new RuntimeException(log);
         }

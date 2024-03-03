@@ -23,8 +23,10 @@ public class AdminTrainingProblemServiceImpl implements AdminTrainingProblemServ
     private AdminTrainingProblemManager adminTrainingProblemManager;
 
     @Override
-    public CommonResult<HashMap<String, Object>> getProblemList(Integer limit, Integer currentPage, String keyword, Boolean queryExisted, Long tid) {
-        HashMap<String, Object> problemMap = adminTrainingProblemManager.getProblemList(limit, currentPage, keyword, queryExisted, tid);
+    public CommonResult<HashMap<String, Object>> getProblemList(Integer limit, Integer currentPage, String keyword,
+            Boolean queryExisted, Long tid) {
+        HashMap<String, Object> problemMap = adminTrainingProblemManager.getProblemList(limit, currentPage, keyword,
+                queryExisted, tid);
         return CommonResult.successResponse(problemMap);
     }
 

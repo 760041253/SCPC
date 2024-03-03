@@ -19,11 +19,13 @@ import java.util.List;
  */
 public interface TeamInfoEntityService {
 
-    public CommonResult<List<TeamInfoVO>> selectWaitingReviewTeamInfoPage(Long cid, Integer pageSize, Integer pageNum) throws StatusForbiddenException, StatusFailException;
+    public CommonResult<List<TeamInfoVO>> selectWaitingReviewTeamInfoPage(Long cid, Integer pageSize, Integer pageNum)
+            throws StatusForbiddenException, StatusFailException;
 
     public CommonResult<List<TeamInfoVO>> getTeamInfoByUsernameFromContestId(Long cid) throws StatusFailException;
 
-    public CommonResult<IPage<TeamInfo>> getTeamInfoPageByContestId(Long cid, Integer pageSize, Integer pageNum, Integer status) throws StatusFailException, StatusForbiddenException;
+    public CommonResult<IPage<TeamInfo>> getTeamInfoPageByContestId(Long cid, Integer pageSize, Integer pageNum,
+            Integer status) throws StatusFailException, StatusForbiddenException;
 
     public CommonResult<TeamInfoVO> getTeamInfoById(Long teamId) throws StatusFailException;
 
@@ -33,9 +35,11 @@ public interface TeamInfoEntityService {
 
     public CommonResult<Void> signUp(TeamInfoDTO teamInfoDto) throws StatusFailException, StatusForbiddenException;
 
-    public void generateCsvByContestId(Long cid, Long choose, HttpServletResponse response) throws IOException, StatusFailException, StatusForbiddenException;
+    public void generateCsvByContestId(Long cid, Long choose, HttpServletResponse response)
+            throws IOException, StatusFailException, StatusForbiddenException;
 
-    public CommonResult<Void> checkApply(Long tid,Boolean isOk,Long cid) throws StatusFailException, StatusForbiddenException;
+    public CommonResult<Void> checkApply(Long tid, Boolean isOk, Long cid)
+            throws StatusFailException, StatusForbiddenException;
 
     public CommonResult<Void> withdrawApply(Long tid) throws StatusForbiddenException, StatusFailException;
 

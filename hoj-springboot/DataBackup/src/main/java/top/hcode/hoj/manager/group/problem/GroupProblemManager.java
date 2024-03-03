@@ -76,7 +76,8 @@ public class GroupProblemManager {
     @Value("${hoj.judge.token}")
     private String judgeToken;
 
-    public IPage<ProblemVO> getProblemList(Integer limit, Integer currentPage, Long gid) throws StatusNotFoundException, StatusForbiddenException {
+    public IPage<ProblemVO> getProblemList(Integer limit, Integer currentPage, Long gid)
+            throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -91,13 +92,16 @@ public class GroupProblemManager {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
 
         return groupProblemEntityService.getProblemList(limit, currentPage, gid);
     }
 
-    public IPage<Problem> getAdminProblemList(Integer limit, Integer currentPage, Long gid) throws StatusNotFoundException, StatusForbiddenException {
+    public IPage<Problem> getAdminProblemList(Integer limit, Integer currentPage, Long gid)
+            throws StatusNotFoundException, StatusForbiddenException {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
@@ -113,8 +117,10 @@ public class GroupProblemManager {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
 
         return groupProblemEntityService.getAdminProblemList(limit, currentPage, gid);
     }
@@ -132,7 +138,7 @@ public class GroupProblemManager {
 
         Long gid = problem.getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("获取失败，不可访问非团队内的题目！");
         }
 
@@ -142,14 +148,16 @@ public class GroupProblemManager {
             throw new StatusNotFoundException("获取失败，该团队不存在或已被封禁！");
         }
 
-        if (!groupValidator.isGroupRoot(userRolesVo.getUid(), gid) && !userRolesVo.getUsername().equals(problem.getAuthor()) && !isRoot) {
+        if (!groupValidator.isGroupRoot(userRolesVo.getUid(), gid)
+                && !userRolesVo.getUsername().equals(problem.getAuthor()) && !isRoot) {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
         return problem;
     }
 
-    public void addProblem(ProblemDTO problemDto) throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
+    public void addProblem(ProblemDTO problemDto)
+            throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
 
         problemValidator.validateGroupProblem(problemDto.getProblem());
 
@@ -158,7 +166,7 @@ public class GroupProblemManager {
 
         Long gid = problemDto.getProblem().getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("添加失败，题目所属团队ID不可为空！");
         }
 
@@ -206,7 +214,8 @@ public class GroupProblemManager {
         }
     }
 
-    public void updateProblem(ProblemDTO problemDto) throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
+    public void updateProblem(ProblemDTO problemDto)
+            throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
 
         problemValidator.validateGroupProblemUpdate(problemDto.getProblem());
 
@@ -223,7 +232,7 @@ public class GroupProblemManager {
 
         Long gid = problem.getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("更新失败，不可操作非团队内的题目！");
         }
 
@@ -298,7 +307,7 @@ public class GroupProblemManager {
 
         Long gid = problem.getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("删除失败，不可操作非团队内的题目！");
         }
 
@@ -322,7 +331,8 @@ public class GroupProblemManager {
         }
     }
 
-    public List<ProblemCase> getProblemCases(Long pid, Boolean isUpload) throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
+    public List<ProblemCase> getProblemCases(Long pid, Boolean isUpload)
+            throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -335,7 +345,7 @@ public class GroupProblemManager {
 
         Long gid = problem.getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("获取失败，不可获取非团队内的题目的题目数据！");
         }
 
@@ -381,7 +391,8 @@ public class GroupProblemManager {
         return tagList;
     }
 
-    public void compileSpj(CompileDTO compileDTO, Long gid) throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
+    public void compileSpj(CompileDTO compileDTO, Long gid)
+            throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -405,7 +416,8 @@ public class GroupProblemManager {
         dispatcher.dispatch(Constants.TaskType.COMPILE_SPJ, compileDTO);
     }
 
-    public void compileInteractive(CompileDTO compileDTO, Long gid) throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
+    public void compileInteractive(CompileDTO compileDTO, Long gid)
+            throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -429,7 +441,8 @@ public class GroupProblemManager {
         dispatcher.dispatch(Constants.TaskType.COMPILE_INTERACTIVE, compileDTO);
     }
 
-    public void changeProblemAuth(Long pid, Integer auth) throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
+    public void changeProblemAuth(Long pid, Integer auth)
+            throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -442,7 +455,7 @@ public class GroupProblemManager {
 
         Long gid = problem.getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("更新失败，不可操作非团队内的题目！");
         }
 
@@ -468,7 +481,8 @@ public class GroupProblemManager {
         }
     }
 
-    public void applyPublic(Long pid, Boolean isApplied) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void applyPublic(Long pid, Boolean isApplied)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -480,7 +494,7 @@ public class GroupProblemManager {
         }
 
         Long gid = problem.getGid();
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("申请失败，不可操作非团队内的题目！");
         }
 

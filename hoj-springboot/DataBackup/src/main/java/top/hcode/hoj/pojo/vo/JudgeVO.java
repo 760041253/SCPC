@@ -14,7 +14,7 @@ import java.util.Date;
  * @Description:
  */
 @Data
-@ApiModel(value="返回的判题信息", description="")
+@ApiModel(value = "返回的判题信息", description = "")
 public class JudgeVO {
 
     @ApiModelProperty(value = "用户id")

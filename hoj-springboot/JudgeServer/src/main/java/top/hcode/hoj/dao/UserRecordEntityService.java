@@ -1,9 +1,7 @@
 package top.hcode.hoj.dao;
 
-
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.hcode.hoj.pojo.entity.user.UserRecord;
-
 
 /**
  * <p>
