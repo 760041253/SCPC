@@ -822,4 +822,8 @@ export const m = {
   Applying_for_Publicity: 'Applying for publicity',
   Group_Problem_Apply_Public_Tips: 'Are you sure you want to apply for this problem to be added to the public bank?',
   Cancel_Group_Problem_Apply_Public_Tips: 'Do you want to cancel the application for this problem to be added to the public bank?',
+
+  // darkmode
+  Dark: 'Dark',
+  Light: 'Light',
 };

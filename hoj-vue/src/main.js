@@ -4,7 +4,8 @@ import store from './store';
 import Element from 'element-ui';
 import i18n from '@/i18n';
 
-// import "element-ui/lib/theme-chalk/index.css"
+// 明亮模式
+import 'element-ui/lib/theme-chalk/index.css';
 import 'font-awesome/css/font-awesome.min.css';
 import Message from 'vue-m-message';
 import 'vue-m-message/dist/index.css';

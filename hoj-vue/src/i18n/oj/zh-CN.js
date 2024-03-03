@@ -825,4 +825,8 @@ export const m = {
   Applying_for_Publicity: '申请公开中',
   Group_Problem_Apply_Public_Tips: '您是否确定要申请该题目加入公开题库？',
   Cancel_Group_Problem_Apply_Public_Tips: '您是否要取消申请该题目加入公开题库？',
+
+  // darkmode
+  Dark: '暗色',
+  Light: '亮色',
 };
