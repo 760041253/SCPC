@@ -10,6 +10,7 @@ import top.hcode.hoj.common.exception.StatusNotFoundException;
 import top.hcode.hoj.dao.common.AnnouncementEntityService;
 import top.hcode.hoj.dao.group.GroupAnnouncementEntityService;
 import top.hcode.hoj.dao.group.GroupEntityService;
+import top.hcode.hoj.manager.group.GroupManager;
 import top.hcode.hoj.pojo.entity.common.Announcement;
 import top.hcode.hoj.pojo.entity.group.Group;
 import top.hcode.hoj.pojo.vo.AnnouncementVO;
@@ -40,6 +41,9 @@ public class GroupAnnouncementManager {
     @Autowired
     private CommonValidator commonValidator;
 
+    @Autowired
+    private GroupManager groupManager;
+
     public IPage<AnnouncementVO> getAnnouncementList(Integer limit, Integer currentPage, Long gid)
             throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
@@ -68,9 +72,9 @@ public class GroupAnnouncementManager {
             throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-
         Group group = groupEntityService.getById(gid);
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (group == null || group.getStatus() == 1 && !isRoot) {
             throw new StatusNotFoundException("获取公告失败，该团队不存在或已被封禁！");
@@ -97,9 +101,9 @@ public class GroupAnnouncementManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-
         Long gid = announcement.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (gid == null) {
             throw new StatusFailException("添加失败，公告所属团队ID不能为空！");
@@ -131,8 +135,6 @@ public class GroupAnnouncementManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-
         Announcement oriAnnouncement = announcementEntityService.getById(announcement.getId());
 
         if (oriAnnouncement == null) {
@@ -140,6 +142,8 @@ public class GroupAnnouncementManager {
         }
 
         Long gid = announcement.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (gid == null) {
             throw new StatusForbiddenException("修改失败，不可操作非团队内的公告！");
@@ -167,8 +171,6 @@ public class GroupAnnouncementManager {
             throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-
         Announcement announcement = announcementEntityService.getById(aid);
 
         if (announcement == null) {
@@ -176,6 +178,8 @@ public class GroupAnnouncementManager {
         }
 
         Long gid = announcement.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (gid == null) {
             throw new StatusForbiddenException("删除失败，不可操作非团队内的公告！");
