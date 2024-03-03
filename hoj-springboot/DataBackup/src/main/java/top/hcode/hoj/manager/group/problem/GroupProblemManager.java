@@ -73,7 +73,7 @@ public class GroupProblemManager {
     @Autowired
     private ProblemValidator problemValidator;
 
-    @Value("${hoj.judge.token}")
+    @Value("${hoj.judge.token:default}")
     private String judgeToken;
 
     public IPage<ProblemVO> getProblemList(Integer limit, Integer currentPage, Long gid)

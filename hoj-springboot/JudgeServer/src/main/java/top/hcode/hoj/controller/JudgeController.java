@@ -31,7 +31,7 @@ public class JudgeController {
     @Autowired
     private JudgeService judgeService;
 
-    @Value("${hoj.judge.token}")
+    @Value("${hoj.judge.token:default}")
     private String judgeToken;
 
     @Value("${hoj-judge-server.remote-judge.open}")

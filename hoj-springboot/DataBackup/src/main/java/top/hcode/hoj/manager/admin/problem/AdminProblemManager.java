@@ -53,7 +53,7 @@ public class AdminProblemManager {
     @Autowired
     private Dispatcher dispatcher;
 
-    @Value("${hoj.judge.token}")
+    @Value("${hoj.judge.token:default}")
     private String judgeToken;
 
     @Resource

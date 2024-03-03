@@ -26,7 +26,7 @@ public class RemoteJudgeDispatcher {
     @Autowired
     private RemoteJudgeReceiver remoteJudgeReceiver;
 
-    @Value("${hoj.judge.token}")
+    @Value("${hoj.judge.token:default}")
     private String judgeToken;
 
     public void sendTask(Long judgeId, Long pid, String remoteJudgeProblem, Boolean isContest,
