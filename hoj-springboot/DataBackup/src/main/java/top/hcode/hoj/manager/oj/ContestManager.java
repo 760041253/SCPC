@@ -34,6 +34,7 @@ import top.hcode.hoj.validator.GroupValidator;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.time.Instant;
 
 /**
  * @Author: Himit_ZH
@@ -216,7 +217,7 @@ public class ContestManager {
         return accessVo;
     }
 
-    public List<ContestProblemVO> getContestProblem(Long cid, Boolean isContainsContestEndJudge)
+    public List<ContestProblemVO> getContestProblem(Long cid, Boolean isContainsContestEndJudge, Long selectedTime)
             throws StatusFailException, StatusForbiddenException {
 
         // 获取当前登录的用户
@@ -225,23 +226,49 @@ public class ContestManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        // 超级管理员或者该比赛的创建者，则为比赛管理者
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-
-        // 需要对该比赛做判断，是否处于开始或结束状态才可以获取题目列表，同时若是私有赛需要判断是否已注册（比赛管理员包括超级管理员可以直接获取）
-        contestValidator.validateContestAuth(contest, userRolesVo, isRoot);
-
-        List<ContestProblemVO> contestProblemList;
-        boolean isAdmin = isRoot
-                || contest.getAuthor().equals(userRolesVo.getUsername())
-                || (contest.getIsGroup() && groupValidator.isGroupRoot(userRolesVo.getUid(), contest.getGid()));
-
         List<String> groupRootUidList = null;
         if (contest.getIsGroup() && contest.getGid() != null) {
             groupRootUidList = groupMemberEntityService.getGroupRootUidList(contest.getGid());
         }
 
         isContainsContestEndJudge = Objects.equals(contest.getAllowEndSubmit(), true) && isContainsContestEndJudge;
+
+        Date selectedTime_date = null;
+        if (!isContainsContestEndJudge) { // 不包含赛后提交
+            // 将Long time 转化为 Date time
+            selectedTime_date = addSeconds(contest.getStartTime(), selectedTime);
+        }
+
+        if (userRolesVo == null) { // 如果访问者没登录
+            if (Objects.equals(contest.getOpenRank(), true) // 比賽開放赛外榜单
+                    && contest.getStatus().intValue() != Constants.Contest.STATUS_SCHEDULED.getCode()) {
+                return contestProblemEntityService.getContestProblemList(cid,
+                        contest.getStartTime(),
+                        contest.getEndTime(),
+                        Objects.equals(contest.getSealRank(), true) ? contest.getSealRankTime() : null,
+                        false,
+                        contest.getAuthor(),
+                        groupRootUidList,
+                        isContainsContestEndJudge,
+                        selectedTime_date);
+            } else {
+                // 比赛没有开启赛外榜单，同时访问者也没登录，则不允许访问比赛题目数据
+                throw new StatusForbiddenException("请您先登录！");
+            }
+        }
+
+        // 超级管理员或者该比赛的创建者，则为比赛管理者
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
+
+        if (!Objects.equals(contest.getOpenRank(), true)) { // 当比賽没有開放赛外榜单，需要鉴权
+            // 需要对该比赛做判断，是否处于开始或结束状态才可以获取题目列表，同时若是私有赛需要判断是否已注册（比赛管理员包括超级管理员可以直接获取）
+            contestValidator.validateContestAuth(contest, userRolesVo, isRoot);
+        }
+
+        List<ContestProblemVO> contestProblemList;
+        boolean isAdmin = isRoot
+                || contest.getAuthor().equals(userRolesVo.getUsername())
+                || (contest.getIsGroup() && groupValidator.isGroupRoot(userRolesVo.getUid(), contest.getGid()));
 
         // 如果比赛开启封榜
         if (contestValidator.isSealRank(userRolesVo.getUid(), contest, true, isRoot)) {
@@ -252,7 +279,8 @@ public class ContestManager {
                     isAdmin,
                     contest.getAuthor(),
                     groupRootUidList,
-                    isContainsContestEndJudge);
+                    isContainsContestEndJudge,
+                    selectedTime_date);
         } else {
             contestProblemList = contestProblemEntityService.getContestProblemList(cid,
                     contest.getStartTime(),
@@ -261,7 +289,8 @@ public class ContestManager {
                     isAdmin,
                     contest.getAuthor(),
                     groupRootUidList,
-                    isContainsContestEndJudge);
+                    isContainsContestEndJudge,
+                    selectedTime_date);
         }
 
         return contestProblemList;
@@ -572,6 +601,11 @@ public class ContestManager {
         boolean isContainsAfterContestJudge = Objects.equals(contest.getAllowEndSubmit(), true)
                 && Objects.equals(contestRankDto.getContainsEnd(), true);
 
+        Long time = null;
+        if (!contestRankDto.getContainsEnd()) {
+            time = contestRankDto.getTime();
+        }
+
         IPage resultList;
         if (contest.getType().intValue() == Constants.Contest.TYPE_ACM.getCode()) {
             // ACM比赛
@@ -585,7 +619,8 @@ public class ContestManager {
                     currentPage,
                     limit,
                     contestRankDto.getKeyword(),
-                    isContainsAfterContestJudge);
+                    isContainsAfterContestJudge,
+                    time);
 
         } else {
             // OI比赛
@@ -598,7 +633,8 @@ public class ContestManager {
                     currentPage,
                     limit,
                     contestRankDto.getKeyword(),
-                    isContainsAfterContestJudge);
+                    isContainsAfterContestJudge,
+                    time);
         }
         return resultList;
     }
@@ -685,4 +721,12 @@ public class ContestManager {
 
     }
 
+    private static Date addSeconds(Date date, Long seconds) {
+        if (seconds != null) {
+            Instant instant = date.toInstant().plusSeconds(seconds);
+            return Date.from(instant);
+        } else {
+            return null;
+        }
+    }
 }
