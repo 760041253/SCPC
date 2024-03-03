@@ -85,7 +85,7 @@ public class GroupContestAnnouncementManager {
             currentPage = 1;
         if (limit == null || limit < 1)
             limit = 10;
-        return announcementEntityService.getContestAnnouncement(cid, false, limit, currentPage, null);
+        return announcementEntityService.getContestAnnouncement(cid, false, limit, currentPage);
     }
 
     @Transactional(rollbackFor = Exception.class)

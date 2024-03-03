@@ -311,9 +311,9 @@ public class JudgeStrategy {
 
         // OI题目计算得分
         if (!isACM) {
-            // 全对的直接用总分*0.1+2*题目难度
+            // 全对的直接用总分*0.1+0.002*题目难度
             if (errorCaseNum == 0 && Constants.JudgeCaseMode.DEFAULT.getMode().equals(judgeCaseMode)) {
-                int oiRankScore = (int) Math.round(totalScore * 0.1 + 2 * problemDifficulty);
+                int oiRankScore = (int) Math.round(totalScore * 0.1 + 0.002 * problemDifficulty);
                 result.put("score", totalScore);
                 result.put("oiRankScore", oiRankScore);
             } else {
@@ -351,9 +351,9 @@ public class JudgeStrategy {
                 if (totalScore != 0 && sumScore > totalScore) {
                     sumScore = totalScore;
                 }
-                // 测试点总得分*0.1+2*题目难度*（测试点总得分/题目总分）
+                // 测试点总得分*0.1+0.002*题目难度*（测试点总得分/题目总分）
                 int oiRankScore = (int) Math
-                        .round(sumScore * 0.1 + 2 * problemDifficulty * (sumScore * 1.0 / totalScore));
+                        .round(sumScore * 0.1 + 0.002 * problemDifficulty * (sumScore * 1.0 / totalScore));
                 result.put("score", sumScore);
                 result.put("oiRankScore", oiRankScore);
             }

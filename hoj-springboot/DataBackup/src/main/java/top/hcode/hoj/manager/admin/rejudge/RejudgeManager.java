@@ -243,7 +243,7 @@ public class RejudgeManager {
                 } else if (score < 0) {
                     score = 0;
                 }
-                oiRankScore = (int) Math.round(problem.getDifficulty() * 2 + 0.1 * score);
+                oiRankScore = (int) Math.round(problem.getDifficulty() * 0.002 + 0.1 * score);
                 judgeUpdateWrapper.set("score", score)
                         .set("oi_rank_score", oiRankScore);
             } else {

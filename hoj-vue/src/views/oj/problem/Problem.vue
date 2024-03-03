@@ -167,7 +167,7 @@
                         problemData.problem.ioScore,
                         problemData.problem.difficulty
                         )
-                        }}(0.1*{{ $t('m.Score') }}+2*{{ $t('m.Level') }})
+                        }}(0.1*{{ $t('m.Score') }}+ 0.002*{{ $t('m.Level') }})
                       </span>
                       <br />
                     </template>
@@ -1638,7 +1638,7 @@ export default {
       });
     },
     calcOIRankScore(score, difficulty) {
-      return Math.round(0.1 * score + 2 * difficulty);
+      return Math.round(0.1 * score + 0.002 * difficulty);
     },
 
     onCopy(event) {
