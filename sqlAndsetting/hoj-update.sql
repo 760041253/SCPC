@@ -1137,3 +1137,32 @@ CALL add_User_Info_Preferences_Setting;
 
 DROP PROCEDURE add_User_Info_Preferences_Setting;
 
+/*
+* 增加同步赛
+
+*/
+DROP PROCEDURE
+IF EXISTS add_Synchronous;
+DELIMITER $$
+
+CREATE PROCEDURE add_Synchronous ()
+BEGIN
+
+IF NOT EXISTS (
+	SELECT
+		1
+	FROM
+		information_schema.`COLUMNS`
+	WHERE
+		table_name = 'contest'
+	AND column_name = 'synchronous_config'
+) THEN
+
+	ALTER TABLE `hoj`.`contest`  ADD COLUMN `synchronous_config` text null comment '同步赛配置 json';
+END
+IF ; END$$
+
+DELIMITER ;
+CALL add_Synchronous ;
+
+DROP PROCEDURE add_Synchronous;

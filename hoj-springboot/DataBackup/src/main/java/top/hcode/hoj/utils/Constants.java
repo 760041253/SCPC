@@ -120,6 +120,20 @@ public class Constants {
         }
     }
 
+    public enum NYOJ {
+        HOST("http://nyoj.online");
+
+        private final String mode;
+
+        NYOJ(String mode) {
+            this.mode = mode;
+        }
+
+        public String getMode() {
+            return mode;
+        }
+    }
+
     /**
      * @Description 比赛相关的常量
      * @Since 2021/1/7
@@ -135,6 +149,8 @@ public class Constants {
         AUTH_PUBLIC(0, "Public"),
         AUTH_PRIVATE(1, "Private"),
         AUTH_PROTECT(2, "Protect"),
+        AUTH_PUBLIC_SYNCHRONOUS(4, "Public_Synchronous"),
+        AUTH_PRIVATE_SYNCHRONOUS(5, "Private_Synchronous"),
 
         RECORD_NOT_AC_PENALTY(-1, "未AC通过算罚时"),
         RECORD_NOT_AC_NOT_PENALTY(0, "未AC通过不罚时"),
@@ -228,6 +244,8 @@ public class Constants {
         FILE_API("/api/public/file/"),
 
         TESTCASE_TMP_FOLDER("/hoj/file/zip"),
+
+        BOXFILE_BASE_FOLDER("/hoj/file/file"),
 
         TESTCASE_BASE_FOLDER("/hoj/testcase"),
 

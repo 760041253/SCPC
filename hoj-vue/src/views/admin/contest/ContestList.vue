@@ -31,7 +31,7 @@
             <el-tag type="gray">{{ row.type | parseContestType }}</el-tag>
           </template>
         </vxe-table-column>
-        <vxe-table-column :title="$t('m.Auth')" width="100">
+        <vxe-table-column :title="$t('m.Auth')" width="150">
           <template v-slot="{ row }">
             <el-tooltip
               :content="$t('m.' + CONTEST_TYPE_REVERSE[row.auth].tips)"
@@ -194,6 +194,8 @@ export default {
     };
   },
   mounted() {
+    this.keyword = this.$route.query.keyword || "";
+    this.$router.replace({ query: {} }); // 隐藏 query
     this.CONTEST_TYPE_REVERSE = Object.assign({}, CONTEST_TYPE_REVERSE);
     this.CONTEST_STATUS_REVERSE = Object.assign({}, CONTEST_STATUS_REVERSE);
     this.getContestList(this.currentPage);

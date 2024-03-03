@@ -332,11 +332,9 @@ const ojApi = {
     });
   },
   // 获取单个提交的信息
-  getSubmission(submitId) {
+  getSubmission(submitId, cid) {
     return ajax('/api/get-submission-detail', 'get', {
-      params: {
-        submitId,
-      },
+      params: { submitId, cid },
     });
   },
   // 在线调试
@@ -373,11 +371,9 @@ const ojApi = {
     });
   },
   // 获取单个提交的全部测试点详情
-  getAllCaseResult(submitId) {
+  getAllCaseResult(submitId, cid) {
     return ajax('/api/get-all-case-result', 'get', {
-      params: {
-        submitId,
-      },
+      params: { submitId, cid },
     });
   },
   // 远程虚拟判题失败进行重新提交
@@ -560,6 +556,11 @@ const ojApi = {
     return ajax('/api/get-contest-problem', 'get', {
       params: { cid, containsEnd, time },
     });
+  }, // 获取同步赛题目列表
+  getSynchronousProblemList(cid, containsEnd = false, time = null) {
+    return ajax('/api/get-synchronous-problem', 'get', {
+      params: { cid, containsEnd, time },
+    });
   },
   // 获取比赛题目详情
   getContestProblem(displayId, cid, gid, containsEnd = false) {
@@ -574,13 +575,24 @@ const ojApi = {
       params,
     });
   },
-
+  // 获取同步赛提交列表
+  getSynchronousSubmissionList(limit, params) {
+    params.limit = limit;
+    return ajax('/api/synchronous-submissions', 'get', {
+      params,
+    });
+  },
   getContestRank(data) {
     return ajax('/api/get-contest-rank', 'post', {
       data,
     });
   },
-
+  // 获取同步赛榜单
+  getSynchronousRank(data) {
+    return ajax('/api/get-synchronous-rank', 'post', {
+      data,
+    });
+  },
   // 获取比赛公告列表
   getContestAnnouncementList(currentPage, limit, cid) {
     let params = {

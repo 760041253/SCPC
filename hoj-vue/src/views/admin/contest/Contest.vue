@@ -44,7 +44,7 @@
           </el-col>
         </el-row>
 
-        <el-row>
+        <el-row :gutter="20">
           <el-col :md="8" :xs="24">
             <el-form-item :label="$t('m.Contest_Rule_Type')" required>
               <el-radio
@@ -80,7 +80,7 @@
           </el-col>
         </el-row>
 
-        <el-row>
+        <el-row :gutter="20">
           <el-col :md="8" :xs="24" v-if="contest.sealRank">
             <el-form-item :label="$t('m.Timeliness_Of_Rank')" required>
               <el-switch
@@ -137,7 +137,7 @@
           </el-col>
         </el-row>
 
-        <el-row>
+        <el-row :gutter="20">
           <el-col :md="8" :xs="24">
             <el-form-item :label="$t('m.Contest_Outside_ScoreBoard')" required>
               <el-switch
@@ -169,7 +169,7 @@
           </el-col>
         </el-row>
 
-        <el-row>
+        <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item :label="$t('m.Rank_Show_Name')" required>
               <el-radio-group v-model="contest.rankShowName">
@@ -230,14 +230,16 @@
                 <el-option :label="$t('m.Public')" :value="0"></el-option>
                 <el-option :label="$t('m.Private')" :value="1"></el-option>
                 <el-option :label="$t('m.Protected')" :value="2"></el-option>
+                <el-option :label="$t('m.Public_Synchronous')" :value="4"></el-option>
+                <el-option :label="$t('m.Private_Synchronous')" :value="5"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :md="8" :xs="24">
+          <el-col :md="8" :xs="24" v-if="contest.auth != 0 && contest.auth != 4">
             <el-form-item
               :label="$t('m.Contest_Password')"
-              v-show="contest.auth != 0"
-              :required="contest.auth != 0"
+              v-show="contest.auth != 0 && contest.auth != 4"
+              :required="contest.auth != 0 && contest.auth != 4"
             >
               <el-input v-model="contest.pwd" :placeholder="$t('m.Contest_Password')"></el-input>
             </el-form-item>
@@ -250,6 +252,61 @@
             >
               <el-switch v-model="contest.openAccountLimit"></el-switch>
             </el-form-item>
+          </el-col>
+
+          <!-- 同步赛配置 -->
+          <el-col :span="24" v-if="contest.auth == 4 || contest.auth == 5">
+            <div style="margin-bottom: 10px">
+              <el-button
+                type="primary"
+                icon="el-icon-plus"
+                circle
+                @click="insertEvent2(-1)"
+                size="small"
+              ></el-button>
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                @click="removeEvent2()"
+                size="small"
+              ></el-button>
+            </div>
+            <vxe-table
+              border
+              ref="xAwardTable2"
+              :data="contest.synchronousConfigList"
+              :edit-config="{ trigger: 'click', mode: 'cell' }"
+              align="center"
+              @edit-closed="editClosedEvent2"
+              style="margin-bottom: 15px"
+            >
+              <vxe-table-column type="checkbox" width="60"></vxe-table-column>
+              <vxe-table-column
+                field="school"
+                min-width="150"
+                :title="$t('m.Synchronous_School')"
+                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
+              ></vxe-table-column>
+              <vxe-table-column
+                field="link"
+                min-width="150"
+                :title="$t('m.Synchronous_Link')"
+                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
+              ></vxe-table-column>
+              <vxe-table-column
+                field="username"
+                min-width="150"
+                :title="$t('m.Synchronous_Username')"
+                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
+              ></vxe-table-column>
+              <vxe-table-column
+                field="password"
+                min-width="150"
+                :title="$t('m.Synchronous_Password')"
+                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
+              ></vxe-table-column>
+            </vxe-table>
           </el-col>
 
           <template v-if="contest.openAccountLimit">
@@ -498,7 +555,7 @@ export default {
       this.title = this.$i18n.t("m.Edit_Contest");
       this.disableRuleType = true;
       this.getContestByCid();
-    } else {
+    } else if (this.$route.name === "admin-create-contest") {
       this.title = this.$i18n.t("m.Create_Contest");
       this.disableRuleType = false;
     }
@@ -509,10 +566,10 @@ export default {
         this.title = this.$i18n.t("m.Edit_Contest");
         this.disableRuleType = true;
         this.getContestByCid();
-      } else {
+      } else if (this.$route.name === "admin-create-contest") {
         this.title = this.$i18n.t("m.Create_Contest");
         this.disableRuleType = false;
-        this.contest = {};
+        // this.contest = {};
       }
     },
   },
@@ -521,39 +578,43 @@ export default {
   },
   methods: {
     getContestByCid() {
-      api
-        .admin_getContest(this.$route.params.contestId)
-        .then((res) => {
-          let data = res.data.data;
-          this.contest = data;
-          this.changeDuration();
-          // 封榜时间转换
-          let halfHour = moment(this.contest.endTime)
-            .subtract(1800, "seconds")
-            .toString();
-          let oneHour = moment(this.contest.endTime)
-            .subtract(3600, "seconds")
-            .toString();
-          let allHour = moment(this.contest.startTime).toString();
-          let sealRankTime = moment(this.contest.sealRankTime).toString();
-          switch (sealRankTime) {
-            case halfHour:
-              this.seal_rank_time = 0;
-              break;
-            case oneHour:
-              this.seal_rank_time = 1;
-              break;
-            case allHour:
-              this.seal_rank_time = 2;
-              break;
-          }
-          if (this.contest.accountLimitRule) {
-            this.formRule = this.changeStrToAccountRule(
-              this.contest.accountLimitRule
-            );
-          }
-        })
-        .catch(() => {});
+      let cid = this.$route.params.contestId;
+      if (cid) {
+        api
+          .admin_getContest(cid)
+          .then((res) => {
+            let data = res.data.data;
+            this.contest = data;
+            this.changeDuration();
+            this.changeSignDuration();
+            // 封榜时间转换
+            let halfHour = moment(this.contest.endTime)
+              .subtract(1800, "seconds")
+              .toString();
+            let oneHour = moment(this.contest.endTime)
+              .subtract(3600, "seconds")
+              .toString();
+            let allHour = moment(this.contest.startTime).toString();
+            let sealRankTime = moment(this.contest.sealRankTime).toString();
+            switch (sealRankTime) {
+              case halfHour:
+                this.seal_rank_time = 0;
+                break;
+              case oneHour:
+                this.seal_rank_time = 1;
+                break;
+              case allHour:
+                this.seal_rank_time = 2;
+                break;
+            }
+            if (this.contest.accountLimitRule) {
+              this.formRule = this.changeStrToAccountRule(
+                this.contest.accountLimitRule
+              );
+            }
+          })
+          .catch(() => {});
+      }
     },
 
     saveContest() {
@@ -591,7 +652,12 @@ export default {
         myMessage.error(this.$i18n.t("m.Contest_Duration_Check"));
         return;
       }
-      if (this.contest.auth != 0 && !this.contest.pwd) {
+
+      if (
+        this.contest.auth != 0 &&
+        this.contest.auth != 4 &&
+        !this.contest.pwd
+      ) {
         myMessage.error(
           this.$i18n.t("m.Contest_Password") +
             " " +
@@ -802,6 +868,54 @@ export default {
         setTimeout(() => {
           // 局部更新单元格为已保存状态
           this.$refs.xAwardTable.reloadRow(row, null, field);
+        }, 300);
+      }
+    },
+
+    async insertEvent2(row) {
+      let record = {
+        school: "school",
+        link: "",
+        authorization: "",
+      };
+      let { row: newRow } = await this.$refs.xAwardTable2.insertAt(record, row);
+      const { insertRecords } = this.$refs.xAwardTable2.getRecordset();
+      this.contest.synchronousConfigList =
+        this.contest.synchronousConfigList.concat(insertRecords);
+      await this.$refs.xAwardTable2.setActiveCell(newRow, "school");
+    },
+    async removeEvent2() {
+      this.$refs.xAwardTable2.removeCheckboxRow();
+      let removeRecords = this.$refs.xAwardTable2.getRemoveRecords();
+      function getDifferenceSetB(arr1, arr2, typeName) {
+        return Object.values(
+          arr1.concat(arr2).reduce((acc, cur) => {
+            if (
+              acc[cur[typeName]] &&
+              acc[cur[typeName]][typeName] === cur[typeName]
+            ) {
+              delete acc[cur[typeName]];
+            } else {
+              acc[cur[typeName]] = cur;
+            }
+            return acc;
+          }, {})
+        );
+      }
+      this.contest.synchronousConfigList = getDifferenceSetB(
+        this.contest.synchronousConfigList,
+        removeRecords,
+        "_XID"
+      );
+    },
+    editClosedEvent2({ row, column }) {
+      let xTable = this.$refs.xAwardTable2;
+      let field = column.property;
+      // 判断单元格值是否被修改
+      if (xTable.isUpdateByRow(row, field)) {
+        setTimeout(() => {
+          // 局部更新单元格为已保存状态
+          this.$refs.xAwardTable2.reloadRow(row, null, field);
         }, 300);
       }
     },

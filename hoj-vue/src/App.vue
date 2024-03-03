@@ -381,6 +381,7 @@ a:hover {
 }
 .contest-config {
   text-align: right;
+  justify-content: flex-end;
 }
 .contest-config-switches p span {
   margin-left: 8px;
