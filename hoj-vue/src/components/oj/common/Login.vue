@@ -80,6 +80,10 @@ import mMessage from "@/common/message";
 export default {
   data() {
     return {
+      formProfile: {
+        uiLanguage: "",
+        uiTheme: "",
+      },
       btnLoginLoading: false,
       verify: {
         loginSuccess: false,
@@ -157,6 +161,18 @@ export default {
               this.$store.commit("changeUserToken", jwt);
               this.$store.dispatch("setUserInfo", res.data.data);
               this.$store.dispatch("incrLoginFailNum", true);
+              let profile = this.$store.getters.userInfo;
+              Object.keys(this.formProfile).forEach((element) => {
+                if (profile[element] !== undefined) {
+                  this.formProfile[element] = profile[element];
+                  this.$store.commit("changeWebLanguage", {
+                    language: this.formProfile.uiLanguage,
+                  });
+                  this.$store.commit("changeWebTheme", {
+                    theme: this.formProfile.uiTheme,
+                  });
+                }
+              });
               mMessage.success(this.$i18n.t("m.Welcome_Back"));
             },
             (_) => {

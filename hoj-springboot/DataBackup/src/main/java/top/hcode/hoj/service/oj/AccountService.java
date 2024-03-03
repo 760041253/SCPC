@@ -22,5 +22,7 @@ public interface AccountService {
 
     public CommonResult<UserInfoVO> changeUserInfo(UserInfoVO userInfoVo);
 
+    public CommonResult<UserInfoVO> changeUserPreferences(UserPreferencesVO UserPreferencesVo);
+
     public CommonResult<UserAuthInfoVO> getUserAuthInfo();
 }

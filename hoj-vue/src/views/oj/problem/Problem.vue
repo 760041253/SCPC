@@ -781,6 +781,9 @@ export default {
   },
   data() {
     return {
+      formProfile: {
+        codeTemplate: "",
+      },
       statusVisible: false,
       captchaRequired: false,
       graphVisible: false,
@@ -866,6 +869,12 @@ export default {
   },
 
   mounted() {
+    let profile = this.$store.getters.userInfo;
+    Object.keys(this.formProfile).forEach((element) => {
+      if (profile[element] !== undefined) {
+        this.formProfile[element] = profile[element];
+      }
+    });
     this.init();
     this.dragControllerDiv();
     this.resizeWatchHeight();
@@ -1249,6 +1258,8 @@ export default {
           let codeTemplate = this.problemData.codeTemplate;
           if (codeTemplate && codeTemplate[this.language]) {
             this.code = codeTemplate[this.language];
+          } else {
+            this.code = this.formProfile.codeTemplate || "";
           }
           this.$nextTick((_) => {
             addCodeBtn();
@@ -1354,7 +1365,7 @@ export default {
         if (this.problemData.codeTemplate[newLang]) {
           this.code = this.problemData.codeTemplate[newLang];
         } else {
-          this.code = "";
+          this.code = this.formProfile.codeTemplate || "";
         }
       }
       this.language = newLang;
@@ -1377,7 +1388,7 @@ export default {
           if (codeTemplate && codeTemplate[this.language]) {
             this.code = codeTemplate[this.language];
           } else {
-            this.code = "";
+            this.code = this.formProfile.codeTemplate || "";
           }
         })
         .catch(() => {});

@@ -22,6 +22,7 @@ const getters = {
   isAuthenticated: (state, getters) => {
     return !!getters.token;
   },
+  // 通用管理权限
   isAdminRole: (state, getters) => {
     if (getters.userInfo.roleList) {
       return getters.userInfo.roleList.indexOf(USER_TYPE.ADMIN) != -1 || getters.userInfo.roleList.indexOf(USER_TYPE.PROBLEM_ADMIN) != -1 || getters.userInfo.roleList.indexOf(USER_TYPE.SUPER_ADMIN) != -1;
@@ -29,6 +30,15 @@ const getters = {
       return false;
     }
   },
+  // 主要管理权限 (除了核心系统配置之外的)
+  isMainAdminRole: (state, getters) => {
+    if (getters.userInfo.roleList) {
+      return getters.userInfo.roleList.indexOf(USER_TYPE.ADMIN) != -1 || getters.userInfo.roleList.indexOf(USER_TYPE.SUPER_ADMIN) != -1;
+    } else {
+      return false;
+    }
+  },
+  // 超管权限
   isSuperAdmin: (state, getters) => {
     if (getters.userInfo.roleList) {
       return getters.userInfo.roleList.indexOf(USER_TYPE.SUPER_ADMIN) != -1;
@@ -36,9 +46,18 @@ const getters = {
       return false;
     }
   },
+  // 题目管理权限
   isProblemAdmin: (state, getters) => {
     if (getters.userInfo.roleList) {
       return getters.userInfo.roleList.indexOf(USER_TYPE.PROBLEM_ADMIN) != -1;
+    } else {
+      return false;
+    }
+  },
+  // 普通管理权限
+  isNormalAdmin: (state, getters) => {
+    if (getters.userInfo.roleList) {
+      return getters.userInfo.roleList.indexOf(USER_TYPE.ADMIN) != -1;
     } else {
       return false;
     }
@@ -47,6 +66,10 @@ const getters = {
 
 const mutations = {
   changeUserInfo(state, { userInfo }) {
+    state.userInfo = userInfo;
+    storage.set('userInfo', userInfo);
+  },
+  changeUserPreferences(state, { userInfo }) {
     state.userInfo = userInfo;
     storage.set('userInfo', userInfo);
   },

@@ -1,17 +1,23 @@
 <template>
   <el-card class="box-card">
     <el-collapse v-model="activeName" accordion>
-      <el-collapse-item name="Account">
+      <el-collapse-item name="Preferences">
         <template slot="title">
-          <i class="fa fa-gear">{{ $t('m.Account_Setting') }}</i>
+          <i class="fa fa-gear">{{ $t("m.Preferences_Setting") }}</i>
         </template>
-        <component :is="Account"></component>
+        <component :is="Preferences"></component>
       </el-collapse-item>
       <el-collapse-item name="UserInfo">
         <template slot="title">
-          <i class="fa fa-gear">{{ $t('m.UserInfo_Setting') }}</i>
+          <i class="fa fa-gear">{{ $t("m.UserInfo_Setting") }}</i>
         </template>
         <component :is="UserInfo"></component>
+      </el-collapse-item>
+      <el-collapse-item name="Account">
+        <template slot="title">
+          <i class="fa fa-gear">{{ $t("m.Account_Setting") }}</i>
+        </template>
+        <component :is="Account"></component>
       </el-collapse-item>
     </el-collapse>
   </el-card>
@@ -19,16 +25,20 @@
 <script>
 const Account = () => import("@/components/oj/setting/Account");
 const UserInfo = () => import("@/components/oj/setting/UserInfo");
+const Preferences = () => import("@/components/oj/setting/Preferences");
+
 export default {
   components: {
     Account,
     UserInfo,
+    Preferences,
   },
   data() {
     return {
       Account: "Account",
       UserInfo: "UserInfo",
-      activeName: "Account",
+      Preferences: "Preferences",
+      activeName: ["Preferences"],
     };
   },
 };
@@ -36,8 +46,8 @@ export default {
 <style scoped>
 @media screen and (min-width: 1200px) {
   .box-card {
-    margin-left: 10%;
-    margin-right: 10%;
+    width: 100%;
+    margin: 0 auto;
   }
 }
 /deep/ .el-collapse-item__header {

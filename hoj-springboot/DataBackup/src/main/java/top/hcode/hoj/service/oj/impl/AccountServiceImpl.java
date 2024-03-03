@@ -90,6 +90,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public CommonResult<UserInfoVO> changeUserPreferences(UserPreferencesVO UserPreferencesVo) {
+        try {
+            return CommonResult.successResponse(accountManager.changeUserPreferences(UserPreferencesVo));
+        } catch (StatusFailException e) {
+            return CommonResult.errorResponse(e.getMessage());
+        }
+    }
+
+    @Override
     public CommonResult<UserAuthInfoVO> getUserAuthInfo() {
         return CommonResult.successResponse(accountManager.getUserAuthInfo());
     }

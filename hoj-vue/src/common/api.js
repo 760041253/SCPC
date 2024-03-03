@@ -695,6 +695,11 @@ const ojApi = {
       data,
     });
   },
+  changeUserPreferences(data) {
+    return ajax('/api/change-userPreferences', 'post', {
+      data,
+    });
+  },
 
   // 讨论页相关请求
   getCategoryList() {

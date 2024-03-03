@@ -6,7 +6,7 @@
           <span>{{ $t('m.Lang') }}:</span>
           <span>
             <el-select
-              :value="this.language"
+              :value="CodeLanguage()"
               @change="onLangChange"
               class="left-adjust"
               size="small"
@@ -22,6 +22,11 @@
           <span v-if="isAuthenticated && !submitDisabled">
             <el-tooltip :content="$t('m.Get_Recently_Passed_Code')" placement="top">
               <el-button icon="el-icon-download" size="small" @click="getUserLastAccepetedCode"></el-button>
+            </el-tooltip>
+          </span>
+          <span>
+            <el-tooltip :content="$t('m.Beauty_Code')" placement="top">
+              <el-button icon="el-icon-thumb" @click="CodeBeauty" size="small"></el-button>
             </el-tooltip>
           </span>
         </div>
@@ -47,7 +52,7 @@
                     {{ $t('m.Theme') }}
                   </span>
                   <el-select
-                    :value="this.theme"
+                    :value="formProfile.ideTheme || this.theme"
                     @change="onThemeChange"
                     class="setting-item-value"
                     size="small"
@@ -66,7 +71,7 @@
                     {{ $t('m.FontSize') }}
                   </span>
                   <el-select
-                    :value="fontSize"
+                    :value="formProfile.codeSize || this.fontSize"
                     @change="onFontSizeChange"
                     class="setting-item-value"
                     size="small"
@@ -141,7 +146,7 @@
         </div>
       </el-col>
     </el-row>
-    <div :style="'line-height: 1.5;font-size:'+fontSize">
+    <div :style="'line-height: 1.5;font-size:' + formProfile.codeSize || this.fontSize">
       <codemirror
         class="js-right"
         :value="value"
@@ -154,7 +159,7 @@
       :visible.sync="openTestCaseDrawer"
       style="position: absolute;"
       :modal="false"
-      size="40%"
+      size="50%"
       :with-header="false"
       @close="closeDrawer"
       direction="btt"
@@ -181,17 +186,51 @@
               :effect="example.active?'dark':'plain'"
             >{{ $t('m.Fill_Case') }} {{ index+1 }}</el-tag>
           </div>
-          <el-input
-            type="textarea"
-            class="mt-10"
-            :rows="7"
-            show-word-limit
-            resize="none"
-            maxlength="1000"
-            v-model="userInput"
-          ></el-input>
-        </el-tab-pane>
-        <el-tab-pane :label="$t('m.Test_Result')" name="result">
+
+          <div class="tj-res-tab">
+            <div class="tj-res-item">
+              <span class="name">{{ $t("m.Test_Input") }}</span>
+              <span class="value">
+                <el-input
+                  type="textarea"
+                  :rows="2"
+                  show-word-limit
+                  resize="none"
+                  maxlength="1000"
+                  v-model="userInput"
+                  :placeholder="$t('m.Test_Input')"
+                ></el-input>
+              </span>
+            </div>
+            <div class="tj-res-item">
+              <span class="name">{{ $t("m.Expected_Output") }}</span>
+              <span class="value">
+                <el-input
+                  type="textarea"
+                  :rows="2"
+                  show-word-limit
+                  resize="none"
+                  maxlength="1000"
+                  v-model="expectedOutput"
+                  :placeholder="$t('m.Expected_Output')"
+                ></el-input>
+              </span>
+            </div>
+            <div class="tj-res-item">
+              <span class="name">{{ $t("m.Real_Output") }}</span>
+              <span class="value">
+                <el-input
+                  type="textarea"
+                  class="textarea"
+                  :readonly="true"
+                  resize="none"
+                  :autosize="{ minRows: 1, maxRows: 4 }"
+                  v-model="testJudgeRes.userOutput"
+                ></el-input>
+              </span>
+            </div>
+          </div>
+
           <div v-loading="testJudgeLoding">
             <template v-if="testJudgeRes.status == -10">
               <div class="tj-res-tab mt-10">
@@ -263,47 +302,6 @@
                   </template>
                 </el-alert>
               </div>
-              <div class="tj-res-tab">
-                <div class="tj-res-item">
-                  <span class="name">{{ $t('m.Test_Input') }}</span>
-                  <span class="value">
-                    <el-input
-                      type="textarea"
-                      class="textarea"
-                      :readonly="true"
-                      resize="none"
-                      :autosize="{ minRows: 1, maxRows: 4}"
-                      v-model="testJudgeRes.userInput"
-                    ></el-input>
-                  </span>
-                </div>
-                <div class="tj-res-item" v-if="testJudgeRes.expectedOutput!=null">
-                  <span class="name">{{ $t('m.Expected_Output') }}</span>
-                  <span class="value">
-                    <el-input
-                      type="textarea"
-                      :readonly="true"
-                      resize="none"
-                      :autosize="{ minRows: 1, maxRows: 4}"
-                      class="textarea"
-                      v-model="testJudgeRes.expectedOutput"
-                    ></el-input>
-                  </span>
-                </div>
-                <div class="tj-res-item">
-                  <span class="name">{{ $t('m.Real_Output') }}</span>
-                  <span class="value">
-                    <el-input
-                      type="textarea"
-                      class="textarea"
-                      :readonly="true"
-                      resize="none"
-                      :autosize="{ minRows: 1, maxRows: 4}"
-                      v-model="testJudgeRes.userOutput"
-                    ></el-input>
-                  </span>
-                </div>
-              </div>
             </template>
             <template v-else>
               <div class="tj-res-tab mt-10">
@@ -317,6 +315,7 @@
                 </el-card>
               </div>
             </template>
+            <p></p>
           </div>
         </el-tab-pane>
         <el-tab-pane>
@@ -345,6 +344,9 @@
 import utils from "@/common/utils";
 import api from "@/common/api";
 import myMessage from "@/common/message";
+//js_beautify
+import { js_beautify } from "js-beautify";
+//codemirror
 import { codemirror, CodeMirror } from "vue-codemirror-lite";
 import { JUDGE_STATUS, JUDGE_STATUS_RESERVE } from "@/common/constants";
 
@@ -414,7 +416,7 @@ export default {
     languages: {
       type: Array,
       default: () => {
-        return ["C", "C++", "Java", "Python3", "Python2"];
+        return ["C", "C++", "C++ 17", "C++ 20", "Java", "Python3", "Python2"];
       },
     },
     language: {
@@ -470,6 +472,11 @@ export default {
   },
   data() {
     return {
+      formProfile: {
+        codeLanguage: "",
+        codeSize: "",
+        ideTheme: "",
+      },
       options: {
         // codemirror options
         tabSize: this.tabSize,
@@ -482,6 +489,8 @@ export default {
         foldGutter: true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         lineWrapping: true,
+        // 自动对焦
+        autofocus: true,
         // 选中文本自动高亮，及高亮方式
         styleSelectedText: true,
         showCursorWhenSelecting: true,
@@ -495,6 +504,45 @@ export default {
         hintOptions: {
           // 当匹配只有一项的时候是否自动补全
           completeSingle: false,
+        },
+        extraKeys: {
+          "Ctrl-/": function (cm) {
+            let startLine = cm.getCursor("start").line;
+            let endLine = cm.getCursor("end").line;
+            for (let i = startLine; i <= endLine; i++) {
+              let origin = cm.getLine(i);
+              if (!origin.startsWith("// ")) {
+                cm.replaceRange(
+                  "// " + origin,
+                  { ch: 0, line: i },
+                  { ch: origin.length, line: i },
+                  null
+                );
+              } else {
+                cm.replaceRange(
+                  origin.substr(3),
+                  { ch: 0, line: i },
+                  { ch: origin.length, line: i },
+                  null
+                );
+              }
+            }
+          },
+          "Ctrl-;": function (cm) {
+            // 获取选中区域的范围
+            let from = cm.getCursor("start");
+            let to = cm.getCursor("end");
+
+            // 获取选中区域的内容并添加或去掉注释
+            let content = cm.getRange(from, to);
+            let note = "/*" + content.replace(/(\n|\r\n)/g, "$&") + "*/";
+            if (content.startsWith("/*") && content.endsWith("*/")) {
+              note = content.substr(2, content.length - 4);
+            }
+
+            // 将注释后的内容替换选中区域
+            cm.replaceRange(note, from, to, null);
+          },
         },
       },
       mode: {
@@ -525,15 +573,24 @@ export default {
     };
   },
   mounted() {
+    let profile = this.$store.getters.userInfo;
+    Object.keys(this.formProfile).forEach((element) => {
+      if (profile[element] !== undefined) {
+        this.formProfile[element] = profile[element];
+      }
+    });
     utils.getLanguages().then((languages) => {
       let mode = {};
       languages.forEach((lang) => {
         mode[lang.name] = lang.contentType;
       });
       this.mode = mode;
+      if (this.languages.includes(this.formProfile.codeLanguage)) {
+        this.language = this.formProfile.codeLanguage;
+      }
       this.editor.setOption("mode", this.mode[this.language]);
     });
-    this.editor.setOption("theme", this.theme);
+    this.editor.setOption("theme", this.formProfile.ideTheme);
     this.editor.setSize("100%", this.height);
     this.editor.on("inputRead", (instance, changeObj) => {
       if (changeObj.text && changeObj.text.length > 0) {
@@ -555,18 +612,37 @@ export default {
     });
   },
   methods: {
+    CodeLanguage() {
+      if (this.languages.includes(this.formProfile.codeLanguage)) {
+        this.language = this.formProfile.codeLanguage;
+        this.onLangChange(this.language);
+      }
+      return this.language;
+    },
+    CodeBeauty() {
+      this.value = js_beautify(this.value || "");
+      this.editor.setValue(this.value);
+      this.editor.refresh();
+    },
     onEditorCodeChange(newCode) {
       this.$emit("update:value", newCode);
     },
     onLangChange(newVal) {
+      if (this.languages.includes(newVal)) {
+        this.formProfile.codeLanguage = newVal;
+        this.language = newVal;
+      }
       this.editor.setOption("mode", this.mode[newVal]);
       this.$emit("changeLang", newVal);
     },
     onThemeChange(newTheme) {
+      this.formProfile.ideTheme = newTheme;
+      this.theme = newTheme;
       this.editor.setOption("theme", newTheme);
       this.$emit("changeTheme", newTheme);
     },
     onFontSizeChange(fontSize) {
+      this.formProfile.codeSize = fontSize;
       this.fontSize = fontSize;
       this.$nextTick(() => {
         this.editor.refresh();
@@ -585,16 +661,58 @@ export default {
     onUploadFile() {
       document.getElementById("file-uploader").click();
     },
+
+    // 防止读取大文件造成的 UI 假死
     onUploadFileDone() {
-      let f = document.getElementById("file-uploader").files[0];
-      let fileReader = new window.FileReader();
-      let self = this;
-      fileReader.onload = function (e) {
-        var text = e.target.result;
-        self.editor.setValue(text);
-        document.getElementById("file-uploader").value = "";
+      let that = this;
+      const fileInput = document.getElementById("file-uploader");
+      const file = fileInput.files[0];
+
+      if (!file) {
+        // 未选择文件
+        return;
+      }
+
+      const chunkSize = 1024 * 1024; // 1 MB chunks (根据需要进行调整)
+      let offset = 0;
+
+      const readChunk = () => {
+        const reader = new FileReader();
+        const blob = file.slice(offset, offset + chunkSize);
+
+        let concatenatedText = "";
+        reader.onload = function (event) {
+          if (event.target.error) {
+            // 读取文件块时出错
+            console.error("Error reading file chunk:", event.target.error);
+            return;
+          }
+
+          const textChunk = event.target.result;
+          // 处理textChunk（例如，更新UI，追加到内容等）
+          // 如果需要，也可以连接块：
+          concatenatedText += String(textChunk);
+
+          offset += textChunk.length;
+
+          if (offset < file.size) {
+            // 继续读取下一个块
+            readChunk();
+          } else {
+            // 所有块都已读取，执行最终操作
+            // 将文本转换为字符串
+            const textChunkString = String(concatenatedText);
+            // 将文本设置到编辑器中
+            that.editor.setValue(textChunkString);
+            // 清空文件上传字段
+            document.getElementById("file-uploader").value = "";
+          }
+        };
+
+        reader.readAsText(blob, "UTF-8");
       };
-      fileReader.readAsText(f, "UTF-8");
+
+      readChunk();
     },
     addTestCaseToTestJudge(input, output, index) {
       this.userInput = input;
@@ -646,7 +764,7 @@ export default {
       api.submitTestJudge(data).then(
         (res) => {
           this.testJudgeKey = res.data.data;
-          this.testJudgeActiveTab = "result";
+          this.testJudgeActiveTab = "input";
           this.testJudgeLoding = true;
           this.checkTestJudgeStatus();
         },
@@ -832,6 +950,9 @@ export default {
 }
 .mr-5 {
   margin-right: 5px;
+}
+.ml-5 {
+  margin-left: 5px;
 }
 .mt-10 {
   margin-top: 10px;

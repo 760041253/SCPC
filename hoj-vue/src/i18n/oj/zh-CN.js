@@ -829,4 +829,19 @@ export const m = {
   // darkmode
   Dark: '暗色',
   Light: '亮色',
+
+  // /components/oj/setting/Preferences.vue
+  Preferences_Setting: '偏好设置',
+  Display_Preference: '显示偏好',
+  Usage_Preference: '使用偏好',
+  UI_Language: '界面语言',
+  UI_Theme: '界面主题',
+  Font_Family: '界面字体',
+  Code_FontFamily: '代码字体',
+  Code_Language: '代码语言',
+  Code_Size: '字体大小',
+  IDE_Theme: '编译器主题',
+  Default_Code_Template: '默认代码模板',
+  Your_Code_Template: '代码模板将在每次编程时显示，若留空，则将使用对应语言的内置代码模板。',
+  Theme: '界面主题',
 };

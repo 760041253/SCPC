@@ -826,4 +826,19 @@ export const m = {
   // darkmode
   Dark: 'Dark',
   Light: 'Light',
+
+  // /components/oj/setting/Preferences.vue
+  Preferences_Setting: 'Preferences Setting',
+  Display_Preference: 'Display Preference',
+  Usage_Preference: 'Usage Preference',
+  UI_Language: 'UI Language',
+  UI_Theme: 'UI Theme',
+  Font_Family: 'Font Family',
+  Code_FontFamily: 'Code Font Family',
+  Code_Language: 'Code Language',
+  Code_Size: 'Code Size',
+  IDE_Theme: 'IDE Theme',
+  Default_Code_Template: 'Default Code Template',
+  Your_Code_Template: 'The code template will be displayed each time you program, and if left blank, the built-in code template for the corresponding language will be used.',
+  Theme: 'Theme',
 };

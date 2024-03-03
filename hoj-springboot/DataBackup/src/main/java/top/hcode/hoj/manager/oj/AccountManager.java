@@ -26,6 +26,7 @@ import top.hcode.hoj.pojo.entity.user.Role;
 import top.hcode.hoj.pojo.entity.user.Session;
 import top.hcode.hoj.pojo.entity.user.UserAcproblem;
 import top.hcode.hoj.pojo.entity.user.UserInfo;
+import top.hcode.hoj.pojo.entity.user.UserPreferences;
 import top.hcode.hoj.pojo.vo.*;
 import top.hcode.hoj.shiro.AccountProfile;
 import top.hcode.hoj.utils.Constants;
@@ -49,6 +50,9 @@ public class AccountManager {
 
     @Autowired
     private UserInfoEntityService userInfoEntityService;
+
+    @Autowired
+    private UserPreferencesEntityService userPreferencesEntityService;
 
     @Autowired
     private UserRoleEntityService userRoleEntityService;
@@ -505,6 +509,44 @@ public class AccountManager {
             throw new StatusFailException("更新个人信息失败！");
         }
 
+    }
+
+    public UserInfoVO changeUserPreferences(UserPreferencesVO userInfoVo) throws StatusFailException {
+
+        commonValidator.validateContentLength(userInfoVo.getCodeTemplate(), "个人代码模板", 65535);
+
+        // 获取当前登录的用户
+        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+
+        // 如果存在则更新,不存在则保存
+        UpdateWrapper<UserPreferences> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("uid", userRolesVo.getUid())
+                .set("ui_language", userInfoVo.getUiLanguage())
+                .set("ui_theme", userInfoVo.getUiTheme())
+                .set("code_language", userInfoVo.getCodeLanguage())
+                .set("code_size", userInfoVo.getCodeSize())
+                .set("ide_theme", userInfoVo.getIdeTheme())
+                .set("code_template", userInfoVo.getCodeTemplate());
+
+        boolean isOk = userPreferencesEntityService.saveOrUpdate(new UserPreferences().setUid(userRolesVo.getUid())
+                .setUiLanguage(userInfoVo.getUiLanguage())
+                .setUiTheme(userInfoVo.getUiTheme())
+                .setCodeLanguage(userInfoVo.getCodeLanguage())
+                .setCodeSize(userInfoVo.getCodeSize())
+                .setIdeTheme(userInfoVo.getIdeTheme())
+                .setCodeTemplate(userInfoVo.getCodeTemplate()));
+
+        if (isOk) {
+            UserRolesVO userRoles = userRoleEntityService.getUserRoles(userRolesVo.getUid(), null);
+            // 更新session
+            BeanUtil.copyProperties(userRoles, userRolesVo);
+            UserInfoVO userInfoVO = new UserInfoVO();
+            BeanUtil.copyProperties(userRoles, userInfoVO, "roles");
+            userInfoVO.setRoleList(userRoles.getRoles().stream().map(Role::getRole).collect(Collectors.toList()));
+            return userInfoVO;
+        } else {
+            throw new StatusFailException("更新个人信息失败！");
+        }
     }
 
     public UserAuthInfoVO getUserAuthInfo() {

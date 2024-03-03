@@ -19,6 +19,7 @@ import top.hcode.hoj.config.NacosSwitchConfig;
 import top.hcode.hoj.config.WebConfig;
 import top.hcode.hoj.dao.user.SessionEntityService;
 import top.hcode.hoj.dao.user.UserInfoEntityService;
+import top.hcode.hoj.dao.user.UserPreferencesEntityService;
 import top.hcode.hoj.dao.user.UserRecordEntityService;
 import top.hcode.hoj.dao.user.UserRoleEntityService;
 import top.hcode.hoj.manager.email.EmailManager;
@@ -72,6 +73,9 @@ public class PassportManager {
 
     @Resource
     private UserRecordEntityService userRecordEntityService;
+
+    @Resource
+    private UserPreferencesEntityService userPreferencesEntityService;
 
     @Resource
     private SessionEntityService sessionEntityService;
@@ -248,7 +252,10 @@ public class PassportManager {
         // 往user_record表插入数据
         boolean addUserRecord = userRecordEntityService.save(new UserRecord().setUid(uuid));
 
-        if (addUser && addUserRole && addUserRecord) {
+        // 往user_preferences表插入数据
+        boolean addUserPreferences = userPreferencesEntityService.save(new UserPreferences().setUid(uuid));
+
+        if (addUser && addUserRole && addUserRecord && addUserPreferences) {
             redisUtils.del(registerDto.getEmail());
             noticeManager.syncNoticeToNewRegisterUser(uuid);
         } else {
