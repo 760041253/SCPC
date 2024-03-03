@@ -179,63 +179,63 @@ public class ScheduleServiceImpl implements ScheduleService {
      * beginTime: "2020-11-08T05:00:00Z",
      * endTime: "2020-11-08T08:00:00Z",
      */
-    @Scheduled(cron = "0 0 0/2 * * *")
-    // @Scheduled(cron = "0/5 * * * * *")
-    @Override
-    public void getOjContestsList() {
-        // 待格式化的API，需要填充年月查询
-        String nowcoderContestAPI = "https://ac.nowcoder.com/acm/calendar/contest?token=&month=%d-%d";
-        // 将获取的比赛列表添加进这里
-        List<Map<String, Object>> contestsList = new ArrayList<>();
-        // 获取当前年月
-        DateTime dateTime = DateUtil.date();
-        // offsetMonth 增加的月份，只枚举最近3个月的比赛
-        for (int offsetMonth = 0; offsetMonth <= 2; offsetMonth++) {
-            // 月份增加i个月
-            DateTime newDate = DateUtil.offsetMonth(dateTime, offsetMonth);
-            // 格式化API 月份从0-11，所以要加一
-            String contestAPI = String.format(nowcoderContestAPI, newDate.year(), newDate.month() + 1);
-            try {
-                // 连接api，获取json格式对象
-                JSONObject resultObject = JsoupUtils
-                        .getJsonFromConnection(JsoupUtils.getConnectionFromUrl(contestAPI, null, null));
-                // 比赛列表存放在data字段中
-                JSONArray contestsArray = resultObject.getJSONArray("data");
-                // 牛客比赛列表按时间顺序排序，所以从后向前取可以减少不必要的遍历
-                for (int i = contestsArray.size() - 1; i >= 0; i--) {
-                    JSONObject contest = contestsArray.getJSONObject(i);
-                    // 如果比赛已经结束了，则直接结束
-                    if (contest.getLong("endTime", 0L) < dateTime.getTime()) {
-                        break;
-                    }
-                    // 把比赛列表信息添加在List里
-                    contestsList.add(MapUtil.builder(new HashMap<String, Object>())
-                            .put("oj", contest.getStr("ojName"))
-                            .put("url", contest.getStr("link"))
-                            .put("title", contest.getStr("contestName"))
-                            .put("beginTime", new Date(contest.getLong("startTime")))
-                            .put("endTime", new Date(contest.getLong("endTime"))).map());
-                }
-            } catch (Exception e) {
-                log.error("爬虫爬取Nowcoder比赛异常----------------------->{}", e.getMessage());
-            }
-        }
-        // 把比赛列表按照开始时间排序，方便查看
-        contestsList.sort((o1, o2) -> {
+    // @Scheduled(cron = "0 0 0/2 * * *")
+    // // @Scheduled(cron = "0/5 * * * * *")
+    // @Override
+    // public void getOjContestsList() {
+    //     // 待格式化的API，需要填充年月查询
+    //     String nowcoderContestAPI = "https://ac.nowcoder.com/acm/calendar/contest?token=&month=%d-%d";
+    //     // 将获取的比赛列表添加进这里
+    //     List<Map<String, Object>> contestsList = new ArrayList<>();
+    //     // 获取当前年月
+    //     DateTime dateTime = DateUtil.date();
+    //     // offsetMonth 增加的月份，只枚举最近3个月的比赛
+    //     for (int offsetMonth = 0; offsetMonth <= 2; offsetMonth++) {
+    //         // 月份增加i个月
+    //         DateTime newDate = DateUtil.offsetMonth(dateTime, offsetMonth);
+    //         // 格式化API 月份从0-11，所以要加一
+    //         String contestAPI = String.format(nowcoderContestAPI, newDate.year(), newDate.month() + 1);
+    //         try {
+    //             // 连接api，获取json格式对象
+    //             JSONObject resultObject = JsoupUtils
+    //                     .getJsonFromConnection(JsoupUtils.getConnectionFromUrl(contestAPI, null, null));
+    //             // 比赛列表存放在data字段中
+    //             JSONArray contestsArray = resultObject.getJSONArray("data");
+    //             // 牛客比赛列表按时间顺序排序，所以从后向前取可以减少不必要的遍历
+    //             for (int i = contestsArray.size() - 1; i >= 0; i--) {
+    //                 JSONObject contest = contestsArray.getJSONObject(i);
+    //                 // 如果比赛已经结束了，则直接结束
+    //                 if (contest.getLong("endTime", 0L) < dateTime.getTime()) {
+    //                     break;
+    //                 }
+    //                 // 把比赛列表信息添加在List里
+    //                 contestsList.add(MapUtil.builder(new HashMap<String, Object>())
+    //                         .put("oj", contest.getStr("ojName"))
+    //                         .put("url", contest.getStr("link"))
+    //                         .put("title", contest.getStr("contestName"))
+    //                         .put("beginTime", new Date(contest.getLong("startTime")))
+    //                         .put("endTime", new Date(contest.getLong("endTime"))).map());
+    //             }
+    //         } catch (Exception e) {
+    //             log.error("爬虫爬取Nowcoder比赛异常----------------------->{}", e.getMessage());
+    //         }
+    //     }
+    //     // 把比赛列表按照开始时间排序，方便查看
+    //     contestsList.sort((o1, o2) -> {
 
-            long beginTime1 = ((Date) o1.get("beginTime")).getTime();
-            long beginTime2 = ((Date) o2.get("beginTime")).getTime();
+    //         long beginTime1 = ((Date) o1.get("beginTime")).getTime();
+    //         long beginTime2 = ((Date) o2.get("beginTime")).getTime();
 
-            return Long.compare(beginTime1, beginTime2);
-        });
+    //         return Long.compare(beginTime1, beginTime2);
+    //     });
 
-        // 获取对应的redis key
-        String redisKey = Constants.Schedule.RECENT_OTHER_CONTEST.getCode();
-        // 缓存时间一天
-        redisUtils.set(redisKey, contestsList, 60 * 60 * 24);
-        // 增加log提示
-        log.info("获取牛客API的比赛列表成功！共获取数据" + contestsList.size() + "条");
-    }
+    //     // 获取对应的redis key
+    //     String redisKey = Constants.Schedule.RECENT_OTHER_CONTEST.getCode();
+    //     // 缓存时间一天
+    //     redisUtils.set(redisKey, contestsList, 60 * 60 * 24);
+    //     // 增加log提示
+    //     log.info("获取牛客API的比赛列表成功！共获取数据" + contestsList.size() + "条");
+    // }
 
     /**
      * 每天3点获取codeforces的rating分数
