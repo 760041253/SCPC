@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import top.hcode.hoj.pojo.vo.ContestRegisterCountVO;
 import top.hcode.hoj.pojo.vo.ContestVO;
 import top.hcode.hoj.pojo.entity.contest.Contest;
+import top.hcode.hoj.pojo.entity.judge.Judge;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.List;
@@ -33,4 +35,6 @@ public interface ContestMapper extends BaseMapper<Contest> {
     ContestVO getContestInfoById(@Param("cid") long cid);
 
     List<ContestVO> getWithinNext14DaysContests();
+
+    List<Judge> getRejudgeList(@Param("pid") long pid);
 }

@@ -42,6 +42,14 @@ public class AdminJudgeController {
         return rejudgeService.rejudgeContestProblem(cid, pid);
     }
 
+    @GetMapping("/test-rejudge-oi-problem")
+    @RequiresAuthentication
+    @RequiresRoles("root") // 只有超级管理员能操作
+    @RequiresPermissions("rejudge")
+    public CommonResult<Void> rejudgeOIProblem(@RequestParam("pid") Long pid) {
+        return rejudgeService.rejudgeOIProblem(pid);
+    }
+
     @GetMapping("/manual-judge")
     @RequiresAuthentication
     @RequiresRoles("root") // 只有超级管理员能操作

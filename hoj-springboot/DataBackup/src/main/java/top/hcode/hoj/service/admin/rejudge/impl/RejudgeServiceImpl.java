@@ -41,6 +41,16 @@ public class RejudgeServiceImpl implements RejudgeService {
     }
 
     @Override
+    public CommonResult<Void> rejudgeOIProblem(Long pid) {
+        try {
+            rejudgeManager.rejudgeOIProblem(pid);
+            return CommonResult.successResponse("重判成功！对应OI题目的全部提交已进入判题队列！");
+        } catch (StatusFailException e) {
+            return CommonResult.errorResponse(e.getMessage());
+        }
+    }
+
+    @Override
     public CommonResult<Judge> manualJudge(Long submitId, Integer status, Integer score) {
         try {
             return CommonResult.successResponse(rejudgeManager.manualJudge(submitId, status, score));

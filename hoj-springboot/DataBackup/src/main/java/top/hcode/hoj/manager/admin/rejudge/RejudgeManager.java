@@ -3,6 +3,7 @@ package top.hcode.hoj.manager.admin.rejudge;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -14,6 +15,7 @@ import top.hcode.hoj.dao.problem.ProblemEntityService;
 import top.hcode.hoj.dao.user.UserAcproblemEntityService;
 import top.hcode.hoj.judge.remote.RemoteJudgeDispatcher;
 import top.hcode.hoj.judge.self.JudgeDispatcher;
+import top.hcode.hoj.mapper.ContestMapper;
 import top.hcode.hoj.pojo.entity.contest.ContestRecord;
 import top.hcode.hoj.pojo.entity.judge.Judge;
 import top.hcode.hoj.pojo.entity.judge.JudgeCase;
@@ -53,6 +55,9 @@ public class RejudgeManager {
 
     @Resource
     private RemoteJudgeDispatcher remoteJudgeDispatcher;
+
+    @Autowired
+    private ContestMapper contestMapper;
 
     private static List<Integer> penaltyStatus = Arrays.asList(
             Constants.Judge.STATUS_PRESENTATION_ERROR.getStatus(),
@@ -114,6 +119,26 @@ public class RejudgeManager {
             }
         }
 
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void rejudgeOIProblem(Long pid) throws StatusFailException {
+
+        // 查询对应的 OI 题目
+        List<Judge> rejudgeList = contestMapper.getRejudgeList(pid);
+
+        if (rejudgeList.size() == 0) {
+            throw new StatusFailException("当前该题目无提交，不可重判！");
+        }
+        HashMap<Long, Integer> idMapStatus = new HashMap<>();
+        // 全部设置默认值
+        checkAndUpdateJudgeBatch(rejudgeList, idMapStatus);
+
+        // 调用重判服务
+        for (Judge judge : rejudgeList) {
+            // 进入重判队列，等待调用判题服务
+            judgeDispatcher.sendTask(judge.getSubmitId(), judge.getPid(), judge.getCid() != 0);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
