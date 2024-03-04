@@ -59,6 +59,9 @@ public class JudgeManager {
     @Autowired
     private JudgeEntityService judgeEntityService;
 
+    @Resource
+    private SynchronousManager synchronousManager;
+
     @Autowired
     private JudgeCaseEntityService judgeCaseEntityService;
 
@@ -337,7 +340,10 @@ public class JudgeManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root"); // 是否为超级管理员
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         // 清空vj信息
         judge.setVjudgeUsername(null);
@@ -391,10 +397,8 @@ public class JudgeManager {
             }
 
         } else {
-            boolean isProblemAdmin = SecurityUtils.getSubject().hasRole("problem_admin");// 是否为题目管理员
             if (!judge.getShare()
                     && !isRoot
-                    && !isProblemAdmin
                     && !(judge.getGid() != null
                             && groupValidator.isGroupRoot(userRolesVo.getUid(), judge.getGid()))) {
                 if (userRolesVo != null) { // 当前是登陆状态
@@ -407,7 +411,7 @@ public class JudgeManager {
                 }
             }
             // 比赛外的提交代码 如果不是超管或题目管理员，需要检查网站是否开启隐藏代码功能
-            if (!isRoot && !isProblemAdmin && judge.getCode() != null) {
+            if (!isRoot && judge.getCode() != null) {
                 try {
                     accessValidator.validateAccess(HOJAccessEnum.HIDE_NON_CONTEST_SUBMISSION_CODE);
                 } catch (AccessException e) {
@@ -625,13 +629,17 @@ public class JudgeManager {
         }
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         QueryWrapper<JudgeCase> wrapper = new QueryWrapper<>();
+
         if (judge.getCid() == 0) { // 非比赛提交
             if (userRolesVo == null) { // 没有登录
                 wrapper.select("time", "memory", "score", "status", "user_output", "group_num", "seq", "mode");
             } else {
-                boolean isRoot = SecurityUtils.getSubject().hasRole("root"); // 是否为超级管理员
                 if (!isRoot
                         && !SecurityUtils.getSubject().hasRole("admin")
                         && !SecurityUtils.getSubject().hasRole("problem_admin")) { // 不是管理员
@@ -642,7 +650,6 @@ public class JudgeManager {
             if (userRolesVo == null) {
                 throw new StatusForbiddenException("您还未登录！不可查看比赛提交的测试点详情！");
             }
-            boolean isRoot = SecurityUtils.getSubject().hasRole("root"); // 是否为超级管理员
             if (!isRoot) {
                 Contest contest = contestEntityService.getById(judge.getCid());
                 // 如果不是比赛管理员 需要受到规则限制

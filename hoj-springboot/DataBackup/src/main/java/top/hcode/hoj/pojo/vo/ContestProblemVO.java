@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/1/16 16:07
  * @Description:
  */
@@ -42,4 +42,5 @@ public class ContestProblemVO implements Serializable {
 
     @ApiModelProperty(value = "该题目的总提交数")
     private Integer total;
+
 }

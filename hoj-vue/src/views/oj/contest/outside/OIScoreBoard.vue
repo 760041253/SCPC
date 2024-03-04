@@ -366,6 +366,7 @@ import Avatar from "vue-avatar";
 import ScoreBoardMixin from "./scoreBoardMixin";
 const RankBox = () => import("@/components/oj/common/RankBox");
 const Pagination = () => import("@/components/oj/common/Pagination");
+
 export default {
   name: "OIContestRank",
   components: {

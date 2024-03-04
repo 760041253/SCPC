@@ -449,6 +449,21 @@ public class Constants {
         }
     }
 
+    public enum HOJSuperAdmin {
+        Username("NYOJ"),
+        Password("NYOJNYOJ");
+
+        private final String mode;
+
+        HOJSuperAdmin(String mode) {
+            this.mode = mode;
+        }
+
+        public String getMode() {
+            return mode;
+        }
+    }
+
     public enum JudgeCaseMode {
         DEFAULT("default"),
         SUBTASK_LOWEST("subtask_lowest"),
