@@ -18,24 +18,21 @@
             size="small"
             @click="handleCreatePage"
             :icon="createPage ? 'el-icon-back' : 'el-icon-plus'"
-            >{{ createPage ? $t('m.Back_To_Admin_Training_List') : $t('m.Create') }}</el-button
-          >
+          >{{ createPage ? $t('m.Back_To_Admin_Training_List') : $t('m.Create') }}</el-button>
           <el-button
             v-if="editPage && adminPage"
             type="warning"
             size="small"
             @click="handleEditPage"
             icon="el-icon-back"
-            >{{ $t('m.Back_To_Admin_Training_List') }}</el-button
-          >
+          >{{ $t('m.Back_To_Admin_Training_List') }}</el-button>
           <el-button
             :type="adminPage ? 'danger' : 'success'"
             v-if="!editPage&&!createPage"
             size="small"
             @click="handleAdminPage"
             :icon="adminPage ? 'el-icon-back' : 'el-icon-s-opportunity'"
-            >{{ adminPage ? $t('m.Back_To_Training_List') : $t('m.Training_Admin') }}</el-button
-          >
+          >{{ adminPage ? $t('m.Back_To_Training_List') : $t('m.Training_Admin') }}</el-button>
         </el-col>
         <el-col
           :md="18"
@@ -49,35 +46,27 @@
             size="small"
             @click="publicPage = true"
             icon="el-icon-plus"
-            >{{ $t('m.Add_From_Public_Problem') }}</el-button
-          >
+          >{{ $t('m.Add_From_Public_Problem') }}</el-button>
           <el-button
             type="success"
             size="small"
             @click="handleGroupPage"
             icon="el-icon-plus"
-            >{{ $t('m.Add_From_Group_Problem') }}</el-button
-          >
+          >{{ $t('m.Add_From_Group_Problem') }}</el-button>
           <el-button
             type="warning"
             size="small"
             @click="handleProblemPage(null)"
             icon="el-icon-back"
-            >{{ $t('m.Back_To_Admin_Training_List') }}</el-button
-          >
+          >{{ $t('m.Back_To_Admin_Training_List') }}</el-button>
         </el-col>
-        <el-col
-          :md="18"
-          :xs="24"
-          v-else-if="(isSuperAdmin || isGroupAdmin) && editProblemPage"
-        >
+        <el-col :md="18" :xs="24" v-else-if="(isSuperAdmin || isGroupAdmin) && editProblemPage">
           <el-button
             type="primary"
             size="small"
             @click="handleEditProblemPage"
             icon="el-icon-back"
-            >{{ $t('m.Back_Admin_Training_Problem_List') }}</el-button
-          >`
+          >{{ $t('m.Back_Admin_Training_Problem_List') }}</el-button>`
         </el-col>
       </el-row>
     </div>
@@ -92,31 +81,15 @@
         align="center"
         @cell-click="goGroupTraining"
       >
-        <vxe-table-column
-          field="rank"
-          :title="$t('m.Number')"
-          min-width="60"
-          show-overflow
-        >
-        </vxe-table-column>
-        <vxe-table-column
-          field="title"
-          :title="$t('m.Title')"
-          min-width="200"
-          align="center"
-        >
-        </vxe-table-column>
+        <vxe-table-column field="rank" :title="$t('m.Number')" min-width="60" show-overflow></vxe-table-column>
+        <vxe-table-column field="title" :title="$t('m.Title')" min-width="200" align="center"></vxe-table-column>
 
-        <vxe-table-column
-          field="auth"
-          :title="$t('m.Auth')"
-          min-width="100"
-          align="center"
-        >
+        <vxe-table-column field="auth" :title="$t('m.Auth')" min-width="100" align="center">
           <template v-slot="{ row }">
-            <el-tag :type="TRAINING_TYPE[row.auth]['color']" effect="dark">
-              {{ $t('m.Training_' + row.auth) }}
-            </el-tag>
+            <el-tag
+              :type="TRAINING_TYPE[row.auth]['color']"
+              effect="dark"
+            >{{ $t('m.Training_' + row.auth) }}</el-tag>
           </template>
         </vxe-table-column>
         <vxe-table-column
@@ -135,16 +108,11 @@
                   row.categoryColor +
                   ';'
               "
-              >{{ row.categoryName }}</el-tag
-            >
+            >{{ row.categoryName }}</el-tag>
           </template>
         </vxe-table-column>
 
-        <vxe-table-column 
-          field="acCount" 
-          :title="$t('m.Progress')" 
-          min-width="120"
-          align="center">
+        <vxe-table-column field="acCount" :title="$t('m.Progress')" min-width="120" align="center">
           <template v-slot="{ row }">
             <span>
               <el-tooltip
@@ -167,16 +135,14 @@
           :title="$t('m.Problem_Number')"
           min-width="70"
           align="center"
-        >
-        </vxe-table-column>
+        ></vxe-table-column>
         <vxe-table-column
           field="author"
           :title="$t('m.Author')"
           min-width="130"
           align="center"
           show-overflow
-        >
-        </vxe-table-column>
+        ></vxe-table-column>
         <vxe-table-column
           field="gmtModified"
           :title="$t('m.Recent_Update')"
@@ -186,12 +152,9 @@
         >
           <template v-slot="{ row }">
             <span>
-                <el-tooltip
-                  :content="row.gmtModified | localtime"
-                  placement="top"
-                >
-                  <span>{{ row.gmtModified | fromNow }}</span>
-                </el-tooltip>
+              <el-tooltip :content="row.gmtModified | localtime" placement="top">
+                <span>{{ row.gmtModified | fromNow }}</span>
+              </el-tooltip>
             </span>
           </template>
         </vxe-table-column>
@@ -218,8 +181,7 @@
       @currentChangeProblem="currentChangeProblem"
       @handleEditProblemPage="handleEditProblemPage"
       ref="trainingProblemList"
-    >
-    </TrainingProblemList>
+    ></TrainingProblemList>
     <Training
       v-if="createPage && !editPage && !problemPage"
       mode="add"
@@ -258,17 +220,17 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { TRAINING_TYPE } from '@/common/constants';
-import Pagination from '@/components/oj/common/Pagination';
-import TrainingList from '@/components/oj/group/TrainingList';
-import Training from '@/components/oj/group/Training';
-import TrainingProblemList from '@/components/oj/group/TrainingProblemList';
-import AddPublicProblem from '@/components/oj/group/AddPublicProblem.vue';
-import AddGroupProblem from '@/components/oj/group/AddGroupProblem.vue';
-import api from '@/common/api';
+import { mapGetters } from "vuex";
+import { TRAINING_TYPE } from "@/common/constants";
+import Pagination from "@/components/oj/common/Pagination";
+import TrainingList from "@/components/oj/group/TrainingList";
+import Training from "@/components/oj/group/Training";
+import TrainingProblemList from "@/components/oj/group/TrainingProblemList";
+import AddPublicProblem from "@/components/oj/group/AddPublicProblem.vue";
+import AddGroupProblem from "@/components/oj/group/AddGroupProblem.vue";
+import api from "@/common/api";
 export default {
-  name: 'GroupTrainingList',
+  name: "GroupTrainingList",
   components: {
     Pagination,
     TrainingList,
@@ -335,10 +297,10 @@ export default {
     },
     goGroupTraining(event) {
       this.$router.push({
-        name: 'GroupTrainingDetails',
+        name: "GroupTrainingDetails",
         params: {
           trainingID: event.row.id,
-          groupID:this.$route.params.groupID
+          groupID: this.$route.params.groupID,
         },
       });
     },
@@ -373,7 +335,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'isSuperAdmin', 'isGroupAdmin']),
+    ...mapGetters(["isAuthenticated", "isSuperAdmin", "isGroupAdmin"]),
   },
 };
 </script>

@@ -4,20 +4,14 @@
       <el-card shadow>
         <div slot="header">
           <el-row :gutter="18">
-            <el-col
-              :md="4"
-              :lg="2"
-            >
-              <span class="panel-title hidden-md-and-down">{{
+            <el-col :md="4" :lg="2">
+              <span class="panel-title hidden-md-and-down">
+                {{
                 $t('m.Status')
-              }}</span>
+                }}
+              </span>
             </el-col>
-            <el-col
-              :xs="10"
-              :sm="8"
-              :md="4"
-              :lg="4"
-            >
+            <el-col :xs="10" :sm="8" :md="4" :lg="4">
               <el-switch
                 style="display: block"
                 v-model="formFilter.onlyMine"
@@ -25,17 +19,10 @@
                 :width="40"
                 @change="handleOnlyMine"
                 :inactive-text="$t('m.All')"
-              >
-              </el-switch>
+              ></el-switch>
             </el-col>
 
-            <el-col
-              :xs="10"
-              :sm="8"
-              :md="5"
-              :lg="4"
-              style="padding-top: 5px;"
-            >
+            <el-col :xs="10" :sm="8" :md="5" :lg="4" style="padding-top: 5px;">
               <el-dropdown
                 class="drop-menu"
                 @command="handleStatusChange"
@@ -47,26 +34,21 @@
                   <i class="el-icon-caret-bottom"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="All">{{
+                  <el-dropdown-item command="All">
+                    {{
                     $t('m.All')
-                  }}</el-dropdown-item>
+                    }}
+                  </el-dropdown-item>
                   <el-dropdown-item
                     v-for="result in Object.keys(JUDGE_STATUS_LIST)"
                     :key="result"
                     :command="result"
-                  >
-                    {{ JUDGE_STATUS_LIST[result].name }}
-                  </el-dropdown-item>
+                  >{{ JUDGE_STATUS_LIST[result].name }}</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </el-col>
 
-            <el-col
-              :sm="8"
-              :md="5"
-              :lg="4"
-              class="hidden-xs-only"
-            >
+            <el-col :sm="8" :md="5" :lg="4" class="hidden-xs-only">
               <el-button
                 type="primary"
                 size="small"
@@ -75,10 +57,7 @@
                 @click="getSubmissions"
               >{{ $t('m.Refresh') }}</el-button>
             </el-col>
-            <el-col
-              :xs="4"
-              class="hidden-sm-and-up"
-            >
+            <el-col :xs="4" class="hidden-sm-and-up">
               <el-button
                 type="primary"
                 size="small"
@@ -88,13 +67,7 @@
               ></el-button>
             </el-col>
 
-            <el-col
-              :xs="24"
-              :sm="12"
-              :md="5"
-              :lg="5"
-              class="search"
-            >
+            <el-col :xs="24" :sm="12" :md="5" :lg="5" class="search">
               <vxe-input
                 v-model="formFilter.problemID"
                 :placeholder="$t('m.Enter_Problem_ID')"
@@ -104,13 +77,7 @@
                 @search-click="handleQueryChange('probemID')"
               ></vxe-input>
             </el-col>
-            <el-col
-              :xs="24"
-              :sm="12"
-              :md="5"
-              :lg="5"
-              class="search"
-            >
+            <el-col :xs="24" :sm="12" :md="5" :lg="5" class="search">
               <vxe-input
                 v-model="formFilter.username"
                 :disabled="formFilter.onlyMine"
@@ -136,37 +103,22 @@
           :data="submissions"
           :loading="loadingTable"
         >
-          <vxe-table-column
-            field="submitId"
-            :title="$t('m.Run_ID')"
-            width="80"
-          ></vxe-table-column>
-          <vxe-table-column
-            field="pid"
-            :title="$t('m.Problem')"
-            min-width="150"
-            show-overflow
-          >
+          <vxe-table-column field="submitId" :title="$t('m.Run_ID')" width="80"></vxe-table-column>
+          <vxe-table-column field="pid" :title="$t('m.Problem')" min-width="150" show-overflow>
             <template v-slot="{ row }">
               <span
                 v-if="contestID"
                 @click="getProblemUri(row.displayId)"
                 style="color: rgb(87, 163, 243)"
-              >{{ row.displayId + ' ' + row.title }}
-              </span>
+              >{{ row.displayId + ' ' + row.title }}</span>
               <span
                 v-else
                 @click="getProblemUri(row.displayPid)"
                 style="color: rgb(87, 163, 243)"
-              >{{ row.displayPid + ' ' + row.title }}
-              </span>
+              >{{ row.displayPid + ' ' + row.title }}</span>
             </template>
           </vxe-table-column>
-          <vxe-table-column
-            field="status"
-            :title="$t('m.Status')"
-            min-width="200"
-          >
+          <vxe-table-column field="status" :title="$t('m.Status')" min-width="200">
             <template v-slot="{ row }">
               <el-tooltip
                 effect="dark"
@@ -203,10 +155,7 @@
                       >{{ $t('m.Cancel_Evaluation') }}</el-button>
                     </span>
                   </div>
-                  <span
-                    :class="getStatusColor(row.status)"
-                    slot="reference"
-                  >
+                  <span :class="getStatusColor(row.status)" slot="reference">
                     <i
                       class="el-icon-loading"
                       v-if="
@@ -247,8 +196,7 @@
                   65 893.2h895.3c0.1-178-103.8-331.7-254.2-403.8z"
                     fill="#D6F3FA"
                     p-id="9873"
-                  >
-                  </path>
+                  />
                   <path
                     d="M587 800.7l86.3 61.1-72.6 33.4c-10.5 4.8-22.2-3.5-21.1-15l7.4-79.5z m274.9-205L685.4 844.8l-86.3-61.1 176.5-249.1 86.3 61.1zM825 612.3c3.1-4.4
                   2.1-10.5-2.3-13.6-4.4-3.1-10.5-2.1-13.6 2.3l-132 186.2c-3.1 4.4-2.1 10.5 2.3 13.6 4.4 3.1 10.5 2.1 13.6-2.3l132-186.2z m41.5-23.1c6.1-8.6 4-20.6-4.6-26.7l-55-39c-8.6-6.1-20.6-4-26.7
@@ -260,8 +208,7 @@
                   9.1 23.4 21.7 23.4 11.4 0 21-8.7 21.6-20.1 1.3-22 4.7-43.8 10.1-65.1 3-10.9-3.5-22.1-14.3-25.6z"
                     fill="#18BAE5"
                     p-id="9874"
-                  >
-                  </path>
+                  />
                 </svg>
               </el-tooltip>
             </template>
@@ -284,14 +231,17 @@
                 <el-tooltip placement="top">
                   <div slot="content">
                     {{ $t('m.Problem_Score') }}：{{
-                      row.score != null ? row.score : $t('m.Unknown')
-                    }}<br />{{ $t('m.OI_Rank_Score') }}：{{
-                      row.oiRankScore != null
-                        ? row.oiRankScore
-                        : $t('m.Unknown')
-                    }}<br />
+                    row.score != null ? row.score : $t('m.Unknown')
+                    }}
+                    <br />
+                    {{ $t('m.OI_Rank_Score') }}：{{
+                    row.oiRankScore != null
+                    ? row.oiRankScore
+                    : $t('m.Unknown')
+                    }}
+                    <br />
                     {{
-                      $t('m.OI_Rank_Calculation_Rule')
+                    $t('m.OI_Rank_Calculation_Rule')
                     }}：(score*0.1+difficulty*2)
                   </div>
                   <el-tag
@@ -301,63 +251,40 @@
                   >{{ row.score }}</el-tag>
                 </el-tooltip>
               </template>
-              <template v-else-if="
+              <template
+                v-else-if="
                   row.status == JUDGE_STATUS_RESERVE['Pending'] ||
                     row.status == JUDGE_STATUS_RESERVE['Compiling'] ||
                     row.status == JUDGE_STATUS_RESERVE['Judging']
-                ">
-                <el-tag
-                  effect="plain"
-                  size="medium"
-                  :type="JUDGE_STATUS[row.status]['type']"
-                >
+                "
+              >
+                <el-tag effect="plain" size="medium" :type="JUDGE_STATUS[row.status]['type']">
                   <i class="el-icon-loading"></i>
                 </el-tag>
               </template>
               <template v-else>
-                <el-tag
-                  effect="plain"
-                  size="medium"
-                  :type="JUDGE_STATUS[row.status]['type']"
-                >--</el-tag>
+                <el-tag effect="plain" size="medium" :type="JUDGE_STATUS[row.status]['type']">--</el-tag>
               </template>
             </template>
           </vxe-table-column>
-          <vxe-table-column
-            field="time"
-            :title="$t('m.Time')"
-            min-width="96"
-          >
+          <vxe-table-column field="time" :title="$t('m.Time')" min-width="96">
             <template v-slot="{ row }">
               <span>{{ submissionTimeFormat(row.time) }}</span>
             </template>
           </vxe-table-column>
-          <vxe-table-column
-            field="memory"
-            :title="$t('m.Memory')"
-            min-width="96"
-          >
+          <vxe-table-column field="memory" :title="$t('m.Memory')" min-width="96">
             <template v-slot="{ row }">
               <span>{{ submissionMemoryFormat(row.memory) }}</span>
             </template>
           </vxe-table-column>
 
-          <vxe-table-column
-            field="length"
-            :title="$t('m.Length')"
-            min-width="80"
-          >
+          <vxe-table-column field="length" :title="$t('m.Length')" min-width="80">
             <template v-slot="{ row }">
               <span>{{ submissionLengthFormat(row.length) }}</span>
             </template>
           </vxe-table-column>
 
-          <vxe-table-column
-            field="language"
-            :title="$t('m.Language')"
-            show-overflow
-            min-width="96"
-          >
+          <vxe-table-column field="language" :title="$t('m.Language')" show-overflow min-width="96">
             <template v-slot="{ row }">
               <el-tooltip
                 class="item"
@@ -368,28 +295,17 @@
                 <span
                   @click="showSubmitDetail(row)"
                   style="color: rgb(87, 163, 243); font-size: .8125rem;"
-                >{{ row.language }}
-                </span>
+                >{{ row.language }}</span>
               </el-tooltip>
             </template>
           </vxe-table-column>
-          <vxe-table-column
-            field="judger"
-            :title="$t('m.Judger')"
-            min-width="96"
-            show-overflow
-          >
+          <vxe-table-column field="judger" :title="$t('m.Judger')" min-width="96" show-overflow>
             <template v-slot="{ row }">
               <span v-if="row.judger">{{ row.judger }}</span>
               <span v-else>--</span>
             </template>
           </vxe-table-column>
-          <vxe-table-column
-            field="username"
-            :title="$t('m.Author')"
-            min-width="96"
-            show-overflow
-          >
+          <vxe-table-column field="username" :title="$t('m.Author')" min-width="96" show-overflow>
             <template v-slot="{ row }">
               <a
                 @click="goUserHome(row.username, row.uid, row.synchronous)"
@@ -397,28 +313,17 @@
               >{{ row.username }}</a>
             </template>
           </vxe-table-column>
-          <vxe-table-column
-            field="submitTime"
-            :title="$t('m.Submit_Time')"
-            min-width="96"
-          >
+          <vxe-table-column field="submitTime" :title="$t('m.Submit_Time')" min-width="96">
             <template v-slot="{ row }">
               <span>
-                <el-tooltip
-                  :content="row.submitTime | localtime"
-                  placement="top"
-                >
+                <el-tooltip :content="row.submitTime | localtime" placement="top">
                   <span>{{ row.submitTime | fromNow }}</span>
                 </el-tooltip>
               </span>
             </template>
           </vxe-table-column>
           <!-- 非比赛提交记录，超级管理员可以对提交进行重判 -->
-          <vxe-table-column
-            v-if="rejudgeColumnVisible"
-            :title="$t('m.Option')"
-            min-width="90"
-          >
+          <vxe-table-column v-if="rejudgeColumnVisible" :title="$t('m.Option')" min-width="90">
             <template v-slot="{ row }">
               <vxe-button
                 v-if="!row.synchronous"
@@ -448,25 +353,15 @@
       center
     >
       <el-form>
-        <el-form-item
-          :label="$t('m.Status')"
-          required
-        >
-          <el-select
-            v-model="changeJudgeStatus.status"
-            size="small"
-          >
+        <el-form-item :label="$t('m.Status')" required>
+          <el-select v-model="changeJudgeStatus.status" size="small">
             <el-option
               :label="JUDGE_STATUS[result].name"
               :key="result"
               :value="parseInt(result)"
               v-for="result in Object.keys(CHANGE_JUDGE_STATUS_LIST)"
             ></el-option>
-            <el-option
-              label="Cancelled"
-              :value="-4"
-              disabled
-            ></el-option>
+            <el-option label="Cancelled" :value="-4" disabled></el-option>
           </el-select>
         </el-form-item>
         <el-form-item
@@ -474,10 +369,7 @@
           required
           v-if="changeJudgeStatus.score != null || changeJudgeStatus.status == JUDGE_STATUS_RESERVE['ca']"
         >
-          <el-input-number
-            size="small"
-            v-model="changeJudgeStatus.score"
-          ></el-input-number>
+          <el-input-number size="small" v-model="changeJudgeStatus.score"></el-input-number>
         </el-form-item>
       </el-form>
       <span slot="footer">
@@ -486,8 +378,7 @@
           @click="manualJudge"
           :disabled="changeJudgeStatus.status == JUDGE_STATUS_RESERVE['ca']"
           :loading="changeJudgeStatusLoading"
-        >{{ $t('m.To_Update') }}
-        </el-button>
+        >{{ $t('m.To_Update') }}</el-button>
       </span>
     </el-dialog>
   </el-row>
@@ -501,6 +392,7 @@ import {
   CONTEST_STATUS,
   JUDGE_STATUS_RESERVE,
   RULE_TYPE,
+  CONTEST_TYPE,
 } from "@/common/constants";
 import utils from "@/common/utils";
 import Pagination from "@/components/oj/common/Pagination";
@@ -536,7 +428,7 @@ export default {
       JUDGE_STATUS_RESERVE: {},
       CONTEST_STATUS: {},
       RULE_TYPE: {},
-      hideManuallyJugdeTooltip:false,
+      hideManuallyJugdeTooltip: false,
       changeJudgeStatusDialogVisible: false,
       changeJudgeStatusLoading: false,
       changeJudgeStatus: {
@@ -620,7 +512,7 @@ export default {
       return utils.submissionLengthFormat(length);
     },
     reSubmit(row) {
-      api.reSubmitsynchronousJudge(row.submitId).then((res) => {
+      api.reSubmitRemoteJudge(row.submitId).then((res) => {
         let xTable = this.$refs.xTable;
         // 重新提交开始，需要将该提交的部分参数初始化
         row.status = res.data.data.status;
@@ -702,26 +594,16 @@ export default {
         this.loadingTable = false;
       };
 
-      if (this.contestID) {
-        api
-          .getContest(this.contestID)
-          .then((res) => {
-            const contest = res.data.data;
-            let func =
-              this.contestID && contest.synchronous
-                ? "getSynchronousSubmissionList"
-                : "getContestSubmissionList";
-
-            return api[func](this.limit, utils.filterEmptyValue(params));
-          })
-          .then(handleApiResponse)
-          .catch(handleApiError);
-      } else {
-        api
-          .getSubmissionList(this.limit, utils.filterEmptyValue(params))
-          .then(handleApiResponse)
-          .catch(handleApiError);
-      }
+      let func =
+        this.contestAuth === CONTEST_TYPE.PUBLIC_SYNCHRONOUS ||
+        this.contestAuth === CONTEST_TYPE.PRIVATE_SYNCHRONOUS
+          ? "getSynchronousSubmissionList"
+          : this.contestID
+          ? "getContestSubmissionList"
+          : "getSubmissionList";
+      api[func](this.limit, utils.filterEmptyValue(params))
+        .then(handleApiResponse)
+        .catch(handleApiError);
     },
     // 对当前提交列表 状态为Pending（6）和Judging（7）的提交记录每2秒查询一下最新结果
     checkSubmissionsStatus() {
@@ -835,9 +717,8 @@ export default {
     goRoute(route) {
       this.$router.push(route);
     },
-    goUserHome(username, uid, synchronous) {
-      if(!synchronous)
-      {
+    goUserHome(username, uid, remote) {
+      if (!remote) {
         this.$router.push({
           path: "/user-home",
           query: { uid, username },
@@ -967,10 +848,10 @@ export default {
         return "own-submit-row";
       }
     },
-    disabledManualJudge(status, synchronous){
+    disabledManualJudge(status, remote) {
       return (
-        !this.isMainAdminRole ||
-        synchronous ||
+        !this.isAdminRole ||
+        remote ||
         status == JUDGE_STATUS_RESERVE["Judging"] ||
         status == JUDGE_STATUS_RESERVE["Compiling"] ||
         status == JUDGE_STATUS_RESERVE["ce"]
@@ -986,9 +867,13 @@ export default {
       this.changeJudgeStatusDialogVisible = true;
     },
     cancelJudge(row) {
-      this.$confirm(this.$i18n.t("m.Cancel_Judge_Tips"), "Run ID："+row.submitId, {
-        type: "warning",
-      }).then(
+      this.$confirm(
+        this.$i18n.t("m.Cancel_Judge_Tips"),
+        "Run ID：" + row.submitId,
+        {
+          type: "warning",
+        }
+      ).then(
         () => {
           api
             .admin_cancelJudge(row.submitId)
@@ -1057,6 +942,7 @@ export default {
       "contestRuleType",
       "contestStatus",
       "ContestRealTimePermission",
+      "contestAuth",
     ]),
     title() {
       if (!this.contestID) {
@@ -1147,7 +1033,7 @@ export default {
     overflow-x: hidden !important;
   }
 }
-/deep/.vxe-table .vxe-cell{
+/deep/.vxe-table .vxe-cell {
   padding: 0 !important;
 }
 /deep/.el-dialog--center .el-dialog__body {

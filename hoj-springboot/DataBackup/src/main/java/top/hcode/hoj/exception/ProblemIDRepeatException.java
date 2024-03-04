@@ -4,7 +4,7 @@ package top.hcode.hoj.exception;
  * @Author Himit_ZH
  * @Date 2022/9/3
  */
-public class ProblemIDRepeatException extends RuntimeException{
+public class ProblemIDRepeatException extends RuntimeException {
     public ProblemIDRepeatException() {
         super();
     }
@@ -21,7 +21,8 @@ public class ProblemIDRepeatException extends RuntimeException{
         super(cause);
     }
 
-    protected ProblemIDRepeatException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected ProblemIDRepeatException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

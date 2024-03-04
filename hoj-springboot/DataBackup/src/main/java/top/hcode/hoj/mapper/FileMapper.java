@@ -23,9 +23,7 @@ public interface FileMapper extends BaseMapper<File> {
     @Select("select * from file where (type = 'avatar' AND `delete` = true)")
     List<File> queryDeleteAvatarList();
 
-
     @Select("select * from file where (type = 'carousel')")
     List<File> queryCarouselFileList();
-
 
 }

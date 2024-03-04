@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller.file;
 
-
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,5 @@ public class ImportHydroProblemController {
     public CommonResult<Void> importHydroProblem(@RequestParam("file") MultipartFile file) {
         return importHydroProblemService.importHydroProblem(file);
     }
-
 
 }

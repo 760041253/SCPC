@@ -12,7 +12,6 @@ import top.hcode.hoj.shiro.ShiroConstant;
 
 import java.util.Date;
 
-
 @Slf4j(topic = "hoj")
 @Data
 @Component
@@ -35,7 +34,7 @@ public class JwtUtils {
      */
     public String generateToken(String userId) {
         Date nowDate = new Date();
-        //过期时间
+        // 过期时间
         Date expireDate = new Date(nowDate.getTime() + expire * 1000);
 
         String token = Jwts.builder()
@@ -78,6 +77,5 @@ public class JwtUtils {
     public boolean isTokenExpired(Date expiration) {
         return expiration.before(new Date());
     }
-
 
 }

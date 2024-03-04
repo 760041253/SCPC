@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
-
 /**
  * @Author: Himit_ZH
  * @Date: 2021/12/7 19:45
@@ -37,7 +36,7 @@ public class AdminContestVO {
     @ApiModelProperty(value = "比赛来源，原创为0，克隆赛为比赛id")
     private Integer source;
 
-    @ApiModelProperty(value = "0为公开赛，1为私有赛（访问有密码），2为保护赛（提交有密码）")
+    @ApiModelProperty(value = "0为公开赛，1为私有赛（访问有密码），2为保护赛（提交有密码），4为同步公开赛，5为同步私有赛（访问有密码）")
     private Integer auth;
 
     @ApiModelProperty(value = "比赛密码")
@@ -99,9 +98,6 @@ public class AdminContestVO {
 
     @ApiModelProperty(value = "是否允许比赛结束后继续交题")
     private Boolean allowEndSubmit;
-
-    @ApiModelProperty(value = "是否开启同步赛")
-    private Boolean synchronous;
 
     @ApiModelProperty(value = "同步赛配置")
     private List<ContestSynchronousConfigVO> synchronousConfigList;

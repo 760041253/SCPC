@@ -19,35 +19,27 @@
             ></el-progress>
           </el-tooltip>
         </div>
-        <div class="count">
-          {{ training.acCount + ' / ' + training.problemCount }}
-        </div>
+        <div class="count">{{ training.acCount + ' / ' + training.problemCount }}</div>
       </template>
     </el-card>
     <div class="card-top">
       <el-tabs @tab-click="tabClick" v-model="route_name">
         <el-tab-pane :name="groupID?'GroupTrainingDetails':'TrainingDetails'" lazy>
-          <span slot="label"
-            ><i class="el-icon-s-home"></i>&nbsp;{{
-              $t('m.Training_Introduction')
-            }}</span
-          >
+          <span slot="label">
+            <i class="el-icon-s-home"></i>
+            &nbsp;{{
+            $t('m.Training_Introduction')
+            }}
+          </span>
           <el-row :gutter="30">
             <el-col :sm="24" :md="7">
-              <el-card
-                v-if="trainingPasswordFormVisible"
-                class="password-form-card"
-              >
+              <el-card v-if="trainingPasswordFormVisible" class="password-form-card">
                 <div slot="header">
-                  <span class="panel-title" style="color: #e6a23c;"
-                    ><i class="el-icon-warning">
-                      {{ $t('m.Password_Required') }}</i
-                    ></span
-                  >
+                  <span class="panel-title" style="color: #e6a23c;">
+                    <i class="el-icon-warning">{{ $t('m.Password_Required') }}</i>
+                  </span>
                 </div>
-                <h3>
-                  {{ $t('m.To_Enter_Training_Need_Password') }}
-                </h3>
+                <h3>{{ $t('m.To_Enter_Training_Need_Password') }}</h3>
                 <el-form>
                   <el-input
                     v-model="trainingPassword"
@@ -61,8 +53,7 @@
                     @click="checkPassword"
                     :loading="btnLoading"
                     style="margin:5px"
-                    >{{ $t('m.OK') }}</el-button
-                  >
+                  >{{ $t('m.OK') }}</el-button>
                 </el-form>
               </el-card>
               <el-card>
@@ -83,9 +74,7 @@
                       <el-tag
                         :type="TRAINING_TYPE[training.auth]['color']"
                         effect="dark"
-                      >
-                        {{ $t('m.Training_' + training.auth) }}
-                      </el-tag>
+                      >{{ $t('m.Training_' + training.auth) }}</el-tag>
                     </span>
                   </div>
                   <div>
@@ -93,8 +82,8 @@
                       <span>{{ $t('m.Training_Category') }}</span>
                     </span>
                     <span>
-                      <span
-                        ><el-tag
+                      <span>
+                        <el-tag
                           size="medium"
                           class="category-item"
                           :style="
@@ -103,9 +92,8 @@
                               ';background-color: ' +
                               training.categoryColor
                           "
-                          >{{ training.categoryName }}</el-tag
-                        ></span
-                      >
+                        >{{ training.categoryName }}</el-tag>
+                      </span>
                     </span>
                   </div>
 
@@ -122,13 +110,12 @@
                       <span>{{ $t('m.Author') }}</span>
                     </span>
                     <span>
-                      <span
-                        ><el-link
+                      <span>
+                        <el-link
                           type="info"
                           @click="goUserHome(training.author)"
-                          >{{ training.author }}</el-link
-                        ></span
-                      >
+                        >{{ training.author }}</el-link>
+                      </span>
                     </span>
                   </div>
                   <div>
@@ -145,14 +132,13 @@
             <el-col :sm="24" :md="17">
               <el-card>
                 <div slot="header">
-                  <span class="panel-title">{{
+                  <span class="panel-title">
+                    {{
                     $t('m.Training_Introduction')
-                  }}</span>
+                    }}
+                  </span>
                 </div>
-                <Markdown 
-                  :isAvoidXss="groupID" 
-                  :content="training.description">
-                </Markdown>
+                <Markdown :isAvoidXss="groupID" :content="training.description"></Markdown>
               </el-card>
             </el-col>
           </el-row>
@@ -163,11 +149,12 @@
           lazy
           :disabled="trainingMenuDisabled"
         >
-          <span slot="label"
-            ><i class="fa fa-list" aria-hidden="true"></i>&nbsp;{{
-              $t('m.Problem_List')
-            }}</span
-          >
+          <span slot="label">
+            <i class="fa fa-list" aria-hidden="true"></i>
+            &nbsp;{{
+            $t('m.Problem_List')
+            }}
+          </span>
           <transition name="el-zoom-in-bottom">
             <router-view
               v-if="route_name === 'TrainingProblemList' || route_name === 'GroupTrainingProblemList'"
@@ -181,13 +168,16 @@
           :disabled="trainingMenuDisabled"
           v-if="isPrivateTraining"
         >
-          <span slot="label"
-            ><i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;{{
-              $t('m.Record_List')
-            }}</span
-          >
+          <span slot="label">
+            <i class="fa fa-bar-chart" aria-hidden="true"></i>
+            &nbsp;{{
+            $t('m.Record_List')
+            }}
+          </span>
           <transition name="el-zoom-in-bottom">
-            <router-view v-if="route_name === 'TrainingRank' || route_name === 'GroupTrainingRank' "></router-view>
+            <router-view
+              v-if="route_name === 'TrainingRank' || route_name === 'GroupTrainingRank' "
+            ></router-view>
           </transition>
         </el-tab-pane>
       </el-tabs>
@@ -196,51 +186,51 @@
 </template>
 
 <script>
-import { TRAINING_TYPE } from '@/common/constants';
-import { mapState, mapGetters, mapActions } from 'vuex';
-import myMessage from '@/common/message';
-import api from '@/common/api';
-import Markdown from '@/components/oj/common/Markdown';
+import { TRAINING_TYPE } from "@/common/constants";
+import { mapState, mapGetters, mapActions } from "vuex";
+import myMessage from "@/common/message";
+import api from "@/common/api";
+import Markdown from "@/components/oj/common/Markdown";
 export default {
-  components: { 
-    Markdown
+  components: {
+    Markdown,
   },
   data() {
     return {
-      route_name: 'TrainingDetails',
+      route_name: "TrainingDetails",
       TRAINING_TYPE: {},
-      trainingPassword: '',
+      trainingPassword: "",
       btnLoading: false,
       customColors: [
-        { color: '#909399', percentage: 20 },
-        { color: '#f56c6c', percentage: 40 },
-        { color: '#e6a23c', percentage: 60 },
-        { color: '#1989fa', percentage: 80 },
-        { color: '#67c23a', percentage: 100 },
+        { color: "#909399", percentage: 20 },
+        { color: "#f56c6c", percentage: 40 },
+        { color: "#e6a23c", percentage: 60 },
+        { color: "#1989fa", percentage: 80 },
+        { color: "#67c23a", percentage: 100 },
       ],
-      groupID:null,
+      groupID: null,
     };
   },
   created() {
     this.route_name = this.$route.name;
     let gid = this.$route.params.groupID;
-    if(gid){
+    if (gid) {
       this.groupID = gid;
-      if (this.route_name == 'GroupTrainingProblemDetails') {
-        this.route_name = 'GroupTrainingProblemList';
+      if (this.route_name == "GroupTrainingProblemDetails") {
+        this.route_name = "GroupTrainingProblemList";
       }
-    }else{
-      if (this.route_name == 'TrainingProblemDetails') {
-        this.route_name = 'TrainingProblemList';
+    } else {
+      if (this.route_name == "TrainingProblemDetails") {
+        this.route_name = "TrainingProblemList";
       }
     }
     this.TRAINING_TYPE = Object.assign({}, TRAINING_TYPE);
-    this.$store.dispatch('getTraining').then((res) => {
+    this.$store.dispatch("getTraining").then((res) => {
       this.changeDomTitle({ title: res.data.data.title });
     });
   },
   methods: {
-    ...mapActions(['changeDomTitle']),
+    ...mapActions(["changeDomTitle"]),
     tabClick(tab) {
       let name = tab.name;
       if (name !== this.$route.name) {
@@ -248,15 +238,15 @@ export default {
       }
     },
     checkPassword() {
-      if (this.trainingPassword === '') {
-        myMessage.warning(this.$i18n.t('m.Enter_the_training_password'));
+      if (this.trainingPassword === "") {
+        myMessage.warning(this.$i18n.t("m.Enter_the_training_password"));
         return;
       }
       this.btnLoading = true;
-      api.registerTraining(this.training.id + '', this.trainingPassword).then(
+      api.registerTraining(this.training.id + "", this.trainingPassword).then(
         (res) => {
-          myMessage.success(this.$i18n.t('m.Register_training_successfully'));
-          this.$store.commit('trainingIntoAccess', { intoAccess: true });
+          myMessage.success(this.$i18n.t("m.Register_training_successfully"));
+          this.$store.commit("trainingIntoAccess", { intoAccess: true });
           this.btnLoading = false;
         },
         (res) => {
@@ -266,7 +256,7 @@ export default {
     },
     goUserHome(username) {
       this.$router.push({
-        name: 'UserHome',
+        name: "UserHome",
         query: { username: username },
       });
     },
@@ -288,29 +278,29 @@ export default {
       training: (state) => state.training.training,
     }),
     ...mapGetters([
-      'trainingPasswordFormVisible',
-      'trainingMenuDisabled',
-      'isPrivateTraining',
-      'isAuthenticated',
+      "trainingPasswordFormVisible",
+      "trainingMenuDisabled",
+      "isPrivateTraining",
+      "isAuthenticated",
     ]),
   },
   watch: {
     $route(newVal) {
       this.route_name = newVal.name;
-      if(this.groupID){
-         if (newVal.name == 'GroupTrainingProblemDetails') {
-          this.route_name = 'GroupTrainingProblemList';
+      if (this.groupID) {
+        if (newVal.name == "GroupTrainingProblemDetails") {
+          this.route_name = "GroupTrainingProblemList";
         }
-      }else{
-        if (newVal.name == 'TrainingProblemDetails') {
-          this.route_name = 'TrainingProblemList';
+      } else {
+        if (newVal.name == "TrainingProblemDetails") {
+          this.route_name = "TrainingProblemList";
         }
       }
       this.changeDomTitle({ title: this.training.title });
     },
   },
   beforeDestroy() {
-    this.$store.commit('clearTraining');
+    this.$store.commit("clearTraining");
   },
 };
 </script>

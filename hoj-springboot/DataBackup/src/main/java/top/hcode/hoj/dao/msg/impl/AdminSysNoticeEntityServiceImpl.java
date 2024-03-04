@@ -18,7 +18,8 @@ import javax.annotation.Resource;
  * @Description:
  */
 @Service
-public class AdminSysNoticeEntityServiceImpl extends ServiceImpl<AdminSysNoticeMapper, AdminSysNotice> implements AdminSysNoticeEntityService {
+public class AdminSysNoticeEntityServiceImpl extends ServiceImpl<AdminSysNoticeMapper, AdminSysNotice>
+        implements AdminSysNoticeEntityService {
 
     @Resource
     private AdminSysNoticeMapper adminSysNoticeMapper;

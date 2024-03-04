@@ -46,8 +46,8 @@ public class RemoteProblemManager {
     @Autowired
     private RemoteJudgeAccountEntityService remoteJudgeAccountEntityService;
 
-
-    public ProblemStrategy.RemoteProblemInfo getOtherOJProblemInfo(String OJName, String problemId, String author) throws Exception {
+    public ProblemStrategy.RemoteProblemInfo getOtherOJProblemInfo(String OJName, String problemId, String author)
+            throws Exception {
 
         ProblemStrategy problemStrategy;
         switch (OJName) {
@@ -83,7 +83,8 @@ public class RemoteProblemManager {
                 List<RemoteJudgeAccount> remoteJudgeAccounts = remoteJudgeAccountEntityService.list(queryWrapper);
                 if (!CollectionUtils.isEmpty(remoteJudgeAccounts)) {
                     RemoteJudgeAccount account = remoteJudgeAccounts.get(0);
-                    return problemContext.getProblemInfoByLogin(problemId, author, account.getUsername(), account.getPassword());
+                    return problemContext.getProblemInfoByLogin(problemId, author, account.getUsername(),
+                            account.getPassword());
                 }
             }
             return null;
@@ -106,7 +107,8 @@ public class RemoteProblemManager {
         List<ProblemLanguage> problemLanguageList = new LinkedList<>();
         if (!CollectionUtil.isEmpty(remoteProblemInfo.getLangIdList())) {
             LanguageContext languageContext = new LanguageContext(remoteProblemInfo.getRemoteOJ());
-            List<Language> languageList = languageContext.buildLanguageListByIds(OJLanguageList, remoteProblemInfo.getLangIdList());
+            List<Language> languageList = languageContext.buildLanguageListByIds(OJLanguageList,
+                    remoteProblemInfo.getLangIdList());
             for (Language language : languageList) {
                 problemLanguageList.add(new ProblemLanguage().setPid(problem.getId()).setLid(language.getId()));
             }

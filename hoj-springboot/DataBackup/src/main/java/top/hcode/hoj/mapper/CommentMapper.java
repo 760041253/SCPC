@@ -11,7 +11,6 @@ import top.hcode.hoj.pojo.vo.CommentVO;
 
 import java.util.List;
 
-
 /**
  * <p>
  * Mapper 接口
@@ -25,8 +24,8 @@ import java.util.List;
 public interface CommentMapper extends BaseMapper<Comment> {
 
     IPage<CommentVO> getCommentList(Page<CommentVO> page,
-                                    @Param("cid") Long cid,
-                                    @Param("did") Integer did,
-                                    @Param("onlyMineAndAdmin") Boolean onlyMineAndAdmin,
-                                    @Param("myAndAdminUidList") List<String> myAndAdminUidList);
+            @Param("cid") Long cid,
+            @Param("did") Integer did,
+            @Param("onlyMineAndAdmin") Boolean onlyMineAndAdmin,
+            @Param("myAndAdminUidList") List<String> myAndAdminUidList);
 }

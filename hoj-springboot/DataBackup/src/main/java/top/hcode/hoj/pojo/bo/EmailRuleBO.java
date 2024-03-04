@@ -22,7 +22,7 @@ import java.util.Properties;
  */
 
 @Component
-@PropertySource(value = "classpath:email-rule.yml",factory = CompositePropertySourceFactory.class)
+@PropertySource(value = "classpath:email-rule.yml", factory = CompositePropertySourceFactory.class)
 @ConfigurationProperties(prefix = "hoj")
 @Data
 public class EmailRuleBO {
@@ -32,7 +32,8 @@ public class EmailRuleBO {
 
 class CompositePropertySourceFactory extends DefaultPropertySourceFactory {
     @Override
-    public org.springframework.core.env.PropertySource<?> createPropertySource(@Nullable String name, EncodedResource resource) throws IOException {
+    public org.springframework.core.env.PropertySource<?> createPropertySource(@Nullable String name,
+            EncodedResource resource) throws IOException {
         String sourceName = Optional.ofNullable(name).orElse(resource.getResource().getFilename());
         if (!resource.getResource().exists()) {
             // return an empty Properties
@@ -44,6 +45,7 @@ class CompositePropertySourceFactory extends DefaultPropertySourceFactory {
             return super.createPropertySource(name, resource);
         }
     }
+
     /**
      * load yaml file to properties
      *

@@ -7,7 +7,7 @@ import top.hcode.hoj.pojo.vo.AnnouncementVO;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author Himit_ZH

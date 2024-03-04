@@ -5,9 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import top.hcode.hoj.pojo.entity.problem.CodeTemplate;
 
-
 @Mapper
 @Repository
-public interface CodeTemplateMapper  extends BaseMapper<CodeTemplate> {
+public interface CodeTemplateMapper extends BaseMapper<CodeTemplate> {
 }
-

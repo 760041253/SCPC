@@ -15,12 +15,14 @@ import top.hcode.hoj.dao.training.TrainingEntityService;
 import top.hcode.hoj.dao.training.TrainingProblemEntityService;
 import top.hcode.hoj.manager.admin.training.AdminTrainingProblemManager;
 import top.hcode.hoj.manager.admin.training.AdminTrainingRecordManager;
+import top.hcode.hoj.manager.group.GroupManager;
 import top.hcode.hoj.pojo.dto.TrainingProblemDTO;
 import top.hcode.hoj.pojo.entity.group.Group;
 import top.hcode.hoj.pojo.entity.problem.Problem;
 import top.hcode.hoj.pojo.entity.training.Training;
 import top.hcode.hoj.pojo.entity.training.TrainingProblem;
 import top.hcode.hoj.shiro.AccountProfile;
+import top.hcode.hoj.utils.Constants;
 import top.hcode.hoj.validator.GroupValidator;
 
 import java.util.Date;
@@ -55,11 +57,13 @@ public class GroupTrainingProblemManager {
     @Autowired
     private GroupValidator groupValidator;
 
-    public HashMap<String, Object> getTrainingProblemList(Integer limit, Integer currentPage, String keyword, Boolean queryExisted, Long tid) throws StatusNotFoundException, StatusForbiddenException {
+    @Autowired
+    private GroupManager groupManager;
+
+    public HashMap<String, Object> getTrainingProblemList(Integer limit, Integer currentPage, String keyword,
+            Boolean queryExisted, Long tid) throws StatusNotFoundException, StatusForbiddenException {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
 
         Training training = trainingEntityService.getById(tid);
 
@@ -68,6 +72,8 @@ public class GroupTrainingProblemManager {
         }
 
         Long gid = training.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         Group group = groupEntityService.getById(gid);
 
@@ -83,10 +89,9 @@ public class GroupTrainingProblemManager {
         return adminTrainingProblemManager.getProblemList(limit, currentPage, keyword, queryExisted, tid);
     }
 
-    public void updateTrainingProblem(TrainingProblem trainingProblem) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void updateTrainingProblem(TrainingProblem trainingProblem)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
 
         Training training = trainingEntityService.getById(trainingProblem.getTid());
 
@@ -96,7 +101,9 @@ public class GroupTrainingProblemManager {
 
         Long gid = training.getGid();
 
-        if (gid == null){
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
+
+        if (gid == null) {
             throw new StatusForbiddenException("更新失败，不可操作非团队内的训练题目！");
         }
 
@@ -117,10 +124,9 @@ public class GroupTrainingProblemManager {
         }
     }
 
-    public void deleteTrainingProblem(Long pid, Long tid) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void deleteTrainingProblem(Long pid, Long tid)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
 
         Training training = trainingEntityService.getById(tid);
 
@@ -130,7 +136,9 @@ public class GroupTrainingProblemManager {
 
         Long gid = training.getGid();
 
-        if (gid == null){
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
+
+        if (gid == null) {
             throw new StatusForbiddenException("删除失败，不可操作非团队内的训练题目！");
         }
 
@@ -155,16 +163,17 @@ public class GroupTrainingProblemManager {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addProblemFromPublic(TrainingProblemDTO trainingProblemDto) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void addProblemFromPublic(TrainingProblemDTO trainingProblemDto)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
 
         Long pid = trainingProblemDto.getPid();
 
         Problem problem = problemEntityService.getById(pid);
 
-        if (problem == null || problem.getAuth() != 1 || problem.getIsGroup()) {
+        if (problem == null
+                || problem.getAuth().intValue() != Constants.ProblemAuth.PUBLIC.getAuth()
+                || problem.getIsGroup()) {
             throw new StatusNotFoundException("该题目不存在或已被隐藏！");
         }
 
@@ -178,7 +187,9 @@ public class GroupTrainingProblemManager {
 
         Long gid = training.getGid();
 
-        if (gid == null){
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
+
+        if (gid == null) {
             throw new StatusForbiddenException("添加失败，不可操作非团队内的训练题目！");
         }
 
@@ -224,10 +235,9 @@ public class GroupTrainingProblemManager {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addProblemFromGroup(String problemId, Long tid) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void addProblemFromGroup(String problemId, Long tid)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
 
         Training training = trainingEntityService.getById(tid);
 
@@ -237,7 +247,9 @@ public class GroupTrainingProblemManager {
 
         Long gid = training.getGid();
 
-        if (gid == null){
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
+
+        if (gid == null) {
             throw new StatusForbiddenException("添加失败，不可操作非团队内的训练题目！");
         }
 

@@ -37,7 +37,7 @@ public class AccountProfile implements Serializable {
     @ApiModelProperty(value = "0可用，1不可用")
     private int status;
 
-    public String getId() { //shiro登录用户实体默认主键获取方法要为getId
+    public String getId() { // shiro登录用户实体默认主键获取方法要为getId
         return uid;
     }
 }

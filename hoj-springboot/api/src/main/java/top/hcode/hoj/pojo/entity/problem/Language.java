@@ -22,7 +22,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="Language对象", description="")
+@ApiModel(value = "Language对象", description = "")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Language {

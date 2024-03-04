@@ -46,7 +46,6 @@ public class ReplyEntityServiceImpl extends ServiceImpl<ReplyMapper, Reply> impl
     @Override
     public List<ReplyVO> getAllReplyByCommentId(Long cid, String uid, Boolean isRoot, Integer commentId) {
 
-
         if (cid != null) {
             Contest contest = contestEntityService.getById(cid);
             boolean onlyMineAndAdmin = contest.getStatus().equals(Constants.Contest.STATUS_RUNNING.getCode())
@@ -66,7 +65,7 @@ public class ReplyEntityServiceImpl extends ServiceImpl<ReplyMapper, Reply> impl
     @Async
     @Override
     public void updateReplyMsg(Integer sourceId, String sourceType, String content,
-                               Integer quoteId, String quoteType, String recipientId, String senderId) {
+            Integer quoteId, String quoteType, String recipientId, String senderId) {
         if (content.length() > 200) {
             content = content.substring(0, 200) + "...";
         }
@@ -80,7 +79,6 @@ public class ReplyEntityServiceImpl extends ServiceImpl<ReplyMapper, Reply> impl
                 .setQuoteType(quoteType)
                 .setRecipientId(recipientId)
                 .setSenderId(senderId);
-
 
         if (sourceType.equals("Discussion")) {
             Discussion discussion = discussionEntityService.getById(sourceId);

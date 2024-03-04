@@ -14,5 +14,5 @@ public interface DashboardService {
 
     public CommonResult<Session> getRecentSession();
 
-    public CommonResult<Map<Object,Object>> getDashboardInfo();
+    public CommonResult<Map<Object, Object>> getDashboardInfo();
 }

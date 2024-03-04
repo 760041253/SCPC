@@ -35,16 +35,17 @@ public class GroupRankManager {
     @Autowired
     private GroupMemberEntityService groupMemberEntityService;
 
-
     public IPage<OIRankVO> getGroupRankList(Integer limit,
-                                            Integer currentPage,
-                                            String searchUser,
-                                            Integer type,
-                                            Long gid) throws StatusFailException {
+            Integer currentPage,
+            String searchUser,
+            Integer type,
+            Long gid) throws StatusFailException {
 
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 30;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 30;
 
         // 根据type查询不同 进行不同排序方式
         String rankType;

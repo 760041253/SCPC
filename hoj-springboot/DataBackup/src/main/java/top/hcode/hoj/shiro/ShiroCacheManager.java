@@ -13,7 +13,7 @@ import top.hcode.hoj.utils.RedisUtils;
 @Data
 public class ShiroCacheManager implements CacheManager {
 
-    private long cacheLive;    // cache存活时间 秒
+    private long cacheLive; // cache存活时间 秒
 
     private String cacheKeyPrefix; // cache前缀
 

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @Author Himit_ZH
  * @Date 2022/6/11
- * 允许请求路径出现[] \ 等特殊字符
+ *       允许请求路径出现[] \ 等特殊字符
  */
 @Configuration
 public class TomcatConfig {

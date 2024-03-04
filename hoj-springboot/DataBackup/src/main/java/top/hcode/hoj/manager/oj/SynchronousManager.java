@@ -9,9 +9,10 @@ import cn.hutool.json.JSONUtil;
 import cn.hutool.json.JSONArray;
 
 import org.jsoup.Connection;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import top.hcode.hoj.pojo.entity.judge.Judge;
 import top.hcode.hoj.pojo.entity.judge.JudgeCase;
@@ -22,17 +23,18 @@ import top.hcode.hoj.pojo.vo.ContestSynchronousConfigVO;
 import top.hcode.hoj.pojo.vo.JudgeVO;
 import top.hcode.hoj.pojo.vo.ContestProblemVO;
 import top.hcode.hoj.pojo.entity.problem.Problem;
+import top.hcode.hoj.utils.Constants;
 import top.hcode.hoj.utils.JsoupUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
 import java.net.HttpCookie;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import top.hcode.hoj.utils.Constants;
 
 /**
  * @param contest                     比赛的信息
@@ -45,7 +47,6 @@ import top.hcode.hoj.utils.Constants;
  */
 @Component
 public class SynchronousManager {
-    public static final String HOST = "http://scpc.fun";
     public static final String LOGIN_URL = "/api/login";
     public static String csrfToken = "";
     public static List<HttpCookie> cookies = new ArrayList<>();
@@ -56,19 +57,21 @@ public class SynchronousManager {
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
             .map();
 
-    public void login() {
-        // 登录管理账号获取密码
-        HttpRequest request = HttpUtil.createPost(HOST + LOGIN_URL);
+    public void login(String host, String username, String password) {
+        HttpRequest request = HttpUtil.createPost(host + LOGIN_URL);
         request.addHeaders(headers);
 
         request.body(new JSONObject(MapUtil.builder(new HashMap<String, Object>())
-                .put("username", Constants.HOJSuperAdmin.Username.getMode())
-                .put("password", Constants.HOJSuperAdmin.Password.getMode())
+                .put("username", username)
+                .put("password", password)
                 .map()).toString());
 
         HttpResponse response = request.execute();
-        csrfToken = response.headers().get("Authorization").get(0);
-        cookies = response.getCookies();
+
+        if (response.isOk()) {
+            csrfToken = response.headers().get("Authorization").get(0);
+            cookies = response.getCookies();
+        }
     }
 
     @Autowired
@@ -103,8 +106,14 @@ public class SynchronousManager {
     }
 
     public List<JSONObject> getSynchronousConfigList(Contest contest) {
+
+        String synchronousConfig = contest.getSynchronousConfig();
+        if (StringUtils.isEmpty(synchronousConfig)) {
+            return new ArrayList<>();
+        }
+
         // 获取比赛对应的同步赛信息
-        JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
+        JSONObject SynchronousJsonObject = JSONUtil.parseObj(synchronousConfig);
         List<JSONObject> result = SynchronousJsonObject.get("config", List.class);
         return result;
     }
@@ -127,9 +136,17 @@ public class SynchronousManager {
         List<String> urlBody = getUrlBody(synchronousConfig.getLink());
         String protocol = urlBody.get(0), rootDomain = urlBody.get(1), port = urlBody.get(2);
 
+        String host = protocol + "://" + rootDomain;
+        // 登录
+        login(host, synchronousConfig.getUsername(), synchronousConfig.getPassword());
+
+        if (StringUtils.isEmpty(csrfToken)) {
+            return JsonObject;
+        }
+
         Map<String, String> headers = MapUtil
                 .builder(new HashMap<String, String>())
-                .put("Authorization", synchronousConfig.getAuthorization())
+                .put("Authorization", csrfToken)
                 .put("Url-Type", "general")
                 .put("Content-Type", "application/json")
                 .put("User-Agent",
@@ -137,7 +154,7 @@ public class SynchronousManager {
                 .map();
 
         // 新建网络请求
-        String link = protocol + "://" + rootDomain + (!port.isEmpty() ? ":" + port : "") + api;
+        String link = host + (!port.isEmpty() ? ":" + port : "") + api;
 
         try {
             Connection connection = JsoupUtils.getShorterConnectionFromUrl(link, params, headers, payload);
@@ -151,10 +168,13 @@ public class SynchronousManager {
     }
 
     public List<ACMContestRankVO> getSynchronousRankList(Contest contest, boolean isContainsAfterContestJudge,
-            boolean removeStar, Long nowtime) {
+            boolean removeStar, Long time) {
         List<ACMContestRankVO> synchronousRankList = new ArrayList();
 
         List<JSONObject> synchronousConfigList = getSynchronousConfigList(contest);
+        if (CollectionUtils.isEmpty(synchronousConfigList)) {
+            return synchronousRankList;
+        }
 
         for (JSONObject object : synchronousConfigList) {
             try {
@@ -177,8 +197,8 @@ public class SynchronousManager {
                         .put("containsEnd", "false")
                         .map();
 
-                if (nowtime != null) {
-                    payload.put("time", nowtime.toString());
+                if (time != null) {
+                    payload.put("time", time.toString());
                 }
 
                 JSONObject JsonObject = getHttpRequestJson(synchronousConfig, api, "post", null, payload);
@@ -210,6 +230,9 @@ public class SynchronousManager {
 
         // 获取比赛对应的同步赛信息
         List<JSONObject> synchronousConfigList = getSynchronousConfigList(contest);
+        if (CollectionUtils.isEmpty(synchronousConfigList)) {
+            return synchronousSubmissionList;
+        }
 
         for (JSONObject object : synchronousConfigList) {
             try {
@@ -266,12 +289,14 @@ public class SynchronousManager {
     }
 
     public List<ContestProblemVO> getSynchronousContestProblemList(Contest contest,
-            boolean isContainsAfterContestJudge) {
+            boolean isContainsAfterContestJudge, Long time) {
         List<ContestProblemVO> synchronousContestProblemList = new ArrayList();
 
         // 获取比赛对应的同步赛信息
-        JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
-        List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
+        List<JSONObject> synchronousConfigList = getSynchronousConfigList(contest);
+        if (CollectionUtils.isEmpty(synchronousConfigList)) {
+            return synchronousContestProblemList;
+        }
 
         for (JSONObject object : synchronousConfigList) {
             try {
@@ -287,6 +312,10 @@ public class SynchronousManager {
                         .put("cid", synchronousCid)
                         .put("containsEnd", String.valueOf(isContainsAfterContestJudge))
                         .map();
+
+                if (time != null) {
+                    params.put("time", time.toString());
+                }
 
                 JSONObject JsonObject = getHttpRequestJson(synchronousConfig, api, "get", params, null);
                 if (!JsonObject.isEmpty()) {
@@ -317,10 +346,13 @@ public class SynchronousManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        if (contest != null && contest.getSynchronous()) {
+        if (contest.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || contest.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             // 获取比赛对应的同步赛信息
-            JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
-            List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
+            List<JSONObject> synchronousConfigList = getSynchronousConfigList(contest);
+            if (CollectionUtils.isEmpty(synchronousConfigList)) {
+                return judge;
+            }
 
             for (JSONObject object : synchronousConfigList) {
                 try {
@@ -359,10 +391,13 @@ public class SynchronousManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        if (contest != null && contest.getSynchronous()) {
+        if (contest.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || contest.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             // 获取比赛对应的同步赛信息
-            JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
-            List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
+            List<JSONObject> synchronousConfigList = getSynchronousConfigList(contest);
+            if (CollectionUtils.isEmpty(synchronousConfigList)) {
+                return synchronousCaseResult;
+            }
 
             for (JSONObject object : synchronousConfigList) {
                 try {
@@ -406,10 +441,13 @@ public class SynchronousManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        if (contest != null && contest.getSynchronous()) {
+        if (contest.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || contest.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             // 获取比赛对应的同步赛信息
-            JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
-            List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
+            List<JSONObject> synchronousConfigList = getSynchronousConfigList(contest);
+            if (CollectionUtils.isEmpty(synchronousConfigList)) {
+                return problem;
+            }
 
             for (JSONObject object : synchronousConfigList) {
                 try {
@@ -448,7 +486,7 @@ public class SynchronousManager {
         return problem;
     }
 
-    public static JudgeVO parseSynchronousSubmission(JSONObject record) {
+    public JudgeVO parseSynchronousSubmission(JSONObject record) {
         JudgeVO judgeVO = new JudgeVO();
         judgeVO.setUid(record.getStr("uid"))
                 .setSubmitId(record.getLong("submitId"))

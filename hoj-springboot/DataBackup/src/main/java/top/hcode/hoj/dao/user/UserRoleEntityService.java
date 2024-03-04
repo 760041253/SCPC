@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author Himit_ZH
@@ -26,5 +26,5 @@ public interface UserRoleEntityService extends IService<UserRole> {
 
     void deleteCache(String uid, boolean isRemoveSession);
 
-    String getAuthChangeContent(int oldType,int newType);
+    String getAuthChangeContent(int oldType, int newType);
 }

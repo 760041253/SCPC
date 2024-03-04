@@ -32,9 +32,9 @@ public class RankController {
      */
     @GetMapping("/get-rank-list")
     public CommonResult<IPage> getRankList(@RequestParam(value = "limit", required = false) Integer limit,
-                                           @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                           @RequestParam(value = "searchUser", required = false) String searchUser,
-                                           @RequestParam(value = "type", required = true) Integer type) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "searchUser", required = false) String searchUser,
+            @RequestParam(value = "type", required = true) Integer type) {
         return rankService.getRankList(limit, currentPage, searchUser, type);
     }
 }

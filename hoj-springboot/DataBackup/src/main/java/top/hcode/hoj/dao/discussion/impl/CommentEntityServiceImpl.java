@@ -55,8 +55,9 @@ public class CommentEntityServiceImpl extends ServiceImpl<CommentMapper, Comment
     private GroupMemberEntityService groupMemberEntityService;
 
     @Override
-    public IPage<CommentVO> getCommentList(int limit, int currentPage, Long cid, Integer did, Boolean isRoot, String uid) {
-        //新建分页
+    public IPage<CommentVO> getCommentList(int limit, int currentPage, Long cid, Integer did, Boolean isRoot,
+            String uid) {
+        // 新建分页
         Page<CommentVO> page = new Page<>(currentPage, limit);
 
         if (cid != null) {
@@ -110,7 +111,6 @@ public class CommentEntityServiceImpl extends ServiceImpl<CommentMapper, Comment
         }
         msgRemindEntityService.saveOrUpdate(msgRemind);
     }
-
 
     @Async
     @Override

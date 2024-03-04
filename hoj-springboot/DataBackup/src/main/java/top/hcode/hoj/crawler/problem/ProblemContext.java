@@ -16,7 +16,7 @@ public class ProblemContext {
         this.problemStrategy = problemStrategy;
     }
 
-    //上下文接口
+    // 上下文接口
     public ProblemStrategy.RemoteProblemInfo getProblemInfo(String problemId, String author) throws Exception {
         try {
             return problemStrategy.getProblemInfo(problemId, author);
@@ -28,8 +28,9 @@ public class ProblemContext {
         }
     }
 
-    //上下文接口
-    public ProblemStrategy.RemoteProblemInfo getProblemInfoByLogin(String problemId, String author, String username, String password) throws Exception {
+    // 上下文接口
+    public ProblemStrategy.RemoteProblemInfo getProblemInfoByLogin(String problemId, String author, String username,
+            String password) throws Exception {
 
         try {
             return problemStrategy.getProblemInfoByLogin(problemId, author, username, password);

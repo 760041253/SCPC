@@ -14,7 +14,8 @@ import javax.annotation.Resource;
  * @Description:
  */
 @Service
-public class TrainingCategoryEntityServiceImpl extends ServiceImpl<TrainingCategoryMapper, TrainingCategory> implements TrainingCategoryEntityService {
+public class TrainingCategoryEntityServiceImpl extends ServiceImpl<TrainingCategoryMapper, TrainingCategory>
+        implements TrainingCategoryEntityService {
 
     @Resource
     private TrainingCategoryMapper trainingCategoryMapper;

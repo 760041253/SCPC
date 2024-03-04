@@ -80,7 +80,6 @@ public class NacosSwitchConfig {
             });
             log.info("[Switch Config] [Init Succeeded] [{}]", getSwitchConfig());
 
-
             refreshWebConfig(configService.getConfig(webConfigFileName, group, 6000));
             configService.addListener(webConfigFileName, group, new Listener() {
                 @Override

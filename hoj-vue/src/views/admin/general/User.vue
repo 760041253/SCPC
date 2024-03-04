@@ -10,8 +10,7 @@
               icon="el-icon-delete-solid"
               @click="deleteUsers(null)"
               size="small"
-              >{{ $t('m.Delete') }}
-            </el-button>
+            >{{ $t('m.Delete') }}</el-button>
           </span>
           <span>
             <vxe-input
@@ -30,8 +29,7 @@
               :width="40"
               @change="filterByAdmin"
               :inactive-text="$t('m.All')"
-            >
-            </el-switch>
+            ></el-switch>
           </span>
         </div>
       </div>
@@ -46,12 +44,7 @@
         @checkbox-all="handlechangeAll"
       >
         <vxe-table-column type="checkbox" width="60"></vxe-table-column>
-        <vxe-table-column
-          field="username"
-          :title="$t('m.User')"
-          min-width="200"
-          show-overflow
-        >
+        <vxe-table-column field="username" :title="$t('m.User')" min-width="200" show-overflow>
           <template v-slot="{ row }">
             <span>{{ row.username }}</span>
             <span style="margin-left:2px">
@@ -60,83 +53,49 @@
                 size="small"
                 v-if="row.titleName"
                 :color="row.titleColor"
-              >
-                {{ row.titleName }}
-              </el-tag>
+              >{{ row.titleName }}</el-tag>
             </span>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          field="realname"
-          :title="$t('m.RealName')"
-          min-width="140"
-          show-overflow
-        ></vxe-table-column>
-        <vxe-table-column
-          field="email"
-          :title="$t('m.Email')"
-          min-width="150"
-          show-overflow
-        ></vxe-table-column>
-        <vxe-table-column
-          field="gmtCreate"
-          :title="$t('m.Created_Time')"
-          min-width="150"
-        >
-          <template v-slot="{ row }">
-            {{ row.gmtCreate | localtime }}
-          </template>
+        <vxe-table-column field="realname" :title="$t('m.RealName')" min-width="140" show-overflow></vxe-table-column>
+        <vxe-table-column field="email" :title="$t('m.Email')" min-width="150" show-overflow></vxe-table-column>
+        <vxe-table-column field="gmtCreate" :title="$t('m.Created_Time')" min-width="150">
+          <template v-slot="{ row }">{{ row.gmtCreate | localtime }}</template>
         </vxe-table-column>
-        <vxe-table-column
-          field="role"
-          :title="$t('m.User_Type')"
-          min-width="100"
-        >
-          <template v-slot="{ row }">
-            {{ getRole(row.roles) | parseRole }}
-          </template>
+        <vxe-table-column field="role" :title="$t('m.User_Type')" min-width="100">
+          <template v-slot="{ row }">{{ getRole(row.roles) | parseRole }}</template>
         </vxe-table-column>
-        <vxe-table-column
-          field="status"
-          :title="$t('m.Status')"
-          min-width="100"
-        >
+        <vxe-table-column field="status" :title="$t('m.Status')" min-width="100">
           <template v-slot="{ row }">
-            <el-tag effect="dark" color="#19be6b" v-if="row.status == 0">{{
+            <el-tag effect="dark" color="#19be6b" v-if="row.status == 0">
+              {{
               $t('m.Normal')
-            }}</el-tag>
-            <el-tag effect="dark" color="#ed3f14" v-else>{{
+              }}
+            </el-tag>
+            <el-tag effect="dark" color="#ed3f14" v-else>
+              {{
               $t('m.Disable')
-            }}</el-tag>
+              }}
+            </el-tag>
           </template>
         </vxe-table-column>
         <vxe-table-column :title="$t('m.Option')" min-width="150">
           <template v-slot="{ row }">
-            <el-tooltip
-              effect="dark"
-              :content="$t('m.Edit_User')"
-              placement="top"
-            >
+            <el-tooltip effect="dark" :content="$t('m.Edit_User')" placement="top">
               <el-button
                 icon="el-icon-edit-outline"
                 size="mini"
                 @click.native="openUserDialog(row)"
                 type="primary"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
-            <el-tooltip
-              effect="dark"
-              :content="$t('m.Delete_User')"
-              placement="top"
-            >
+            <el-tooltip effect="dark" :content="$t('m.Delete_User')" placement="top">
               <el-button
                 icon="el-icon-delete-solid"
                 size="mini"
                 @click.native="deleteUsers([row.uid])"
                 type="danger"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
           </template>
         </vxe-table-column>
@@ -150,8 +109,7 @@
           :total="total"
           @size-change="onPageSizeChange"
           :page-sizes="[10, 30, 50, 100]"
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </el-card>
 
@@ -167,26 +125,21 @@
       <p>5. {{ $t('m.Import_User_Tips5') }}</p>
       <el-upload
         v-if="!uploadUsers.length"
-        action=""
+        action
         :show-file-list="false"
         accept=".csv"
         :before-upload="handleUsersCSV"
       >
-        <el-button size="small" icon="el-icon-folder-opened" type="primary">{{
+        <el-button size="small" icon="el-icon-folder-opened" type="primary">
+          {{
           $t('m.Choose_File')
-        }}</el-button>
+          }}
+        </el-button>
       </el-upload>
       <template v-else>
         <vxe-table :data="uploadUsersPage" stripe auto-resize>
-          <vxe-table-column
-            :title="$t('m.Username')"
-            field="username"
-            min-width="96"
-            show-overflow
-          >
-            <template v-slot="{ row }">
-              {{ row[0] }}
-            </template>
+          <vxe-table-column :title="$t('m.Username')" field="username" min-width="96" show-overflow>
+            <template v-slot="{ row }">{{ row[0] }}</template>
           </vxe-table-column>
           <vxe-table-column
             :title="$t('m.Password')"
@@ -194,19 +147,10 @@
             min-width="130"
             show-overflow
           >
-            <template v-slot="{ row }">
-              {{ row[1] }}
-            </template>
+            <template v-slot="{ row }">{{ row[1] }}</template>
           </vxe-table-column>
-          <vxe-table-column
-            :title="$t('m.Email')"
-            field="email"
-            min-width="120"
-            show-overflow
-          >
-            <template v-slot="{ row }">
-              {{ row[2] }}
-            </template>
+          <vxe-table-column :title="$t('m.Email')" field="email" min-width="120" show-overflow>
+            <template v-slot="{ row }">{{ row[2] }}</template>
           </vxe-table-column>
           <vxe-table-column
             :title="$t('m.RealName')"
@@ -214,19 +158,10 @@
             min-width="150"
             show-overflow
           >
-            <template v-slot="{ row }">
-              {{ row[3] }}
-            </template>
+            <template v-slot="{ row }">{{ row[3] }}</template>
           </vxe-table-column>
-          <vxe-table-column
-            :title="$t('m.Gender')"
-            field="gender"
-            min-width="60"
-            show-overflow
-          >
-            <template v-slot="{ row }">
-              {{ row[4] }}
-            </template>
+          <vxe-table-column :title="$t('m.Gender')" field="gender" min-width="60" show-overflow>
+            <template v-slot="{ row }">{{ row[4] }}</template>
           </vxe-table-column>
           <vxe-table-column
             :title="$t('m.Nickname')"
@@ -234,19 +169,10 @@
             min-width="100"
             show-overflow
           >
-            <template v-slot="{ row }">
-              {{ row[5] }}
-            </template>
+            <template v-slot="{ row }">{{ row[5] }}</template>
           </vxe-table-column>
-          <vxe-table-column
-            :title="$t('m.School')"
-            field="school"
-            min-width="100"
-            show-overflow
-          >
-            <template v-slot="{ row }">
-              {{ row[6] }}
-            </template>
+          <vxe-table-column :title="$t('m.School')" field="school" min-width="100" show-overflow>
+            <template v-slot="{ row }">{{ row[6] }}</template>
           </vxe-table-column>
         </vxe-table>
 
@@ -256,23 +182,20 @@
             size="small"
             icon="el-icon-upload"
             @click="handleUsersUpload"
-            >{{ $t('m.Upload_All') }}
-          </el-button>
+          >{{ $t('m.Upload_All') }}</el-button>
           <el-button
             type="danger"
             size="small"
             icon="el-icon-delete"
             @click="handleResetData"
-            >{{ $t('m.Clear_All') }}
-          </el-button>
+          >{{ $t('m.Clear_All') }}</el-button>
           <el-pagination
             class="page"
             layout="prev, pager, next"
             :page-size="uploadUsersPageSize"
             :current-page.sync="uploadUsersCurrentPage"
             :total="uploadUsers.length"
-          >
-          </el-pagination>
+          ></el-pagination>
         </div>
       </template>
     </el-card>
@@ -282,49 +205,30 @@
       <div slot="header">
         <span class="panel-title home-title">{{ $t('m.Generate_User') }}</span>
       </div>
-      <el-form
-        :model="formGenerateUser"
-        ref="formGenerateUser"
-        :rules="formGenerateRules"
-      >
+      <el-form :model="formGenerateUser" ref="formGenerateUser" :rules="formGenerateRules">
         <el-row :gutter="10">
           <el-col :md="5" :xs="24">
             <el-form-item :label="$t('m.Prefix')" prop="prefix">
-              <el-input
-                v-model="formGenerateUser.prefix"
-                placeholder="Prefix"
-              ></el-input>
+              <el-input v-model="formGenerateUser.prefix" placeholder="Prefix"></el-input>
             </el-form-item>
           </el-col>
           <el-col :md="5" :xs="24">
             <el-form-item :label="$t('m.Suffix')" prop="suffix">
-              <el-input
-                v-model="formGenerateUser.suffix"
-                placeholder="Suffix"
-              ></el-input>
+              <el-input v-model="formGenerateUser.suffix" placeholder="Suffix"></el-input>
             </el-form-item>
           </el-col>
           <el-col :md="5" :xs="24">
             <el-form-item :label="$t('m.Start_Number')" prop="number_from">
-              <el-input-number
-                v-model="formGenerateUser.number_from"
-                style="width: 100%"
-              ></el-input-number>
+              <el-input-number v-model="formGenerateUser.number_from" style="width: 100%"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :md="5" :xs="24">
             <el-form-item :label="$t('m.End_Number')" prop="number_to">
-              <el-input-number
-                v-model="formGenerateUser.number_to"
-                style="width: 100%"
-              ></el-input-number>
+              <el-input-number v-model="formGenerateUser.number_to" style="width: 100%"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :md="4" :xs="24">
-            <el-form-item
-              :label="$t('m.Password_Length')"
-              prop="password_length"
-            >
+            <el-form-item :label="$t('m.Password_Length')" prop="password_length">
               <el-input
                 v-model.number="formGenerateUser.password_length"
                 :placeholder="$t('m.Password_Length')"
@@ -340,18 +244,16 @@
             icon="fa fa-users"
             :loading="loadingGenerate"
             size="small"
-          >
-            {{ $t('m.Generate_and_Export') }}
-          </el-button>
+          >{{ $t('m.Generate_and_Export') }}</el-button>
           <span
             class="userPreview"
             v-if="formGenerateUser.number_from <= formGenerateUser.number_to"
           >
             {{ $t('m.The_usernames_will_be') }}
             {{
-              formGenerateUser.prefix +
-                formGenerateUser.number_from +
-                formGenerateUser.suffix
+            formGenerateUser.prefix +
+            formGenerateUser.number_from +
+            formGenerateUser.suffix
             }},
             <span
               v-if="
@@ -359,10 +261,10 @@
               "
             >
               {{
-                formGenerateUser.prefix +
-                  (formGenerateUser.number_from + 1) +
-                  formGenerateUser.suffix +
-                  '...'
+              formGenerateUser.prefix +
+              (formGenerateUser.number_from + 1) +
+              formGenerateUser.suffix +
+              '...'
               }}
             </span>
             <span
@@ -371,9 +273,9 @@
               "
             >
               {{
-                formGenerateUser.prefix +
-                  formGenerateUser.number_to +
-                  formGenerateUser.suffix
+              formGenerateUser.prefix +
+              formGenerateUser.number_to +
+              formGenerateUser.suffix
               }}
             </span>
           </span>
@@ -382,11 +284,7 @@
     </el-card>
 
     <!--编辑用户的对话框-->
-    <el-dialog
-      :title="$t('m.User')"
-      :visible.sync="showUserDialog"
-      width="350px"
-    >
+    <el-dialog :title="$t('m.User')" :visible.sync="showUserDialog" width="350px">
       <el-form
         :model="selectUser"
         label-width="100px"
@@ -416,16 +314,11 @@
                 :active-value="true"
                 :inactive-value="false"
                 v-model="selectUser.setNewPwd"
-              >
-              </el-switch>
+              ></el-switch>
             </el-form-item>
           </el-col>
           <el-col :span="24" v-if="selectUser.setNewPwd == 1">
-            <el-form-item
-              :label="$t('m.General_New_Password')"
-              required
-              prop="password"
-            >
+            <el-form-item :label="$t('m.General_New_Password')" required prop="password">
               <el-input
                 v-model="selectUser.password"
                 :placeholder="$t('m.General_New_Password')"
@@ -436,51 +329,15 @@
           <el-col :span="24">
             <el-form-item :label="$t('m.User_Type')">
               <el-select v-model="selectUser.type" size="small">
-                <el-option
-                  label="超级管理员"
-                  :value="1000"
-                  :key="1000"
-                ></el-option>
-                <el-option
-                  label="题目管理员"
-                  :value="1008"
-                  :key="1008"
-                ></el-option>
-                <el-option
-                  label="普通管理员"
-                  :value="1001"
-                  :key="1001"
-                ></el-option>
-                <el-option
-                  label="用户(默认)"
-                  :value="1002"
-                  :key="1002"
-                ></el-option>
-                <el-option
-                  label="用户(禁止提交)"
-                  :value="1003"
-                  :key="1003"
-                ></el-option>
-                <el-option
-                  label="用户(禁止发讨论)"
-                  :value="1004"
-                  :key="1004"
-                ></el-option>
-                <el-option
-                  label="用户(禁言)"
-                  :value="1005"
-                  :key="1005"
-                ></el-option>
-                <el-option
-                  label="用户(禁止提交&禁止发讨论)"
-                  :value="1006"
-                  :key="1006"
-                ></el-option>
-                <el-option
-                  label="用户(禁止提交&禁言)"
-                  :value="1007"
-                  :key="1007"
-                ></el-option>
+                <el-option label="超级管理员" :value="1000" :key="1000"></el-option>
+                <el-option label="题目管理员" :value="1008" :key="1008"></el-option>
+                <el-option label="普通管理员" :value="1001" :key="1001"></el-option>
+                <el-option label="用户(默认)" :value="1002" :key="1002"></el-option>
+                <el-option label="用户(禁止提交)" :value="1003" :key="1003"></el-option>
+                <el-option label="用户(禁止发讨论)" :value="1004" :key="1004"></el-option>
+                <el-option label="用户(禁言)" :value="1005" :key="1005"></el-option>
+                <el-option label="用户(禁止提交&禁止发讨论)" :value="1006" :key="1006"></el-option>
+                <el-option label="用户(禁止提交&禁言)" :value="1007" :key="1007"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -489,9 +346,7 @@
               <el-input v-model="selectUser.titleName" size="small"></el-input>
             </el-form-item>
             <el-form-item :label="$t('m.Title_Color')">
-              <el-color-picker
-                v-model="selectUser.titleColor"
-              ></el-color-picker>
+              <el-color-picker v-model="selectUser.titleColor"></el-color-picker>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -502,38 +357,41 @@
                 :active-text="$t('m.Normal')"
                 :inactive-text="$t('m.Disable')"
                 v-model="selectUser.status"
-              >
-              </el-switch>
+              ></el-switch>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="danger" @click.native="showUserDialog = false">{{
+        <el-button type="danger" @click.native="showUserDialog = false">
+          {{
           $t('m.Cancel')
-        }}</el-button>
-        <el-button type="primary" @click.native="saveUser">{{
+          }}
+        </el-button>
+        <el-button type="primary" @click.native="saveUser">
+          {{
           $t('m.OK')
-        }}</el-button>
+          }}
+        </el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import papa from 'papaparse'; // csv插件
-import api from '@/common/api';
-import utils from '@/common/utils';
-import myMessage from '@/common/message';
+import papa from "papaparse"; // csv插件
+import api from "@/common/api";
+import utils from "@/common/utils";
+import myMessage from "@/common/message";
 export default {
-  name: 'user',
+  name: "user",
   data() {
     const CheckTogtFrom = (rule, value, callback) => {
       if (value < this.formGenerateUser.number_from) {
         callback(
           new Error(
             this.$i18n.t(
-              'm.The_end_number_cannot_be_less_than_the_start_number'
+              "m.The_end_number_cannot_be_less_than_the_start_number"
             )
           )
         );
@@ -545,7 +403,7 @@ export default {
         callback(
           new Error(
             this.$i18n.t(
-              'm.Please_select_6_to_25_characters_for_password_length'
+              "m.Please_select_6_to_25_characters_for_password_length"
             )
           )
         );
@@ -559,7 +417,7 @@ export default {
             res.data.data.username === true &&
             value != this.selectUser.username
           ) {
-            callback(new Error(this.$i18n.t('m.The_username_already_exists')));
+            callback(new Error(this.$i18n.t("m.The_username_already_exists")));
           } else {
             callback();
           }
@@ -571,7 +429,7 @@ export default {
       api.checkUsernameOrEmail(undefined, value).then(
         (res) => {
           if (res.data.data.email === true && value != this.selectUser.email) {
-            callback(new Error(this.$i18n.t('m.The_email_already_exists')));
+            callback(new Error(this.$i18n.t("m.The_email_already_exists")));
           } else {
             callback();
           }
@@ -591,54 +449,54 @@ export default {
       uploadUsersCurrentPage: 1,
       uploadUsersPageSize: 15,
       // 搜索关键字
-      keyword: '',
+      keyword: "",
       // 是否显示用户对话框
       showUserDialog: false,
       onlyAdmin: false,
 
       // 当前用户model
       selectUser: {
-        uid: '',
-        username: '',
-        realname: '',
-        email: '',
-        password: '',
+        uid: "",
+        username: "",
+        realname: "",
+        email: "",
+        password: "",
         type: 1002,
         status: 0,
         setNewPwd: false,
-        titleName: '',
-        titleColor: '',
+        titleName: "",
+        titleColor: "",
       },
       updateUserRules: {
         username: [
-          { required: true, message: 'Username is required', trigger: 'blur' },
+          { required: true, message: "Username is required", trigger: "blur" },
           {
             validator: CheckUsernameNotExist,
-            trigger: 'blur',
-            message: this.$i18n.t('m.The_username_already_exists'),
+            trigger: "blur",
+            message: this.$i18n.t("m.The_username_already_exists"),
           },
           {
             max: 255,
-            message: this.$i18n.t('m.Username_Check_Max'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Username_Check_Max"),
+            trigger: "blur",
           },
         ],
         realname: [
           {
             max: 255,
-            trigger: 'blur',
+            trigger: "blur",
           },
         ],
         email: [
           {
-            type: 'email',
-            message: this.$i18n.t('m.Email_Check_Format'),
-            trigger: 'blur',
+            type: "email",
+            message: this.$i18n.t("m.Email_Check_Format"),
+            trigger: "blur",
           },
           {
             validator: CheckEmailNotExist,
-            message: this.$i18n.t('m.The_email_already_exists'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.The_email_already_exists"),
+            trigger: "blur",
           },
         ],
       },
@@ -648,8 +506,8 @@ export default {
       currentPage: 1,
       selectedUsers: [],
       formGenerateUser: {
-        prefix: '',
-        suffix: '',
+        prefix: "",
+        suffix: "",
         number_from: 0,
         number_to: 10,
         password_length: 6,
@@ -658,30 +516,30 @@ export default {
         number_from: [
           {
             required: true,
-            message: this.$i18n.t('m.Start_Number_Required'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Start_Number_Required"),
+            trigger: "blur",
           },
         ],
         number_to: [
           {
             required: true,
-            message: this.$i18n.t('m.End_Number_Required'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.End_Number_Required"),
+            trigger: "blur",
           },
-          { validator: CheckTogtFrom, trigger: 'blur' },
+          { validator: CheckTogtFrom, trigger: "blur" },
         ],
         password_length: [
           {
             required: true,
-            message: this.$i18n.t('m.Password_Check_Required'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Password_Check_Required"),
+            trigger: "blur",
           },
           {
-            type: 'number',
-            message: this.$i18n.t('m.Password_Length_Checked'),
-            trigger: 'blur',
+            type: "number",
+            message: this.$i18n.t("m.Password_Length_Checked"),
+            trigger: "blur",
           },
-          { validator: CheckPwdLength, trigger: 'blur' },
+          { validator: CheckPwdLength, trigger: "blur" },
         ],
       },
     };
@@ -701,13 +559,13 @@ export default {
     },
     // 提交修改用户的信息
     saveUser() {
-      this.$refs['updateUser'].validate((valid) => {
+      this.$refs["updateUser"].validate((valid) => {
         if (valid) {
           api
             .admin_editUser(this.selectUser)
             .then((res) => {
               // 更新列表
-              myMessage.success(this.$i18n.t('m.Update_Successfully'));
+              myMessage.success(this.$i18n.t("m.Update_Successfully"));
               this.getUserList(this.currentPage);
             })
             .then(() => {
@@ -724,7 +582,7 @@ export default {
       this.currentChange(1);
     },
     getRole(roles) {
-      return roles[0]['id'];
+      return roles[0]["id"];
     },
     // 打开用户对话框
     openUserDialog(row) {
@@ -734,7 +592,7 @@ export default {
       this.selectUser.realname = row.realname;
       this.selectUser.email = row.email;
       this.selectUser.setNewPwd = false;
-      this.selectUser.password = '';
+      this.selectUser.password = "";
       this.selectUser.type = this.getRole(row.roles);
       this.selectUser.status = row.status;
       this.selectUser.titleName = row.titleName;
@@ -761,16 +619,16 @@ export default {
         ids = this.selectedUsers;
       }
       if (ids.length > 0) {
-        this.$confirm(this.$i18n.t('m.Delete_User_Tips'), 'Tips', {
-          confirmButtonText: this.$i18n.t('m.OK'),
-          cancelButtonText: this.$i18n.t('m.Cancel'),
-          type: 'warning',
+        this.$confirm(this.$i18n.t("m.Delete_User_Tips"), "Tips", {
+          confirmButtonText: this.$i18n.t("m.OK"),
+          cancelButtonText: this.$i18n.t("m.Cancel"),
+          type: "warning",
         }).then(
           () => {
             api
               .admin_deleteUsers(ids)
               .then((res) => {
-                myMessage.success(this.$i18n.$t('m.Delete_successfully'));
+                myMessage.success(this.$i18n.$t("m.Delete_successfully"));
                 this.selectedUsers = [];
                 this.getUserList(this.currentPage);
               })
@@ -783,11 +641,11 @@ export default {
         );
       } else {
         myMessage.warning(
-          this.$i18n.t('m.The_number_of_users_selected_cannot_be_empty')
+          this.$i18n.t("m.The_number_of_users_selected_cannot_be_empty")
         );
       }
     },
-    checCheckboxkMethod({ row }){
+    checCheckboxkMethod({ row }) {
       return row.uid != this.userInfo.uid;
     },
     // 用户表部分勾选 改变选中的内容
@@ -806,9 +664,9 @@ export default {
       }
     },
     generateUser() {
-      this.$refs['formGenerateUser'].validate((valid) => {
+      this.$refs["formGenerateUser"].validate((valid) => {
         if (!valid) {
-          myMessage.error(this.$i18n.t('m.Error_Please_check_your_choice'));
+          myMessage.error(this.$i18n.t("m.Error_Please_check_your_choice"));
           return;
         }
         this.loadingGenerate = true;
@@ -817,9 +675,9 @@ export default {
           .admin_generateUser(data)
           .then((res) => {
             this.loadingGenerate = false;
-            let url = '/api/file/generate-user-excel?key=' + res.data.data.key;
+            let url = "/api/file/generate-user-excel?key=" + res.data.data.key;
             utils.downloadFile(url).then(() => {
-              this.$alert(this.$i18n.t('m.Generate_User_Success'), 'Tips');
+              this.$alert(this.$i18n.t("m.Generate_User_Success"), "Tips");
             });
             this.getUserList(1);
           })
@@ -837,7 +695,7 @@ export default {
           let delta = results.data.length - data.length;
           if (delta > 0) {
             myMessage.warning(
-              delta + this.$i18n.t('m.Generate_Skipped_Reason')
+              delta + this.$i18n.t("m.Generate_Skipped_Reason")
             );
           }
           this.uploadUsersCurrentPage = 1;
@@ -855,7 +713,7 @@ export default {
         .then((res) => {
           this.getUserList(1);
           this.handleResetData();
-          myMessage.success(this.$i18n.t('m.Upload_Users_Successfully'));
+          myMessage.success(this.$i18n.t("m.Upload_Users_Successfully"));
         })
         .catch(() => {});
     },

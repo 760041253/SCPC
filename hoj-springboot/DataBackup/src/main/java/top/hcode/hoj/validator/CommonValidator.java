@@ -35,14 +35,12 @@ public class CommonValidator {
         }
     }
 
-
-
     public void validateNotEmpty(Object value, String item) throws StatusFailException {
         if (value == null) {
             throw new StatusFailException(item + "不能为空");
         }
-        if (value instanceof String){
-            if (StrUtil.isBlank((String)value)){
+        if (value instanceof String) {
+            if (StrUtil.isBlank((String) value)) {
                 throw new StatusFailException(item + "不能为空");
             }
         }

@@ -16,5 +16,5 @@ public interface MsgRemindMapper extends BaseMapper<MsgRemind> {
     UserUnreadMsgCountVO getUserUnreadMsgCount(@Param("uid") String uid);
 
     IPage<UserMsgVO> getUserMsg(Page<UserMsgVO> page, @Param("uid") String uid,
-                                @Param("action") String action);
+            @Param("action") String action);
 }

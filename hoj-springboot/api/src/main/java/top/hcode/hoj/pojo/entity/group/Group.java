@@ -20,7 +20,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @ApiModel(value = "Group对象", description = "")
 @TableName("`group`")
-public class Group implements Serializable  {
+public class Group implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
@@ -48,7 +48,7 @@ public class Group implements Serializable  {
     @ApiModelProperty(value = "团队拥有者的uuid")
     private String uid;
 
-    @ApiModelProperty(value = "1为公开团队，2为保护团队，3为私有团队")
+    @ApiModelProperty(value = "1为公开团队，2为保护团队，3为私有团队，4为命题团队")
     private Integer auth;
 
     @ApiModelProperty(value = "团队是否可见")

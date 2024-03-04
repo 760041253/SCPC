@@ -46,15 +46,18 @@ public class ContestValidator {
 
         if (Objects.equals(Constants.Contest.TYPE_OI.getCode(), adminContestVO.getType())) {
             if (!Objects.equals(Constants.Contest.OI_RANK_RECENT_SCORE.getName(), adminContestVO.getOiRankScoreType())
-                    && !Objects.equals(Constants.Contest.OI_RANK_HIGHEST_SCORE.getName(), adminContestVO.getOiRankScoreType())) {
+                    && !Objects.equals(Constants.Contest.OI_RANK_HIGHEST_SCORE.getName(),
+                            adminContestVO.getOiRankScoreType())) {
                 throw new StatusFailException("OI比赛排行榜得分类型必须为最近得分(Recent)、最高得分(Highest)！");
             }
         }
 
         if (!Objects.equals(Constants.Contest.AUTH_PUBLIC.getCode(), adminContestVO.getAuth())
                 && !Objects.equals(Constants.Contest.AUTH_PRIVATE.getCode(), adminContestVO.getAuth())
-                && !Objects.equals(Constants.Contest.AUTH_PROTECT.getCode(), adminContestVO.getAuth())) {
-            throw new StatusFailException("比赛的权限必须为公开赛(0)、私有赛(1)、保护赛(2)！");
+                && !Objects.equals(Constants.Contest.AUTH_PROTECT.getCode(), adminContestVO.getAuth())
+                && !Objects.equals(Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode(), adminContestVO.getAuth())
+                && !Objects.equals(Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode(), adminContestVO.getAuth())) {
+            throw new StatusFailException("比赛的权限必须为公开赛(0)、私有赛(1)、保护赛(2)、同步公开赛(4)、同步私有赛(5)！");
         }
     }
 
@@ -79,7 +82,6 @@ public class ContestValidator {
         return false;
     }
 
-
     /**
      * @param contest
      * @param userRolesVo
@@ -88,7 +90,8 @@ public class ContestValidator {
      * @Description 需要对该比赛做判断，是否处于开始或结束状态才可以获取，同时若是私有赛需要判断是否已注册（比赛管理员包括超级管理员可以直接获取）
      * @Since 2021/1/17
      */
-    public void validateContestAuth(Contest contest, AccountProfile userRolesVo, Boolean isRoot) throws StatusFailException, StatusForbiddenException {
+    public void validateContestAuth(Contest contest, AccountProfile userRolesVo, Boolean isRoot)
+            throws StatusFailException, StatusForbiddenException {
 
         if (contest == null || !contest.getVisible()) {
             throw new StatusFailException("对不起，该比赛不存在！");
@@ -129,7 +132,6 @@ public class ContestValidator {
 
     }
 
-
     public void validateJudgeAuth(Contest contest, String uid) throws StatusForbiddenException {
 
         if (contest.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE.getCode() ||
@@ -143,7 +145,6 @@ public class ContestValidator {
             }
         }
     }
-
 
     public boolean validateAccountRule(String accountRule, String username) {
 

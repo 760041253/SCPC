@@ -25,9 +25,11 @@ public class GroupContestAnnouncementServiceImpl implements GroupContestAnnounce
     private GroupContestAnnouncementManager groupContestAnnouncementManager;
 
     @Override
-    public CommonResult<IPage<AnnouncementVO>> getContestAnnouncementList(Integer limit, Integer currentPage, Long cid) {
+    public CommonResult<IPage<AnnouncementVO>> getContestAnnouncementList(Integer limit, Integer currentPage,
+            Long cid) {
         try {
-            return CommonResult.successResponse(groupContestAnnouncementManager.getContestAnnouncementList(limit, currentPage, cid));
+            return CommonResult.successResponse(
+                    groupContestAnnouncementManager.getContestAnnouncementList(limit, currentPage, cid));
         } catch (StatusForbiddenException e) {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         } catch (StatusNotFoundException e) {

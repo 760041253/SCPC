@@ -1,6 +1,5 @@
 package top.hcode.hoj.advice;
 
-
 import com.google.protobuf.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.exceptions.PersistenceException;
@@ -55,15 +54,14 @@ public class GlobalExceptionAdvice {
      * 400 - Internal Server Error 自定义通用异常
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = {StatusForbiddenException.class,
+    @ExceptionHandler(value = { StatusForbiddenException.class,
             StatusAccessDeniedException.class,
             StatusFailException.class,
             StatusNotFoundException.class,
-            StatusSystemErrorException.class})
+            StatusSystemErrorException.class })
     public CommonResult<Void> handleCustomException(Exception e) {
         return CommonResult.errorResponse(e.getMessage(), ResultStatus.FAIL);
     }
-
 
     /**
      * 401 -UnAuthorized 处理AuthenticationException,token相关异常 即是认证出错 可能无法处理！
@@ -71,8 +69,8 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = AuthenticationException.class)
     public CommonResult<Void> handleAuthenticationException(AuthenticationException e,
-                                                            HttpServletRequest httpRequest,
-                                                            HttpServletResponse httpResponse) {
+            HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse) {
         httpResponse.setHeader("Url-Type", httpRequest.getHeader("Url-Type")); // 为了前端能区别请求来源
         return CommonResult.errorResponse(e.getMessage(), ResultStatus.ACCESS_DENIED);
     }
@@ -84,8 +82,8 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = UnauthenticatedException.class)
     public CommonResult<Void> handleUnauthenticatedException(UnauthenticatedException e,
-                                                             HttpServletRequest httpRequest,
-                                                             HttpServletResponse httpResponse) {
+            HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse) {
         httpResponse.setHeader("Url-Type", httpRequest.getHeader("Url-Type")); // 为了前端能区别请求来源
         return CommonResult.errorResponse("请您先登录！", ResultStatus.ACCESS_DENIED);
     }
@@ -96,8 +94,8 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(value = AuthorizationException.class)
     public CommonResult<String> handleAuthenticationException(AuthorizationException e,
-                                                              HttpServletRequest httpRequest,
-                                                              HttpServletResponse httpResponse) {
+            HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse) {
         httpResponse.setHeader("Url-Type", httpRequest.getHeader("Url-Type")); // 为了前端能区别请求来源
         return CommonResult.errorResponse("对不起，您无权限进行此操作！", ResultStatus.FORBIDDEN);
     }
@@ -108,8 +106,8 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(value = ShiroException.class)
     public CommonResult<Void> handleShiroException(ShiroException e,
-                                                   HttpServletRequest httpRequest,
-                                                   HttpServletResponse httpResponse) {
+            HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse) {
         httpResponse.setHeader("Url-Type", httpRequest.getHeader("Url-Type")); // 为了前端能区别请求来源
         return CommonResult.errorResponse("对不起，您无权限进行此操作，请先登录进行授权认证", ResultStatus.FORBIDDEN);
     }
@@ -137,12 +135,12 @@ public class GlobalExceptionAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public CommonResult<Void> handlerMethodArgumentNotValidException(MethodArgumentNotValidException e) throws IOException {
+    public CommonResult<Void> handlerMethodArgumentNotValidException(MethodArgumentNotValidException e)
+            throws IOException {
         BindingResult bindingResult = e.getBindingResult();
         ObjectError objectError = bindingResult.getAllErrors().stream().findFirst().get();
         return CommonResult.errorResponse(objectError.getDefaultMessage(), ResultStatus.FAIL);
     }
-
 
     /**
      * 400 - Bad Request 处理缺少请求参数
@@ -151,7 +149,8 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public CommonResult<Void> handleMissingServletRequestParameterException(
             MissingServletRequestParameterException e) {
-        return CommonResult.errorResponse("The required request parameters are missing：" + e.getMessage(), ResultStatus.FAIL);
+        return CommonResult.errorResponse("The required request parameters are missing：" + e.getMessage(),
+                ResultStatus.FAIL);
     }
 
     /**
@@ -163,7 +162,6 @@ public class GlobalExceptionAdvice {
             HttpMessageNotReadableException e) {
         return CommonResult.errorResponse("Failed to parse parameter format!", ResultStatus.FAIL);
     }
-
 
     /**
      * 400 - Bad Request 参数绑定失败
@@ -197,7 +195,8 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
     public CommonResult<Void> handleValidationException(ValidationException e) {
-        return CommonResult.errorResponse("Entity verification failed. The request parameters are incorrect!", ResultStatus.FAIL);
+        return CommonResult.errorResponse("Entity verification failed. The request parameters are incorrect!",
+                ResultStatus.FAIL);
     }
 
     /**
@@ -218,7 +217,6 @@ public class GlobalExceptionAdvice {
     public CommonResult<Void> handleHttpMediaTypeNotSupportedException(Exception e) {
         return CommonResult.errorResponse("The media type is not supported!", ResultStatus.FAIL);
     }
-
 
     /**
      * 500 - Internal Server Error 处理邮件发送出现的异常
@@ -250,7 +248,6 @@ public class GlobalExceptionAdvice {
         return CommonResult.errorResponse("Server Error! Please try Again later!", ResultStatus.SYSTEM_ERROR);
     }
 
-
     /**
      * 500 - Internal Server Error 操作数据库出现异常
      */
@@ -258,7 +255,8 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(SQLException.class)
     public CommonResult<Void> handleSQLException(SQLException e) {
         log.error("操作数据库出现异常-------------->{}", getMessage(e));
-        return CommonResult.errorResponse("Operation failed! Error message: " + e.getMessage(), ResultStatus.SYSTEM_ERROR);
+        return CommonResult.errorResponse("Operation failed! Error message: " + e.getMessage(),
+                ResultStatus.SYSTEM_ERROR);
     }
 
     /**
@@ -271,7 +269,6 @@ public class GlobalExceptionAdvice {
         return CommonResult.errorResponse("请检查数据是否准确！可能原因：数据库中已有相同的数据导致重复冲突!", ResultStatus.SYSTEM_ERROR);
     }
 
-
     /**
      * 500 - Internal Server Error 系统通用异常
      */
@@ -282,14 +279,13 @@ public class GlobalExceptionAdvice {
         return CommonResult.errorResponse("Server Error!", ResultStatus.SYSTEM_ERROR);
     }
 
-
     /**
      * 打印异常信息
      */
     public static String getMessage(Exception e) {
         String swStr = null;
         try (StringWriter sw = new StringWriter();
-             PrintWriter pw = new PrintWriter(sw)) {
+                PrintWriter pw = new PrintWriter(sw)) {
             e.printStackTrace(pw);
             pw.flush();
             sw.flush();

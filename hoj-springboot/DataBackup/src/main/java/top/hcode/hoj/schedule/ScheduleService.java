@@ -7,7 +7,7 @@ public interface ScheduleService {
 
     void deleteContestPrintText();
 
-    void getOjContestsList();
+    // void getOjContestsList();
 
     void getCodeforcesRating();
 

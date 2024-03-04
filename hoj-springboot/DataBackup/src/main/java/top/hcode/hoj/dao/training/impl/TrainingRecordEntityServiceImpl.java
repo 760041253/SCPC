@@ -16,13 +16,14 @@ import java.util.List;
  * @Description:
  */
 @Service
-public class TrainingRecordEntityServiceImpl extends ServiceImpl<TrainingRecordMapper, TrainingRecord> implements TrainingRecordEntityService {
+public class TrainingRecordEntityServiceImpl extends ServiceImpl<TrainingRecordMapper, TrainingRecord>
+        implements TrainingRecordEntityService {
 
     @Resource
     private TrainingRecordMapper trainingRecordMapper;
 
     @Override
-    public List<TrainingRecordVO> getTrainingRecord(Long tid){
+    public List<TrainingRecordVO> getTrainingRecord(Long tid) {
         return trainingRecordMapper.getTrainingRecord(tid);
     }
 

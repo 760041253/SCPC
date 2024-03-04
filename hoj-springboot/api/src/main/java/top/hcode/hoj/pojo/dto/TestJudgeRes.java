@@ -20,17 +20,17 @@ public class TestJudgeRes implements Serializable {
     private static final long serialVersionUID = 888L;
 
     /**
-     *  评测结果状态码
+     * 评测结果状态码
      */
     private Integer status;
 
     /**
-     *  评测运行时间消耗 ms
+     * 评测运行时间消耗 ms
      */
     private Long time;
 
     /**
-     *  评测运行空间消耗 kb
+     * 评测运行空间消耗 kb
      */
     private Long memory;
 

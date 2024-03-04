@@ -51,7 +51,7 @@ public class UserRoleEntityServiceImpl extends ServiceImpl<UserRoleMapper, UserR
 
     @Override
     public IPage<UserRolesVO> getUserList(int limit, int currentPage, String keyword, Boolean onlyAdmin) {
-        //新建分页
+        // 新建分页
         Page<UserRolesVO> page = new Page<>(currentPage, limit);
         if (onlyAdmin) {
             return userRoleMapper.getAdminUserList(page, limit, currentPage, keyword);
@@ -70,55 +70,57 @@ public class UserRoleEntityServiceImpl extends ServiceImpl<UserRoleMapper, UserR
      */
     @Override
     public void deleteCache(String uid, boolean isRemoveSession) {
-        //从缓存中获取Session
-//        Collection<Session> sessions = redisSessionDAO.getActiveSessions();
-//        for (Session sessionInfo : sessions) {
-//            //遍历Session,找到该用户名称对应的Session
-//            Object attribute = sessionInfo.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
-//            if (attribute == null) {
-//                continue;
-//            }
-//            AccountProfile accountProfile = (AccountProfile) ((SimplePrincipalCollection) attribute).getPrimaryPrincipal();
-//            if (accountProfile == null) {
-//                continue;
-//            }
-//            // 如果该session是指定的uid用户的
-//            if (Objects.equals(accountProfile.getUid(), uid)) {
-//                deleteSession(isRemoveSession, sessionInfo, uid);
-//            }
-//        }
+        // 从缓存中获取Session
+        // Collection<Session> sessions = redisSessionDAO.getActiveSessions();
+        // for (Session sessionInfo : sessions) {
+        // //遍历Session,找到该用户名称对应的Session
+        // Object attribute =
+        // sessionInfo.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+        // if (attribute == null) {
+        // continue;
+        // }
+        // AccountProfile accountProfile = (AccountProfile) ((SimplePrincipalCollection)
+        // attribute).getPrimaryPrincipal();
+        // if (accountProfile == null) {
+        // continue;
+        // }
+        // // 如果该session是指定的uid用户的
+        // if (Objects.equals(accountProfile.getUid(), uid)) {
+        // deleteSession(isRemoveSession, sessionInfo, uid);
+        // }
+        // }
 
         if (isRemoveSession) {
             redisUtils.del(ShiroConstant.SHIRO_TOKEN_KEY + uid,
                     ShiroConstant.SHIRO_TOKEN_REFRESH + uid,
                     ShiroConstant.SHIRO_AUTHORIZATION_CACHE + uid);
-        }else{
+        } else {
             redisUtils.del(ShiroConstant.SHIRO_AUTHORIZATION_CACHE + uid);
         }
 
     }
 
-
     private void deleteSession(boolean isRemoveSession, Session session, String uid) {
-        //删除session 会强制退出！主要是在禁用用户或角色时，强制用户退出的
+        // 删除session 会强制退出！主要是在禁用用户或角色时，强制用户退出的
         if (isRemoveSession) {
             redisSessionDAO.delete(session);
         }
 
-        //删除Cache，在访问受限接口时会重新授权
+        // 删除Cache，在访问受限接口时会重新授权
         redisUtils.del(ShiroConstant.SHIRO_AUTHORIZATION_CACHE + uid);
-//        DefaultWebSecurityManager securityManager = (DefaultWebSecurityManager) SecurityUtils.getSecurityManager();
-//        Authenticator authc = securityManager.getAuthenticator();
-//        ((LogoutAware) authc).onLogout((SimplePrincipalCollection) attribute);
+        // DefaultWebSecurityManager securityManager = (DefaultWebSecurityManager)
+        // SecurityUtils.getSecurityManager();
+        // Authenticator authc = securityManager.getAuthenticator();
+        // ((LogoutAware) authc).onLogout((SimplePrincipalCollection) attribute);
     }
-
 
     private final static List<String> ChineseRole = Arrays.asList("超级管理员", "普通管理员",
             "普通用户(默认)", "普通用户(禁止提交)", "普通用户(禁止发讨论)", "普通用户(禁言)", "普通用户(禁止提交&禁止发讨论)",
             "用户(禁止提交&禁言)", "题目管理员");
 
     private final static List<String> EnglishRole = Arrays.asList("Super Administrator", "General Administrator",
-            "Normal User(Default)", "Normal User(No Submission)", "Normal User(No Discussion)", "Normal User(Forbidden Words)",
+            "Normal User(Default)", "Normal User(No Submission)", "Normal User(No Discussion)",
+            "Normal User(Forbidden Words)",
             "Normal User(No Submission & No Discussion)",
             "Normal User(No Submission & Forbidden Words)", "Problem Administrator");
 

@@ -12,5 +12,6 @@ import top.hcode.hoj.dao.ProblemCaseEntityService;
  * @Description:
  */
 @Service
-public class ProblemCaseEntityServiceImpl extends ServiceImpl<ProblemCaseMapper, ProblemCase> implements ProblemCaseEntityService {
+public class ProblemCaseEntityServiceImpl extends ServiceImpl<ProblemCaseMapper, ProblemCase>
+        implements ProblemCaseEntityService {
 }

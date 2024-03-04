@@ -51,7 +51,6 @@ public class JudgeReceiver extends AbstractReceiver {
                 Constants.Queue.TEST_JUDGE_WAITING.getName());
     }
 
-
     @Override
     public String getTaskByRedis(String queue) {
         long size = redisUtils.lGetListSize(queue);

@@ -40,7 +40,7 @@ public class ContestScoreboardServiceImpl implements ContestScoreboardService {
     public CommonResult<IPage> getContestOutsideScoreboard(ContestRankDTO contestRankDto) {
         try {
             return CommonResult.successResponse(contestScoreboardManager.getContestOutsideScoreboard(contestRankDto));
-        }  catch (StatusForbiddenException e) {
+        } catch (StatusForbiddenException e) {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());

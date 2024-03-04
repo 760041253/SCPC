@@ -44,4 +44,13 @@
         FROM contest c WHERE DATE_ADD(CURDATE(), INTERVAL 14 DAY) >= DATE(start_time) AND c.status != 1 AND c.visible=true AND c.is_group = false
         order by c.start_time DESC
     </select>
+
+    <select id="getRejudgeList" resultType="top.hcode.hoj.pojo.entity.judge.Judge">
+        SELECT j.* FROM  judge j
+        LEFT JOIN problem p on j.pid = p.id
+        WHERE vjudge_submit_id is null and score is not null and p.type = 1
+        <if test="pid!=null">
+            and p.id = #{pid}
+        </if>
+    </select>
 </mapper>

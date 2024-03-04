@@ -1,11 +1,10 @@
 <template>
   <el-card>
-    <div
-      shadow
-      slot="header"
-      :padding="10"
-    >
-      <span class="home-title panel-title"><i class="el-icon-data-line"></i> {{$t('m.Statistics_Submissions_In_The_Last_Week')}}</span>
+    <div shadow slot="header" :padding="10">
+      <span class="home-title panel-title">
+        <i class="el-icon-data-line"></i>
+        {{$t('m.Statistics_Submissions_In_The_Last_Week')}}
+      </span>
       <span v-if="isSuperAdmin">
         <el-button
           type="primary"
@@ -14,24 +13,17 @@
           size="small"
           :loading="loading"
           @click="getLastWeekSubmissionStatistics(true)"
-          >{{ $t('m.Refresh') }}</el-button>
+        >{{ $t('m.Refresh') }}</el-button>
       </span>
     </div>
-    <div
-      class="echarts"
-      v-loading="loading"
-    >
-      <ECharts
-        :options="options"
-        ref="chart"
-        :autoresize="true"
-      ></ECharts>
+    <div class="echarts" v-loading="loading">
+      <ECharts :options="options" ref="chart" :autoresize="true"></ECharts>
     </div>
   </el-card>
 </template>
 <script>
 import api from "@/common/api";
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 export default {
   name: "SubmissionStatistics",
   props: {
@@ -72,11 +64,21 @@ export default {
             type: "category",
             boundaryGap: false,
             data: [],
+            axisLabel: {
+              textStyle: {
+                color: this.getAxisLabelColor(),
+              },
+            },
           },
         ],
         yAxis: [
           {
             type: "value",
+            axisLabel: {
+              textStyle: {
+                color: this.getAxisLabelColor(),
+              },
+            },
           },
         ],
         series: [
@@ -128,19 +130,33 @@ export default {
         }
       );
     },
+    getAxisLabelColor() {
+      return this.webTheme === "Dark" ? "white" : "black";
+    },
   },
   computed: {
-    ...mapGetters(['isSuperAdmin','webLanguage'])
+    ...mapGetters(["isSuperAdmin", "webLanguage", "webTheme"]),
   },
-  watch:{
-    webLanguage(newVal, oldVal){
-        this.options.legend.data = [this.$i18n.t("m.AC"), this.$i18n.t("m.Total")];
-        if(this.options.series != null && this.options.series.length == 2){
-            this.options.series[0].name = this.$i18n.t("m.AC");
-            this.options.series[1].name = this.$i18n.t("m.Total");
-        }
-    }
-  }
+  watch: {
+    webLanguage(newVal, oldVal) {
+      this.options.legend.data = [
+        this.$i18n.t("m.AC"),
+        this.$i18n.t("m.Total"),
+      ];
+      if (this.options.series != null && this.options.series.length == 2) {
+        this.options.series[0].name = this.$i18n.t("m.AC");
+        this.options.series[1].name = this.$i18n.t("m.Total");
+      }
+    },
+    webTheme(newVal, OldVal) {
+      if (this.options.xAxis && this.options.yAxis) {
+        this.options.xAxis[0].axisLabel.textStyle.color =
+          this.getAxisLabelColor();
+        this.options.yAxis[0].axisLabel.textStyle.color =
+          this.getAxisLabelColor();
+      }
+    },
+  },
 };
 </script>
 <style scoped>

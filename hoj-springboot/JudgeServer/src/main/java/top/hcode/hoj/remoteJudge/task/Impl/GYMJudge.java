@@ -1,6 +1,5 @@
 package top.hcode.hoj.remoteJudge.task.Impl;
 
-
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.text.UnicodeUtil;
@@ -40,7 +39,8 @@ public class GYMJudge extends CodeForcesJudge {
     public static void main(String[] args) {
         String S = HttpUtil.get(HOST + "/submissions/zhanshihui");
 
-        String regex = "<span .*? submissionId=\"170036627\" submissionVerdict=\"(.*?)\" .*?>.*?</span>.*?<i .*?></i>[\\s]*?</td>[\\s]*?" +
+        String regex = "<span .*? submissionId=\"170036627\" submissionVerdict=\"(.*?)\" .*?>.*?</span>.*?<i .*?></i>[\\s]*?</td>[\\s]*?"
+                +
                 "<td class=\"time.*?\">[\\s]*?(\\d+)&nbsp;ms[\\s]*?</td>[\\s]*?" +
                 "<td class=\"memory.*?\">[\\s]*?(\\d+)&nbsp;KB[\\s]*?</td>[\\s]*?</tr>";
         Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);
@@ -75,7 +75,8 @@ public class GYMJudge extends CodeForcesJudge {
         homeRequest.cookie(remoteJudgeDTO.getCookies());
         HttpResponse homeResponse = homeRequest.execute();
 
-        String regex = "<span .*? submissionId=\"" + submitId + "\" submissionVerdict=\"(.*?)\" .*?>.*?</span>.*?<i .*?></i>[\\s]*?</td>[\\s]*?" +
+        String regex = "<span .*? submissionId=\"" + submitId
+                + "\" submissionVerdict=\"(.*?)\" .*?>.*?</span>.*?<i .*?></i>[\\s]*?</td>[\\s]*?" +
                 "<td class=\"time.*?\">[\\s]*?(\\d+)&nbsp;ms[\\s]*?</td>[\\s]*?" +
                 "<td class=\"memory.*?\">[\\s]*?(\\d+)&nbsp;KB[\\s]*?</td>[\\s]*?</tr>";
         Pattern pattern = PatternPool.get(regex, Pattern.DOTALL);

@@ -105,7 +105,7 @@ public class SwitchConfig {
      */
     private Integer defaultCreateCommentACInitValue = 10;
 
-    public void formatStrRemoteAccount2Unicode(){
+    public void formatStrRemoteAccount2Unicode() {
         this.setHduUsernameList(format2Unicode(this.hduUsernameList));
         this.setHduPasswordList(format2Unicode(this.hduPasswordList));
         this.setPojUsernameList(format2Unicode(this.pojUsernameList));
@@ -118,7 +118,7 @@ public class SwitchConfig {
         this.setSpojPasswordList(format2Unicode(this.spojPasswordList));
     }
 
-    public void convertUnicodeRemoteAccount2Str(){
+    public void convertUnicodeRemoteAccount2Str() {
         this.setHduUsernameList(convertUnicode2Str(this.hduUsernameList));
         this.setHduPasswordList(convertUnicode2Str(this.hduPasswordList));
         this.setPojUsernameList(convertUnicode2Str(this.pojUsernameList));
@@ -130,7 +130,6 @@ public class SwitchConfig {
         this.setSpojUsernameList(convertUnicode2Str(this.spojUsernameList));
         this.setSpojPasswordList(convertUnicode2Str(this.spojPasswordList));
     }
-
 
     private List<String> format2Unicode(List<String> strList) {
         if (CollectionUtils.isEmpty(strList)) {

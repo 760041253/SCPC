@@ -18,32 +18,20 @@
                 class="filter-mt"
               ></vxe-input>
             </el-col>
-            <el-col
-              :xs="12"
-              :sm="6"
-              style="text-align: center;padding-top: 6px;"
-              class="filter-mt"
-            >
+            <el-col :xs="12" :sm="6" style="text-align: center;padding-top: 6px;" class="filter-mt">
               <vxe-checkbox
                 v-model="tagVisible"
                 @change="changeTagVisible(tagVisible)"
-                >{{ $t('m.Show_Tags') }}</vxe-checkbox
-              >
+              >{{ $t('m.Show_Tags') }}</vxe-checkbox>
             </el-col>
-            <el-col
-              :xs="12"
-              :sm="6"
-              style="text-align: center;"
-              class="filter-mt"
-            >
+            <el-col :xs="12" :sm="6" style="text-align: center;" class="filter-mt">
               <el-button
                 type="primary"
                 size="small"
                 icon="el-icon-refresh"
                 round
                 @click="onReset"
-                >{{ $t('m.Reset') }}</el-button
-              >
+              >{{ $t('m.Reset') }}</el-button>
             </el-col>
           </el-row>
 
@@ -55,8 +43,7 @@
                 class="filter-item"
                 :effect="query.oj === 'All' ? 'dark' : 'plain'"
                 @click="filterByOJ('All')"
-                >{{ $t('m.All') }}</el-tag
-              >
+              >{{ $t('m.All') }}</el-tag>
               <el-tag
                 size="medium"
                 class="filter-item"
@@ -64,8 +51,7 @@
                   query.oj === 'Mine' || query.oj === '' ? 'dark' : 'plain'
                 "
                 @click="filterByOJ('Mine')"
-                >{{ $t('m.My_OJ') }}</el-tag
-              >
+              >{{ $t('m.My_OJ') }}</el-tag>
               <el-tag
                 size="medium"
                 class="filter-item"
@@ -73,8 +59,7 @@
                 :effect="query.oj == remoteOj.key ? 'dark' : 'plain'"
                 :key="index"
                 @click="filterByOJ(remoteOj.key)"
-                >{{ remoteOj.name }}</el-tag
-              >
+              >{{ remoteOj.name }}</el-tag>
             </div>
           </section>
 
@@ -90,8 +75,7 @@
                     : 'plain'
                 "
                 @click="filterByDifficulty('All')"
-                >{{ $t('m.All') }}</el-tag
-              >
+              >{{ $t('m.All') }}</el-tag>
               <el-tag
                 size="medium"
                 class="filter-item"
@@ -100,8 +84,7 @@
                 :style="getLevelBlockColor(key)"
                 :key="index"
                 @click="filterByDifficulty(key)"
-                >{{ getLevelName(key) }}</el-tag
-              >
+              >{{ getLevelName(key) }}</el-tag>
             </div>
           </section>
           <template v-if="filterTagList.length > 0 && buildFilterTagList">
@@ -117,9 +100,7 @@
                 @close="removeTag(tag)"
                 size="medium"
                 class="filter-item"
-              >
-                {{ tag.name }}
-              </el-tag>
+              >{{ tag.name }}</el-tag>
             </el-row>
           </template>
         </div>
@@ -132,70 +113,43 @@
           @cell-mouseenter="cellHover"
           :data="problemList"
         >
-          <vxe-table-column title="" width="30" v-if="isAuthenticated">
+          <vxe-table-column title width="30" v-if="isAuthenticated">
             <template v-slot="{ row }">
               <template v-if="isGetStatusOk">
-                <el-tooltip
-                  :content="JUDGE_STATUS[row.myStatus]['name']"
-                  placement="top"
-                >
+                <el-tooltip :content="JUDGE_STATUS[row.myStatus]['name']" placement="top">
                   <template v-if="row.myStatus == 0">
-                    <i
-                      class="el-icon-check"
-                      :style="getIconColor(row.myStatus)"
-                    ></i>
+                    <i class="el-icon-check" :style="getIconColor(row.myStatus)"></i>
                   </template>
 
                   <template v-else-if="row.myStatus != -10">
-                    <i
-                      class="el-icon-minus"
-                      :style="getIconColor(row.myStatus)"
-                    ></i>
+                    <i class="el-icon-minus" :style="getIconColor(row.myStatus)"></i>
                   </template>
                 </el-tooltip>
               </template>
             </template>
           </vxe-table-column>
-          <vxe-table-column
-            field="problemId"
-            :title="$t('m.Problem_ID')"
-            width="150"
-            show-overflow
-          ></vxe-table-column>
+          <vxe-table-column field="problemId" :title="$t('m.Problem_ID')" width="150" show-overflow></vxe-table-column>
 
-          <vxe-table-column
-            field="title"
-            :title="$t('m.Problem')"
-            min-width="150"
-            show-overflow
-          >
+          <vxe-table-column field="title" :title="$t('m.Problem')" min-width="150" show-overflow>
             <template v-slot="{ row }">
-              <a @click="getProblemUri(row.problemId)" class="title-a">{{
+              <a @click="getProblemUri(row.problemId)" class="title-a">
+                {{
                 row.title
-              }}</a>
+                }}
+              </a>
             </template>
           </vxe-table-column>
 
-          <vxe-table-column
-            field="difficulty"
-            :title="$t('m.Level')"
-            min-width="100"
-          >
+          <vxe-table-column field="difficulty" :title="$t('m.Level')" min-width="100">
             <template v-slot="{ row }">
               <span
                 class="el-tag el-tag--small"
                 :style="getLevelColor(row.difficulty)"
-                >{{ getLevelName(row.difficulty) }}</span
-              >
+              >{{ getLevelName(row.difficulty) }}</span>
             </template>
           </vxe-table-column>
 
-          <vxe-table-column
-            field="tag"
-            :title="$t('m.Tags')"
-            min-width="230"
-            visible="false"
-          >
+          <vxe-table-column field="tag" :title="$t('m.Tags')" min-width="230" visible="false">
             <template v-slot="{ row }">
               <span
                 class="el-tag el-tag--small"
@@ -206,21 +160,11 @@
                 v-for="tag in row.tags"
                 :key="tag.id"
                 @click="addTag(tag)"
-                >{{ tag.name }}</span
-              >
+              >{{ tag.name }}</span>
             </template>
           </vxe-table-column>
-          <vxe-table-column
-            field="total"
-            :title="$t('m.Total')"
-            min-width="80"
-          ></vxe-table-column>
-          <vxe-table-column
-            field="ac"
-            :title="$t('m.AC_Rate')"
-            min-width="120"
-            align="center"
-          >
+          <vxe-table-column field="total" :title="$t('m.Total')" min-width="80"></vxe-table-column>
+          <vxe-table-column field="ac" :title="$t('m.AC_Rate')" min-width="120" align="center">
             <template v-slot="{ row }">
               <span>
                 <el-tooltip
@@ -260,8 +204,7 @@
               effect="dark"
               size="small"
               :color="JUDGE_STATUS[record.status].rgb"
-              >{{ JUDGE_STATUS[record.status].short }}</el-tag
-            >
+            >{{ JUDGE_STATUS[record.status].short }}</el-tag>
           </el-col>
           <el-col :xs="19" :sm="20" :md="18" :lg="20">
             <el-progress
@@ -285,35 +228,37 @@
               @keyup.enter.native="filterSearchTag"
               @input="filterSearchTag"
               clearable
-            >
-            </el-input>
+            ></el-input>
           </div>
         </div>
         <template v-if="searchTagClassificationList.length > 0" v-loading="loadings.tag">
-          <el-row :gutter="10" v-for="(item,index) in secondClassificationTemp" 
-              :key="index">
-            <el-col  v-for="(tagsAndClassification,i) in item" :key="i"
+          <el-row :gutter="10" v-for="(item,index) in secondClassificationTemp" :key="index">
+            <el-col
+              v-for="(tagsAndClassification,i) in item"
+              :key="i"
               :span="query.oj == 'All' || (secondClassificationTemp.length==index+1 && item.length == i+1 && i%2 ==0)
-              ?24:12">
+              ?24:12"
+            >
               <el-collapse v-model="activeTagClassificationIdList" style="margin-top:10px">
-                  <el-collapse-item :title="getTagClassificationName(tagsAndClassification.classification)"
-                    v-if="tagsAndClassification.classification != null 
-                        || tagsAndClassification.tagList.length > 0 " 
-                    :name="tagsAndClassification.classification == null?-1:tagsAndClassification.classification.id">
-                    <el-button
-                      v-for="tag in tagsAndClassification.tagList"
-                      :key="tag.id"
-                      @click="addTag(tag)"
-                      type="ghost"
-                      size="mini"
-                      class="tag-btn"
-                      :style="
+                <el-collapse-item
+                  :title="getTagClassificationName(tagsAndClassification.classification)"
+                  v-if="tagsAndClassification.classification != null
+                        || tagsAndClassification.tagList.length > 0 "
+                  :name="tagsAndClassification.classification == null?-1:tagsAndClassification.classification.id"
+                >
+                  <el-button
+                    v-for="tag in tagsAndClassification.tagList"
+                    :key="tag.id"
+                    @click="addTag(tag)"
+                    type="ghost"
+                    size="mini"
+                    class="tag-btn"
+                    :style="
                         'color:#FFF;background-color:' +
                           (tag.color ? tag.color : '#409eff')
                       "
-                      >{{ tag.name }}
-                    </el-button>
-                  </el-collapse-item>
+                  >{{ tag.name }}</el-button>
+                </el-collapse-item>
               </el-collapse>
             </el-col>
           </el-row>
@@ -331,20 +276,20 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import api from '@/common/api';
+import { mapGetters } from "vuex";
+import api from "@/common/api";
 import {
   PROBLEM_LEVEL,
   JUDGE_STATUS,
   JUDGE_STATUS_RESERVE,
   REMOTE_OJ,
-} from '@/common/constants';
-import utils from '@/common/utils';
-import myMessage from '@/common/message';
-import 'element-ui/lib/theme-chalk/display.css';
-import Pagination from '@/components/oj/common/Pagination';
+} from "@/common/constants";
+import utils from "@/common/utils";
+import myMessage from "@/common/message";
+import "element-ui/lib/theme-chalk/display.css";
+import Pagination from "@/components/oj/common/Pagination";
 export default {
-  name: 'ProblemList',
+  name: "ProblemList",
   components: {
     Pagination,
   },
@@ -354,9 +299,9 @@ export default {
       JUDGE_STATUS: {},
       JUDGE_STATUS_RESERVE: {},
       REMOTE_OJ: {},
-      tagsAndClassificationList:[],
+      tagsAndClassificationList: [],
       tagVisible: false,
-      currentProblemTitle: '',
+      currentProblemTitle: "",
       problemRecord: [],
       problemList: [],
       limit: 30,
@@ -369,24 +314,24 @@ export default {
       filterConfig: { remote: true },
       filterTagList: [],
       buildFilterTagList: false,
-      routeName: '',
+      routeName: "",
       query: {
-        keyword: '',
-        difficulty: 'All',
-        oj: '',
-        tagId: '',
+        keyword: "",
+        difficulty: "All",
+        oj: "",
+        tagId: "",
         currentPage: 1,
       },
       customColors: [
-        { color: '#909399', percentage: 20 },
-        { color: '#f56c6c', percentage: 40 },
-        { color: '#e6a23c', percentage: 60 },
-        { color: '#1989fa', percentage: 80 },
-        { color: '#67c23a', percentage: 100 },
+        { color: "#909399", percentage: 20 },
+        { color: "#f56c6c", percentage: 40 },
+        { color: "#e6a23c", percentage: 60 },
+        { color: "#1989fa", percentage: 80 },
+        { color: "#67c23a", percentage: 100 },
       ],
-      searchTag: '',
+      searchTag: "",
       searchTagClassificationList: [],
-      activeTagClassificationIdList:[]
+      activeTagClassificationIdList: [],
     };
   },
   created() {
@@ -398,7 +343,7 @@ export default {
     this.JUDGE_STATUS_RESERVE = Object.assign({}, JUDGE_STATUS_RESERVE);
     this.JUDGE_STATUS = Object.assign({}, JUDGE_STATUS);
     this.REMOTE_OJ = Object.assign({}, REMOTE_OJ);
-    this.currentProblemTitle = this.$i18n.t('m.Touch_Get_Status');
+    this.currentProblemTitle = this.$i18n.t("m.Touch_Get_Status");
     // 初始化
     this.problemRecord = [
       { status: 0, count: 100 },
@@ -414,7 +359,7 @@ export default {
     this.loadings.table = true;
     setTimeout(() => {
       // 将指定列设置为隐藏状态
-      this.$refs.problemList.getColumnByField('tag').visible = false;
+      this.$refs.problemList.getColumnByField("tag").visible = false;
       this.$refs.problemList.refreshColumn();
       this.loadings.table = false;
     }, 200);
@@ -424,9 +369,9 @@ export default {
     init() {
       this.routeName = this.$route.name;
       let query = this.$route.query;
-      this.query.difficulty = query.difficulty || '';
-      this.query.oj = query.oj || 'Mine';
-      this.query.keyword = query.keyword || '';
+      this.query.difficulty = query.difficulty || "";
+      this.query.oj = query.oj || "Mine";
+      this.query.keyword = query.keyword || "";
       try {
         this.query.tagId = JSON.parse(query.tagId);
       } catch (error) {
@@ -449,7 +394,7 @@ export default {
       );
       this.query.limit = this.limit;
       this.$router.push({
-        path: '/problem',
+        path: "/problem",
         query: this.query,
       });
     },
@@ -504,15 +449,15 @@ export default {
     },
     getProblemList() {
       let queryParams = Object.assign({}, this.query);
-      if (queryParams.difficulty == 'All') {
-        queryParams.difficulty = '';
+      if (queryParams.difficulty == "All") {
+        queryParams.difficulty = "";
       }
-      if (queryParams.oj == 'All') {
-        queryParams.oj = '';
+      if (queryParams.oj == "All") {
+        queryParams.oj = "";
       } else if (!queryParams.oj) {
-        queryParams.oj = 'Mine';
+        queryParams.oj = "Mine";
       }
-      queryParams.tagId = queryParams.tagId + '';
+      queryParams.tagId = queryParams.tagId + "";
       queryParams.limit = this.limit;
       this.loadings.table = true;
       api.getProblemList(queryParams).then(
@@ -538,7 +483,7 @@ export default {
                     index < this.problemList.length;
                     index++
                   ) {
-                    this.problemList[index]['myStatus'] =
+                    this.problemList[index]["myStatus"] =
                       result[this.problemList[index].pid].status;
                   }
                   this.isGetStatusOk = true;
@@ -553,8 +498,8 @@ export default {
       );
     },
     getTagList(oj) {
-      if (oj == 'Mine') {
-        oj = 'ME';
+      if (oj == "Mine") {
+        oj = "ME";
       }
       this.loadings.tag = true;
       api.getProblemTagsAndClassification(oj).then(
@@ -566,9 +511,10 @@ export default {
           let tagLen = this.tagsAndClassificationList.length;
           for (let x = 0; x < tidLen; x++) {
             for (let y = 0; y < tagLen; y++) {
-              let tmpTagAndClassification = this.tagsAndClassificationList[y].tagList;
+              let tmpTagAndClassification =
+                this.tagsAndClassificationList[y].tagList;
               let tmpLen = tmpTagAndClassification.length;
-              for(let z = 0; z <tmpLen; z++){
+              for (let z = 0; z < tmpLen; z++) {
                 if (this.query.tagId[x] == tmpTagAndClassification[z].id) {
                   this.filterTagList.push(tmpTagAndClassification[z]);
                   break;
@@ -588,21 +534,25 @@ export default {
       if (this.searchTag) {
         this.searchTagClassificationList = [];
         this.activeTagClassificationIdList = [];
-        for(let tagsAndClassification of this.tagsAndClassificationList){
+        for (let tagsAndClassification of this.tagsAndClassificationList) {
           let tmpTagList = [];
-          for(let tag of tagsAndClassification.tagList){
-            if(tag.name.toLowerCase().indexOf(this.searchTag.toLowerCase()) >= 0){
+          for (let tag of tagsAndClassification.tagList) {
+            if (
+              tag.name.toLowerCase().indexOf(this.searchTag.toLowerCase()) >= 0
+            ) {
               tmpTagList.push(tag);
             }
           }
-          if(tmpTagList.length > 0){
-            this.searchTagClassificationList.push(
-              {
-                classification: tagsAndClassification.classification,
-                tagList:tmpTagList
-              }
-            )
-            this.activeTagClassificationIdList.push(tagsAndClassification.classification == null? -1:tagsAndClassification.classification.id);
+          if (tmpTagList.length > 0) {
+            this.searchTagClassificationList.push({
+              classification: tagsAndClassification.classification,
+              tagList: tmpTagList,
+            });
+            this.activeTagClassificationIdList.push(
+              tagsAndClassification.classification == null
+                ? -1
+                : tagsAndClassification.classification.id
+            );
           }
         }
       } else {
@@ -611,13 +561,13 @@ export default {
       }
     },
     changeTagVisible(visible) {
-      this.$refs.problemList.getColumnByField('tag').visible = visible;
+      this.$refs.problemList.getColumnByField("tag").visible = visible;
       this.$refs.problemList.refreshColumn();
     },
     onReset() {
       this.filterTagList = [];
-      if (JSON.stringify(this.$route.query) != '{}') {
-        this.$router.push({ name: 'ProblemList' });
+      if (JSON.stringify(this.$route.query) != "{}") {
+        this.$router.push({ name: "ProblemList" });
       }
     },
     removeTag(tag) {
@@ -645,7 +595,7 @@ export default {
     },
     filterByOJ(oj) {
       this.query.oj = oj;
-      if (oj != 'All') {
+      if (oj != "All") {
         this.filterTagList = [];
       }
       this.query.currentPage = 1;
@@ -658,16 +608,16 @@ export default {
     },
     pickone() {
       api.pickone().then((res) => {
-        myMessage.success(this.$i18n.t('m.Good_luck_to_you'));
+        myMessage.success(this.$i18n.t("m.Good_luck_to_you"));
         this.$router.push({
-          name: 'ProblemDetails',
+          name: "ProblemDetails",
           params: { problemID: res.data.data.problemId },
         });
       });
     },
     getProblemUri(problemId) {
       this.$router.push({
-        name: 'ProblemDetails',
+        name: "ProblemDetails",
         params: {
           problemID: problemId,
         },
@@ -681,7 +631,7 @@ export default {
     },
     getIconColor(status) {
       return (
-        'font-weight: 600;font-size: 16px;color:' +
+        "font-weight: 600;font-size: 16px;color:" +
         this.JUDGE_STATUS[status].rgb
       );
     },
@@ -690,57 +640,57 @@ export default {
         return this.getLevelColor(difficulty);
       }
     },
-    getTagClassificationName(classification){
-      if(classification !=null){
-        let name = '';
+    getTagClassificationName(classification) {
+      if (classification != null) {
+        let name = "";
         let oj = this.query.oj;
-        if(oj == 'All'){
-          switch(classification.oj){
+        if (oj == "All") {
+          switch (classification.oj) {
             case "ME":
-              name = '['+this.$i18n.t('m.My_OJ')+'] '
+              name = "[" + this.$i18n.t("m.My_OJ") + "] ";
               break;
             case "AC":
-              name = '[AtCoder] ';
+              name = "[AtCoder] ";
               break;
             case "CF":
-              name = '[Codeforces] ';
+              name = "[Codeforces] ";
               break;
             default:
-              name = '['+classification.oj+'] '
+              name = "[" + classification.oj + "] ";
           }
         }
         return name + classification.name;
-      }else{
-        return this.$i18n.t('m.Unclassified');
+      } else {
+        return this.$i18n.t("m.Unclassified");
       }
-    }
+    },
   },
   computed: {
-    ...mapGetters(['isAuthenticated']),
+    ...mapGetters(["isAuthenticated"]),
     OJName() {
-      if (this.query.oj == 'Mine' || !this.$route.query.oj) {
-        return this.$i18n.t('m.My_OJ');
-      } else if (this.query.oj == 'All') {
-        return this.$i18n.t('m.All');
+      if (this.query.oj == "Mine" || !this.$route.query.oj) {
+        return this.$i18n.t("m.My_OJ");
+      } else if (this.query.oj == "All") {
+        return this.$i18n.t("m.All");
       } else {
         return this.query.oj;
       }
     },
-    secondClassificationTemp(){
+    secondClassificationTemp() {
       let index = 0;
-      let count = 2;		//两个一组
+      let count = 2; //两个一组
       let arrTemp = [];
       let tagsClassificationList = this.searchTagClassificationList;
       let len = tagsClassificationList.length;
-      for(let i=0;i<len;i++){
-        index = parseInt(i/count);
+      for (let i = 0; i < len; i++) {
+        index = parseInt(i / count);
         if (arrTemp.length <= index) {
           arrTemp.push([]);
         }
-        arrTemp[index].push(tagsClassificationList[i])
+        arrTemp[index].push(tagsClassificationList[i]);
       }
-      return arrTemp
-    }
+      return arrTemp;
+    },
   },
   watch: {
     $route(newVal, oldVal) {
@@ -843,7 +793,7 @@ ul {
   }
 }
 
-/deep/.el-collapse-item__header{
+/deep/.el-collapse-item__header {
   font-weight: bolder !important;
   height: 38px !important;
   line-height: 38px !important;

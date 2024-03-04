@@ -86,7 +86,8 @@ public class CommentManager {
 
     private final static Pattern pattern = Pattern.compile("<.*?([a,A][u,U][t,T][o,O][p,P][l,L][a,A][y,Y]).*?>");
 
-    public CommentListVO getComments(Long cid, Integer did, Integer limit, Integer currentPage) throws StatusForbiddenException, AccessException {
+    public CommentListVO getComments(Long cid, Integer did, Integer limit, Integer currentPage)
+            throws StatusForbiddenException, AccessException {
 
         // 如果有登录，则获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
@@ -141,7 +142,6 @@ public class CommentManager {
         commentListVo.setCommentLikeMap(commentLikeMap);
         return commentListVo;
     }
-
 
     @Transactional
     public CommentVO addComment(Comment comment) throws StatusFailException, StatusForbiddenException, AccessException {
@@ -317,7 +317,8 @@ public class CommentManager {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addCommentLike(Integer cid, Boolean toLike, Integer sourceId, String sourceType) throws StatusFailException {
+    public void addCommentLike(Integer cid, Boolean toLike, Integer sourceId, String sourceType)
+            throws StatusFailException {
 
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
@@ -343,7 +344,8 @@ public class CommentManager {
                 commentEntityService.updateById(comment);
                 // 当前的评论要不是点赞者的 才发送点赞消息
                 if (!userRolesVo.getUsername().equals(comment.getFromName())) {
-                    commentEntityService.updateCommentLikeMsg(comment.getFromUid(), userRolesVo.getUid(), sourceId, sourceType);
+                    commentEntityService.updateCommentLikeMsg(comment.getFromUid(), userRolesVo.getUid(), sourceId,
+                            sourceType);
                 }
             }
         } else { // 取消点赞
@@ -361,7 +363,8 @@ public class CommentManager {
 
     }
 
-    public List<ReplyVO> getAllReply(Integer commentId, Long cid) throws StatusForbiddenException, StatusFailException, AccessException {
+    public List<ReplyVO> getAllReply(Integer commentId, Long cid)
+            throws StatusForbiddenException, StatusFailException, AccessException {
 
         // 如果有登录，则获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
@@ -393,7 +396,6 @@ public class CommentManager {
                 commentId);
     }
 
-
     public ReplyVO addReply(ReplyDTO replyDto) throws StatusFailException, StatusForbiddenException, AccessException {
 
         commonValidator.validateContent(replyDto.getReply().getContent(), "回复", 10000);
@@ -407,7 +409,7 @@ public class CommentManager {
 
         Reply reply = replyDto.getReply();
 
-        if (reply == null || reply.getCommentId() == null){
+        if (reply == null || reply.getCommentId() == null) {
             throw new StatusFailException("回复失败，当前请求的参数错误！");
         }
 
@@ -503,7 +505,7 @@ public class CommentManager {
 
         Reply reply = replyDto.getReply();
 
-        if (reply == null || reply.getId() == null){
+        if (reply == null || reply.getId() == null) {
             throw new StatusFailException("删除失败，删除的回复不可为空！");
         }
 

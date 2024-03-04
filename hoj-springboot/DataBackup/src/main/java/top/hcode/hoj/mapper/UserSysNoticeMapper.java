@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import top.hcode.hoj.pojo.entity.msg.UserSysNotice;
 import top.hcode.hoj.pojo.vo.SysMsgVO;
 
-
 @Mapper
 @Repository
 public interface UserSysNoticeMapper extends BaseMapper<UserSysNotice> {

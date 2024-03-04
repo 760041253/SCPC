@@ -12,23 +12,20 @@
             size="small"
             @click="handleCreatePage"
             :icon="createPage ? 'el-icon-back' : 'el-icon-plus'"
-            >{{ createPage ? $t('m.Back_To_Problem_List') : $t('m.Create') }}</el-button
-          >
+          >{{ createPage ? $t('m.Back_To_Problem_List') : $t('m.Create') }}</el-button>
           <el-button
             v-if="editPage && adminPage"
             type="primary"
             size="small"
             @click="handleEditPage"
             icon="el-icon-back"
-            >{{ $t('m.Back_To_Admin_Problem_List') }}</el-button
-          >`
+          >{{ $t('m.Back_To_Admin_Problem_List') }}</el-button>`
           <el-button
             :type="adminPage ? 'danger' : 'success'"
             size="small"
             @click="handleAdminPage"
             :icon="adminPage ? 'el-icon-circle-close' : 'el-icon-s-opportunity'"
-            >{{ adminPage ? $t('m.Cancel_Admin') : $t('m.Problem_Admin') }}</el-button
-          >
+          >{{ adminPage ? $t('m.Cancel_Admin') : $t('m.Problem_Admin') }}</el-button>
         </el-col>
       </el-row>
     </div>
@@ -43,78 +40,45 @@
         align="center"
         @cell-click="goGroupProblem"
       >
-        <vxe-table-column
-          field="status"
-          title=""
-          width="50"
-          v-if="isAuthenticated"
-        >
+        <vxe-table-column field="status" title width="50" v-if="isAuthenticated">
           <template v-slot="{ row }">
             <template v-if="isGetStatusOk">
-              <el-tooltip
-                :content="JUDGE_STATUS[row['myStatus']]['name']"
-                placement="top"
-              >
+              <el-tooltip :content="JUDGE_STATUS[row['myStatus']]['name']" placement="top">
                 <template v-if="row.myStatus == 0">
-                  <i
-                    class="el-icon-check"
-                    :style="getIconColor(row.myStatus)"
-                  ></i>
+                  <i class="el-icon-check" :style="getIconColor(row.myStatus)"></i>
                 </template>
 
                 <template v-else-if="row.myStatus != -10">
-                  <i
-                    class="el-icon-minus"
-                    :style="getIconColor(row.myStatus)"
-                  ></i>
+                  <i class="el-icon-minus" :style="getIconColor(row.myStatus)"></i>
                 </template>
               </el-tooltip>
             </template>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          field="problemId"
-          :title="$t('m.Problem_ID')"
-          width="150"
-          show-overflow
-        >
-        </vxe-table-column>
-        <vxe-table-column
-          field="title"
-          :title="$t('m.Title')"
-          min-width="150"
-          show-overflow
-        >
-        </vxe-table-column>
-        <vxe-table-column
-          field="difficulty"
-          :title="$t('m.Level')"
-          min-width="100"
-        >
+        <vxe-table-column field="problemId" :title="$t('m.Problem_ID')" width="150" show-overflow></vxe-table-column>
+        <vxe-table-column field="title" :title="$t('m.Title')" min-width="150" show-overflow></vxe-table-column>
+        <vxe-table-column field="difficulty" :title="$t('m.Level')" min-width="100">
           <template v-slot="{ row }">
             <span
               class="el-tag el-tag--small"
               :style="getLevelColor(row.difficulty)"
-              >{{ getLevelName(row.difficulty) }}</span
-            >
+            >{{ getLevelName(row.difficulty) }}</span>
           </template>
         </vxe-table-column>
         <vxe-table-column field="tag" min-width="100">
-          <template v-slot:header
-            ><el-link
+          <template v-slot:header>
+            <el-link
               type="primary"
               v-if="!showTags"
               :underline="false"
               @click="showTags = !showTags"
-              >{{ $t('m.Show_Tags') }}</el-link
-            >
+            >{{ $t('m.Show_Tags') }}</el-link>
             <el-link
               type="danger"
               v-else
               @click="showTags = !showTags"
               :underline="false"
-              >{{ $t('m.Hide_Tags') }}</el-link
-            >
+            >{{ $t('m.Hide_Tags') }}</el-link>
           </template>
           <template v-slot="{ row }">
             <div v-if="showTags">
@@ -126,19 +90,14 @@
                 "
                 v-for="tag in row.tags"
                 :key="tag.id"
-                >{{ tag.name }}</span
-              >
+              >{{ tag.name }}</span>
             </div>
           </template>
         </vxe-table-column>
         <vxe-table-column field="ac" :title="$t('m.AC_Rate')" min-width="120">
           <template v-slot="{ row }">
             <span>
-              <el-tooltip
-                effect="dark"
-                :content="row.ac + '/' + row.total"
-                placement="top"
-              >
+              <el-tooltip effect="dark" :content="row.ac + '/' + row.total" placement="top">
                 <el-progress
                   :text-inside="true"
                   :stroke-width="20"
@@ -178,15 +137,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import utils from '@/common/utils';
-import { JUDGE_STATUS } from '@/common/constants';
-import Pagination from '@/components/oj/common/Pagination';
-import ProblemList from '@/components/oj/group/ProblemList';
-import Problem from '@/components/oj/group/Problem';
-import api from '@/common/api';
+import { mapGetters } from "vuex";
+import utils from "@/common/utils";
+import { JUDGE_STATUS } from "@/common/constants";
+import Pagination from "@/components/oj/common/Pagination";
+import ProblemList from "@/components/oj/group/ProblemList";
+import Problem from "@/components/oj/group/Problem";
+import api from "@/common/api";
 export default {
-  name: 'GroupProblemList',
+  name: "GroupProblemList",
   components: {
     Pagination,
     ProblemList,
@@ -200,14 +159,14 @@ export default {
       problemList: [],
       contestID: null,
       pid: null,
-      title: '',
-      apiMethod: '',
+      title: "",
+      apiMethod: "",
       JUDGE_STATUS: {},
       isGetStatusOk: false,
-      testcolor: 'rgba(0, 206, 209, 1)',
+      testcolor: "rgba(0, 206, 209, 1)",
       showTags: false,
       loading: false,
-      routeName: '',
+      routeName: "",
       adminPage: false,
       createPage: false,
       editPage: false,
@@ -215,12 +174,12 @@ export default {
   },
   mounted() {
     this.routeName = this.$route.name;
-    if (this.routeName === 'GroupProblemList') {
-      this.title = this.$t('m.Create_Problem');
-      this.apiMethod = 'addGroupProblem';
-    } else if (this.routeName === 'GroupContestProblemList') {
-      this.title = this.$t('m.Create_Contest_Problem');
-      this.apiMethod = 'addGroupContestProblem';
+    if (this.routeName === "GroupProblemList") {
+      this.title = this.$t("m.Create_Problem");
+      this.apiMethod = "addGroupProblem";
+    } else if (this.routeName === "GroupContestProblemList") {
+      this.title = this.$t("m.Create_Contest_Problem");
+      this.apiMethod = "addGroupContestProblem";
     }
     this.init();
   },
@@ -271,8 +230,8 @@ export default {
                       index < this.problemList.length;
                       index++
                     ) {
-                      this.problemList[index]['myStatus'] =
-                        result[this.problemList[index].pid]['status'];
+                      this.problemList[index]["myStatus"] =
+                        result[this.problemList[index].pid]["status"];
                     }
                     this.isGetStatusOk = true;
                   });
@@ -286,7 +245,7 @@ export default {
     },
     goGroupProblem(event) {
       this.$router.push({
-        name: 'GroupFullProblemDetails',
+        name: "GroupFullProblemDetails",
         params: {
           problemID: event.row.problemId,
         },
@@ -309,7 +268,7 @@ export default {
     },
     getIconColor(status) {
       return (
-        'font-weight: 600;font-size: 16px;color:' + JUDGE_STATUS[status].rgb
+        "font-weight: 600;font-size: 16px;color:" + JUDGE_STATUS[status].rgb
       );
     },
     getLevelColor(difficulty) {
@@ -326,9 +285,9 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'isSuperAdmin', 'isGroupAdmin']),
+    ...mapGetters(["isAuthenticated", "isSuperAdmin", "isGroupAdmin"]),
     isContest() {
-      return !(this.routeName == 'GroupProblemList' && !this.contestId);
+      return !(this.routeName == "GroupProblemList" && !this.contestId);
     },
   },
 };

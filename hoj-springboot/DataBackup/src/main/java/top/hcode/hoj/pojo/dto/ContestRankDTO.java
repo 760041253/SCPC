@@ -18,7 +18,6 @@ public class ContestRankDTO {
      * @param concernedList 关注的用户(uuid)列表
      * @param keyword       搜索关键词：学校或榜单显示名称
      * @param containsEnd   是否展示比赛结束后的提交结果
-     * @param time          比赛的当前时间
      */
     private Long cid;
 
@@ -39,5 +38,4 @@ public class ContestRankDTO {
     private List<Integer> externalCidList;
 
     private Long time;
-
 }

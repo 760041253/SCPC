@@ -22,6 +22,8 @@ import top.hcode.hoj.utils.Constants;
 import top.hcode.hoj.utils.RedisUtils;
 
 import javax.annotation.Resource;
+
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,13 +39,13 @@ public class ContestCalculateRankManager {
     private UserInfoEntityService userInfoEntityService;
 
     @Resource
-    private SynchronousManager synchronousManager;
-
-    @Resource
     private RedisUtils redisUtils;
 
     @Resource
     private ContestRecordEntityService contestRecordEntityService;
+
+    @Resource
+    private SynchronousManager synchronousManager;
 
     @Autowired
     private GroupMemberEntityService groupMemberEntityService;
@@ -55,7 +57,7 @@ public class ContestCalculateRankManager {
             List<String> concernedList,
             List<Integer> externalCidList,
             boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long time) {
         return calcACMRank(isOpenSealRank,
                 removeStar,
                 contest,
@@ -65,7 +67,7 @@ public class ContestCalculateRankManager {
                 false,
                 null,
                 isContainsAfterContestJudge,
-                nowtime);
+                time);
     }
 
     public List<ACMContestRankVO> calcSynchronousACMRank(boolean isOpenSealRank,
@@ -75,7 +77,7 @@ public class ContestCalculateRankManager {
             List<String> concernedList,
             List<Integer> externalCidList,
             boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long time) {
         return calcSynchronousACMRank(isOpenSealRank,
                 removeStar,
                 contest,
@@ -85,7 +87,7 @@ public class ContestCalculateRankManager {
                 false,
                 null,
                 isContainsAfterContestJudge,
-                nowtime);
+                time);
     }
 
     public List<OIContestRankVO> calcOIRank(Boolean isOpenSealRank,
@@ -95,7 +97,7 @@ public class ContestCalculateRankManager {
             List<String> concernedList,
             List<Integer> externalCidList,
             Boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long time) {
 
         return calcOIRank(isOpenSealRank,
                 removeStar,
@@ -106,7 +108,7 @@ public class ContestCalculateRankManager {
                 false,
                 null,
                 isContainsAfterContestJudge,
-                nowtime);
+                time);
     }
 
     /**
@@ -119,7 +121,7 @@ public class ContestCalculateRankManager {
      * @param useCache                    是否对初始排序计算的结果进行缓存
      * @param cacheTime                   缓存的时间 单位秒
      * @param isContainsAfterContestJudge 是否包含比赛结束后的提交
-     * @param nowtime                     比赛的现在时间
+     * @param time                        距离比赛开始的秒数
      * @MethodName calcACMRank
      * @Description TODO
      * @Return
@@ -134,7 +136,7 @@ public class ContestCalculateRankManager {
             boolean useCache,
             Long cacheTime,
             boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long time) {
         List<ACMContestRankVO> orderResultList;
         Long minSealRankTime = null;
         Long maxSealRankTime = null;
@@ -153,7 +155,7 @@ public class ContestCalculateRankManager {
                     maxSealRankTime = contest.getDuration();
                 }
                 orderResultList = getACMOrderRank(contest, isOpenSealRank, minSealRankTime, maxSealRankTime,
-                        externalCidList, isContainsAfterContestJudge, nowtime);
+                        externalCidList, isContainsAfterContestJudge, time);
                 redisUtils.set(key, orderResultList, cacheTime);
             }
         } else {
@@ -162,7 +164,7 @@ public class ContestCalculateRankManager {
                 maxSealRankTime = contest.getDuration();
             }
             orderResultList = getACMOrderRank(contest, isOpenSealRank, minSealRankTime, maxSealRankTime,
-                    externalCidList, isContainsAfterContestJudge, nowtime);
+                    externalCidList, isContainsAfterContestJudge, time);
         }
 
         // 需要打星的用户名列表
@@ -190,7 +192,6 @@ public class ContestCalculateRankManager {
                 }
             }
         }
-
         boolean needAddConcernedUser = false;
         if (!CollectionUtils.isEmpty(concernedList)) {
             needAddConcernedUser = true;
@@ -198,14 +199,14 @@ public class ContestCalculateRankManager {
             concernedList.remove(currentUserId);
         }
 
-        // 将本oj的synchronous状态设为false
-        orderResultList.forEach(ACMContestRankvo -> ACMContestRankvo.setSynchronous(false));
-
         // 重新排序
         List<ACMContestRankVO> result = orderResultList.stream()
                 .sorted(Comparator.comparing(ACMContestRankVO::getAc, Comparator.reverseOrder()) // 先以总ac数降序
                         .thenComparing(ACMContestRankVO::getTotalTime) // 再以总耗时升序
                 ).collect(Collectors.toList());
+
+        // 将本oj的synchronous状态设为false
+        orderResultList.forEach(ACMContestRankvo -> ACMContestRankvo.setSynchronous(false));
 
         return getTopRank(removeStar, isNeedSetAward, currentUserId, concernedList, result, starAccountMap,
                 awardConfigVoList,
@@ -222,7 +223,7 @@ public class ContestCalculateRankManager {
      * @param useCache                    是否对初始排序计算的结果进行缓存
      * @param cacheTime                   缓存的时间 单位秒
      * @param isContainsAfterContestJudge 是否包含比赛结束后的提交
-     * @param nowtime                     比赛的现在时间
+     * @param selectedTime                比赛跳转榜单的时间
      * @MethodName calcSynchronousACMRank
      * @Description TODO
      * @Return
@@ -237,7 +238,7 @@ public class ContestCalculateRankManager {
             boolean useCache,
             Long cacheTime,
             boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
         List<ACMContestRankVO> orderResultList;
         Long minSealRankTime = null;
         Long maxSealRankTime = null;
@@ -256,7 +257,7 @@ public class ContestCalculateRankManager {
                     maxSealRankTime = contest.getDuration();
                 }
                 orderResultList = getACMOrderRank(contest, isOpenSealRank, minSealRankTime, maxSealRankTime,
-                        externalCidList, isContainsAfterContestJudge, nowtime);
+                        externalCidList, isContainsAfterContestJudge, selectedTime);
                 redisUtils.set(key, orderResultList, cacheTime);
             }
         } else {
@@ -265,7 +266,7 @@ public class ContestCalculateRankManager {
                 maxSealRankTime = contest.getDuration();
             }
             orderResultList = getACMOrderRank(contest, isOpenSealRank, minSealRankTime, maxSealRankTime,
-                    externalCidList, isContainsAfterContestJudge, nowtime);
+                    externalCidList, isContainsAfterContestJudge, selectedTime);
         }
 
         // 需要打星的用户名列表
@@ -293,7 +294,7 @@ public class ContestCalculateRankManager {
                 }
             }
         }
-        // 记录当前用户排名数据和关注列表的用户排名数据
+
         boolean needAddConcernedUser = false;
         if (!CollectionUtils.isEmpty(concernedList)) {
             needAddConcernedUser = true;
@@ -305,9 +306,10 @@ public class ContestCalculateRankManager {
         orderResultList.forEach(ACMContestRankvo -> ACMContestRankvo.setSynchronous(false));
 
         // 是否开启同步赛
-        if (contest.getSynchronous() != null && contest.getSynchronous()) {
+        if (contest.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || contest.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             List<ACMContestRankVO> synchronousResultList = synchronousManager.getSynchronousRankList(contest,
-                    isContainsAfterContestJudge, removeStar, nowtime);
+                    isContainsAfterContestJudge, removeStar, selectedTime);
             if (!CollectionUtils.isEmpty(synchronousResultList)) {
                 // 将两个列表合并
                 orderResultList.addAll(synchronousResultList);
@@ -422,146 +424,13 @@ public class ContestCalculateRankManager {
                 needAddConcernedUser);
     }
 
-    public List<ACMContestRankVO> getTopRank(
-            boolean removeStar,
-            boolean isNeedSetAward,
-            String currentUserId,
-            List<String> concernedList,
-            List<ACMContestRankVO> result,
-            HashMap<String, Boolean> starAccountMap,
-            Queue<ContestAwardConfigVO> awardConfigVoList,
-            boolean needAddConcernedUser) {
-
-        List<ACMContestRankVO> topACMRankVoList = new ArrayList<>();
-        int rankNum = 1;
-        int len = result.size();
-        ACMContestRankVO lastACMRankVo = null;
-        ContestAwardConfigVO configVo = null;
-        for (int i = 0; i < len; i++) {
-            ACMContestRankVO currentACMRankVo = result.get(i);
-            if (!removeStar && starAccountMap.containsKey(currentACMRankVo.getUsername())) {
-                // 打星队伍排名为-1
-                currentACMRankVo.setRank(-1);
-                currentACMRankVo.setIsWinAward(false);
-            } else {
-                if (rankNum == 1) {
-                    currentACMRankVo.setRank(rankNum);
-                } else {
-                    // 当前用户的总罚时和AC数跟前一个用户一样的话，同时前一个不应该为打星，排名则一样
-                    if (Objects.equals(lastACMRankVo.getAc(), currentACMRankVo.getAc())
-                            && lastACMRankVo.getTotalTime().equals(currentACMRankVo.getTotalTime())) {
-                        currentACMRankVo.setRank(lastACMRankVo.getRank());
-                    } else {
-                        currentACMRankVo.setRank(rankNum);
-                    }
-                }
-
-                if (isNeedSetAward && currentACMRankVo.getAc() > 0) {
-                    if (configVo == null || configVo.getNum() == 0) {
-                        if (!awardConfigVoList.isEmpty()) {
-                            configVo = awardConfigVoList.poll();
-                            currentACMRankVo.setAwardName(configVo.getName());
-                            currentACMRankVo.setAwardBackground(configVo.getBackground());
-                            currentACMRankVo.setAwardColor(configVo.getColor());
-                            currentACMRankVo.setIsWinAward(true);
-                            configVo.setNum(configVo.getNum() - 1);
-                        } else {
-                            isNeedSetAward = false;
-                            currentACMRankVo.setIsWinAward(false);
-                        }
-                    } else {
-                        currentACMRankVo.setAwardName(configVo.getName());
-                        currentACMRankVo.setAwardBackground(configVo.getBackground());
-                        currentACMRankVo.setAwardColor(configVo.getColor());
-                        currentACMRankVo.setIsWinAward(true);
-                        configVo.setNum(configVo.getNum() - 1);
-                    }
-                } else {
-                    currentACMRankVo.setIsWinAward(false);
-                }
-
-                lastACMRankVo = currentACMRankVo;
-                rankNum++;
-            }
-            // 默认将请求用户的排名置为最顶
-            if (!StringUtils.isEmpty(currentUserId) &&
-                    currentACMRankVo.getUid().equals(currentUserId)) {
-                topACMRankVoList.add(0, currentACMRankVo);
-            }
-
-            // 需要添加关注用户
-            if (needAddConcernedUser) {
-                if (concernedList.contains(currentACMRankVo.getUid())) {
-                    topACMRankVoList.add(currentACMRankVo);
-                }
-            }
-        }
-        topACMRankVoList.addAll(result);
-        return topACMRankVoList;
-    }
-
-    public List<HashMap<String, Object>> getSubmissions(HashMap<String, HashMap<String, Object>> submissionInfo) {
-        List<HashMap<String, Object>> submissions = new ArrayList<>();
-        // 遍历 submissionInfos
-        Iterator<Map.Entry<String, HashMap<String, Object>>> iterator = submissionInfo.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, HashMap<String, Object>> entry = iterator.next();
-            String key = entry.getKey();
-            HashMap<String, Object> submissionData = entry.getValue();
-
-            submissionData.put("displayId", key);
-
-            submissions.add(submissionData);
-        }
-        return submissions;
-    }
-
-    // 自定义的比较器
-    static class SubmissonComparator implements Comparator<HashMap<String, Object>> {
-        @Override
-        public int compare(HashMap<String, Object> o1, HashMap<String, Object> o2) {
-            Long actime1 = findACTime(o1);
-            Long actime2 = findACTime(o2);
-
-            // 根据 ACTime 的大小进行比较
-            return Long.compare(actime1, actime2);
-        }
-
-        // 辅助方法，用于找到 ACTime 的值
-        private Long findACTime(HashMap<String, Object> submissionInfo) {
-            // 遍历 submissionInfo
-            Boolean isAC = false;
-
-            Iterator<Map.Entry<String, Object>> iterator = submissionInfo.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<String, Object> entry = iterator.next();
-                String key = entry.getKey();
-                Object value = entry.getValue();
-
-                if ("isAC".equals(key) && value != null) {
-                    isAC = true;
-                }
-
-                // TODO 同步赛时间筛选
-                if ("ACTime".equals(key) && isAC) { // 检查键是否为"ACTime"
-                    Long ACTime = ((Number) value).longValue();
-                    return ACTime;
-                }
-
-            }
-
-            // 如果找不到 ACTime，可以返回一个默认值或者抛出异常，具体根据需求而定
-            return 0L;
-        }
-    }
-
     private List<ACMContestRankVO> getACMOrderRank(Contest contest,
             Boolean isOpenSealRank,
             Long minSealRankTime,
             Long maxSealRankTime,
             List<Integer> externalCidList,
             Boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
 
         List<ContestRecordVO> contestRecordList = contestRecordEntityService.getACMContestRecord(contest.getUid(),
                 contest.getId(),
@@ -580,8 +449,10 @@ public class ContestCalculateRankManager {
 
         for (ContestRecordVO contestRecord : contestRecordList) {
 
-            if (nowtime != null) {
-                if (contestRecord.getTime() > nowtime) {
+            if (selectedTime != null) {
+                Date thisTime = addSeconds(contest.getStartTime(), selectedTime);
+                // 提交时间大于查询的时间
+                if (contestRecord.getSubmitTime().compareTo(thisTime) > 0) {
                     // 将超过查询时间的数据排除
                     continue;
                 }
@@ -718,7 +589,7 @@ public class ContestCalculateRankManager {
      * @param useCache                    是否对初始排序计算的结果进行缓存
      * @param cacheTime                   缓存的时间 单位秒
      * @param isContainsAfterContestJudge 是否包含比赛结束后的提交
-     * @param nowtime                     比赛的现在时间
+     * @param time                        距离比赛开始的秒数
      * @MethodName calcOIRank
      * @Description TODO
      * @Return
@@ -733,7 +604,7 @@ public class ContestCalculateRankManager {
             boolean useCache,
             Long cacheTime,
             boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long time) {
 
         List<OIContestRankVO> orderResultList;
         if (useCache) {
@@ -746,12 +617,12 @@ public class ContestCalculateRankManager {
             orderResultList = (List<OIContestRankVO>) redisUtils.get(key);
             if (orderResultList == null) {
                 orderResultList = getOIOrderRank(contest, externalCidList, isOpenSealRank, isContainsAfterContestJudge,
-                        nowtime);
+                        time);
                 redisUtils.set(key, orderResultList, cacheTime);
             }
         } else {
             orderResultList = getOIOrderRank(contest, externalCidList, isOpenSealRank, isContainsAfterContestJudge,
-                    nowtime);
+                    time);
         }
 
         // 需要打星的用户名列表
@@ -861,7 +732,7 @@ public class ContestCalculateRankManager {
             List<Integer> externalCidList,
             Boolean isOpenSealRank,
             Boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
 
         List<ContestRecordVO> oiContestRecord = contestRecordEntityService.getOIContestRecord(contest,
                 externalCidList, isOpenSealRank, isContainsAfterContestJudge);
@@ -881,8 +752,10 @@ public class ContestCalculateRankManager {
 
         for (ContestRecordVO contestRecord : oiContestRecord) {
 
-            if (nowtime != null) {
-                if (contestRecord.getTime() > nowtime) {
+            if (selectedTime != null) {
+                Date thisTime = addSeconds(contest.getStartTime(), selectedTime);
+                // 提交时间大于查询的时间
+                if (contestRecord.getSubmitTime().compareTo(thisTime) > 0) {
                     // 将超过查询时间的数据排除
                     continue;
                 }
@@ -1056,5 +929,146 @@ public class ContestCalculateRankManager {
             }
         }
         return queue;
+    }
+
+    private static Date addSeconds(Date date, Long seconds) {
+        if (seconds != null) {
+            Instant instant = date.toInstant().plusSeconds(seconds);
+            return Date.from(instant);
+        } else {
+            return null;
+        }
+    }
+
+    public List<ACMContestRankVO> getTopRank(
+            boolean removeStar,
+            boolean isNeedSetAward,
+            String currentUserId,
+            List<String> concernedList,
+            List<ACMContestRankVO> result,
+            HashMap<String, Boolean> starAccountMap,
+            Queue<ContestAwardConfigVO> awardConfigVoList,
+            boolean needAddConcernedUser) {
+
+        List<ACMContestRankVO> topACMRankVoList = new ArrayList<>();
+        int rankNum = 1;
+        int len = result.size();
+        ACMContestRankVO lastACMRankVo = null;
+        ContestAwardConfigVO configVo = null;
+        for (int i = 0; i < len; i++) {
+            ACMContestRankVO currentACMRankVo = result.get(i);
+            if (!removeStar && starAccountMap.containsKey(currentACMRankVo.getUsername())) {
+                // 打星队伍排名为-1
+                currentACMRankVo.setRank(-1);
+                currentACMRankVo.setIsWinAward(false);
+            } else {
+                if (rankNum == 1) {
+                    currentACMRankVo.setRank(rankNum);
+                } else {
+                    // 当前用户的总罚时和AC数跟前一个用户一样的话，同时前一个不应该为打星，排名则一样
+                    if (Objects.equals(lastACMRankVo.getAc(), currentACMRankVo.getAc())
+                            && lastACMRankVo.getTotalTime().equals(currentACMRankVo.getTotalTime())) {
+                        currentACMRankVo.setRank(lastACMRankVo.getRank());
+                    } else {
+                        currentACMRankVo.setRank(rankNum);
+                    }
+                }
+
+                if (isNeedSetAward && currentACMRankVo.getAc() > 0) {
+                    if (configVo == null || configVo.getNum() == 0) {
+                        if (!awardConfigVoList.isEmpty()) {
+                            configVo = awardConfigVoList.poll();
+                            currentACMRankVo.setAwardName(configVo.getName());
+                            currentACMRankVo.setAwardBackground(configVo.getBackground());
+                            currentACMRankVo.setAwardColor(configVo.getColor());
+                            currentACMRankVo.setIsWinAward(true);
+                            configVo.setNum(configVo.getNum() - 1);
+                        } else {
+                            isNeedSetAward = false;
+                            currentACMRankVo.setIsWinAward(false);
+                        }
+                    } else {
+                        currentACMRankVo.setAwardName(configVo.getName());
+                        currentACMRankVo.setAwardBackground(configVo.getBackground());
+                        currentACMRankVo.setAwardColor(configVo.getColor());
+                        currentACMRankVo.setIsWinAward(true);
+                        configVo.setNum(configVo.getNum() - 1);
+                    }
+                } else {
+                    currentACMRankVo.setIsWinAward(false);
+                }
+
+                lastACMRankVo = currentACMRankVo;
+                rankNum++;
+            }
+            // 默认将请求用户的排名置为最顶
+            if (!StringUtils.isEmpty(currentUserId) &&
+                    currentACMRankVo.getUid().equals(currentUserId)) {
+                topACMRankVoList.add(0, currentACMRankVo);
+            }
+
+            // 需要添加关注用户
+            if (needAddConcernedUser) {
+                if (concernedList.contains(currentACMRankVo.getUid())) {
+                    topACMRankVoList.add(currentACMRankVo);
+                }
+            }
+        }
+        topACMRankVoList.addAll(result);
+        return topACMRankVoList;
+    }
+
+    public List<HashMap<String, Object>> getSubmissions(HashMap<String, HashMap<String, Object>> submissionInfo) {
+        List<HashMap<String, Object>> submissions = new ArrayList<>();
+        // 遍历 submissionInfos
+        Iterator<Map.Entry<String, HashMap<String, Object>>> iterator = submissionInfo.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, HashMap<String, Object>> entry = iterator.next();
+            String key = entry.getKey();
+            HashMap<String, Object> submissionData = entry.getValue();
+
+            submissionData.put("displayId", key);
+
+            submissions.add(submissionData);
+        }
+        return submissions;
+    }
+
+    // 自定义的比较器
+    static class SubmissonComparator implements Comparator<HashMap<String, Object>> {
+        @Override
+        public int compare(HashMap<String, Object> o1, HashMap<String, Object> o2) {
+            Long actime1 = findACTime(o1);
+            Long actime2 = findACTime(o2);
+
+            // 根据 ACTime 的大小进行比较
+            return Long.compare(actime1, actime2);
+        }
+
+        // 辅助方法，用于找到 ACTime 的值
+        private Long findACTime(HashMap<String, Object> submissionInfo) {
+            // 遍历 submissionInfo
+            Boolean isAC = false;
+
+            Iterator<Map.Entry<String, Object>> iterator = submissionInfo.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, Object> entry = iterator.next();
+                String key = entry.getKey();
+                Object value = entry.getValue();
+
+                if ("isAC".equals(key) && value != null) {
+                    isAC = true;
+                }
+
+                // TODO 同步赛时间筛选
+                if ("ACTime".equals(key) && isAC) { // 检查键是否为"ACTime"
+                    Long ACTime = ((Number) value).longValue();
+                    return ACTime;
+                }
+            }
+
+            // 如果找不到 ACTime，可以返回一个默认值或者抛出异常，具体根据需求而定
+            return 0L;
+        }
     }
 }

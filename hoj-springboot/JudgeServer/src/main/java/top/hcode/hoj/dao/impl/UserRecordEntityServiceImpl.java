@@ -24,7 +24,8 @@ import top.hcode.hoj.dao.UserRecordEntityService;
  * @since 2020-10-23
  */
 @Service
-public class UserRecordEntityServiceImpl extends ServiceImpl<UserRecordMapper, UserRecord> implements UserRecordEntityService {
+public class UserRecordEntityServiceImpl extends ServiceImpl<UserRecordMapper, UserRecord>
+        implements UserRecordEntityService {
 
     @Autowired
     private UserRecordMapper userRecordMapper;
@@ -34,7 +35,7 @@ public class UserRecordEntityServiceImpl extends ServiceImpl<UserRecordMapper, U
 
     /**
      * @MethodNameupdateRecord
-     * @Params  * @param null
+     * @Params * @param null
      * @Description 本方法不启用，不适合数据一致性
      * @Return
      * @Since 2021/6/2
@@ -60,7 +61,7 @@ public class UserRecordEntityServiceImpl extends ServiceImpl<UserRecordMapper, U
             userRecordUpdateWrapper.setSql("total_score=total_score+" + score).eq("uid", uid);
             result = userRecordMapper.update(null, userRecordUpdateWrapper) == 1;
         } else if (lastHighScoreJudge.getScore() < score) {
-            //如果之前该题目最高得分的提交比现在得分低,也需要修改
+            // 如果之前该题目最高得分的提交比现在得分低,也需要修改
             int addValue = score - lastHighScoreJudge.getScore();
             UpdateWrapper<UserRecord> userRecordUpdateWrapper = new UpdateWrapper<>();
             userRecordUpdateWrapper.setSql("total_score=total_score+" + addValue).eq("uid", uid);
@@ -91,7 +92,7 @@ public class UserRecordEntityServiceImpl extends ServiceImpl<UserRecordMapper, U
                 userRecordUpdateWrapper.set("total_score", score).eq("uid", uid);
                 success = userRecordMapper.update(null, userRecordUpdateWrapper) == 1;
             } else if (lastHighScoreJudge.getScore() < score) {
-                //如果之前该题目最高得分的提交比现在得分低,也需要修改
+                // 如果之前该题目最高得分的提交比现在得分低,也需要修改
                 int addValue = score - lastHighScoreJudge.getScore();
                 UpdateWrapper<UserRecord> userRecordUpdateWrapper = new UpdateWrapper<>();
                 userRecordUpdateWrapper.setSql("total_score=total_score+" + addValue).eq("uid", uid);

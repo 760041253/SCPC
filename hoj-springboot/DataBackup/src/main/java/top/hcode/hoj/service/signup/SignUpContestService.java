@@ -14,11 +14,14 @@ import java.util.List;
  * @date 2023/4/21 20:22
  */
 public interface SignUpContestService {
-    public CommonResult<List<SignUpContest>> getContestSignList(Integer pageSize,Integer pageNum) throws StatusForbiddenException;
+    public CommonResult<List<SignUpContest>> getContestSignList(Integer pageSize, Integer pageNum)
+            throws StatusForbiddenException;
 
-    public CommonResult<Void>addNewContestSignUp(SignUpContestDTO signUpContestDTO) throws StatusForbiddenException, StatusFailException;
+    public CommonResult<Void> addNewContestSignUp(SignUpContestDTO signUpContestDTO)
+            throws StatusForbiddenException, StatusFailException;
 
-    public CommonResult<Void>deleteContestSignUp(Long id) throws StatusForbiddenException, StatusFailException;
+    public CommonResult<Void> deleteContestSignUp(Long id) throws StatusForbiddenException, StatusFailException;
 
-    public CommonResult<Void>updateContestSignUp(SignUpContestDTO signUpContestDTO) throws StatusForbiddenException, StatusFailException;
+    public CommonResult<Void> updateContestSignUp(SignUpContestDTO signUpContestDTO)
+            throws StatusForbiddenException, StatusFailException;
 }

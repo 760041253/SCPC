@@ -104,12 +104,16 @@ public class JudgeManager {
     @Autowired
     private NacosSwitchConfig nacosSwitchConfig;
 
+    @Resource
+    private SynchronousManager synchronousManager;
+
     /**
      * @MethodName submitProblemJudge
      * @Description 核心方法 判题通过openfeign调用判题系统服务
      * @Since 2020/10/30
      */
-    public Judge submitProblemJudge(SubmitJudgeDTO judgeDto) throws StatusForbiddenException, StatusFailException, StatusNotFoundException, StatusAccessDeniedException, AccessException {
+    public Judge submitProblemJudge(SubmitJudgeDTO judgeDto) throws StatusForbiddenException, StatusFailException,
+            StatusNotFoundException, StatusAccessDeniedException, AccessException {
 
         judgeValidator.validateSubmissionInfo(judgeDto);
 
@@ -129,7 +133,8 @@ public class JudgeManager {
             redisUtils.expire(lockKey, switchConfig.getDefaultSubmitInterval());
         }
 
-        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes()))
+                .getRequest();
         // 将提交先写入数据库，准备调用判题服务器
         Judge judge = new Judge();
         judge.setShare(false) // 默认设置代码为单独自己可见
@@ -215,7 +220,6 @@ public class JudgeManager {
         return uniqueKey;
     }
 
-
     public TestJudgeVO getTestJudgeResult(String testJudgeKey) throws StatusFailException {
         TestJudgeRes testJudgeRes = (TestJudgeRes) redisUtils.get(testJudgeKey);
         if (testJudgeRes == null) {
@@ -236,7 +240,6 @@ public class JudgeManager {
         redisUtils.del(testJudgeKey);
         return testJudgeVo;
     }
-
 
     /**
      * @MethodName resubmit
@@ -311,7 +314,6 @@ public class JudgeManager {
         }
         return judge;
     }
-
 
     /**
      * @MethodName getSubmission
@@ -475,16 +477,18 @@ public class JudgeManager {
      * @Since 2020/10/29
      */
     public IPage<JudgeVO> getJudgeList(Integer limit,
-                                       Integer currentPage,
-                                       Boolean onlyMine,
-                                       String searchPid,
-                                       Integer searchStatus,
-                                       String searchUsername,
-                                       Boolean completeProblemID,
-                                       Long gid) throws StatusAccessDeniedException {
+            Integer currentPage,
+            Boolean onlyMine,
+            String searchPid,
+            Integer searchStatus,
+            String searchUsername,
+            Boolean completeProblemID,
+            Long gid) throws StatusAccessDeniedException {
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 30;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 30;
 
         String uid = null;
         // 只查看当前用户的提交
@@ -513,7 +517,6 @@ public class JudgeManager {
                 completeProblemID,
                 gid);
     }
-
 
     /**
      * @MethodName checkJudgeResult
@@ -549,7 +552,8 @@ public class JudgeManager {
      * @Description 需要检查是否为封榜，是否可以查询结果，避免有人恶意查询
      * @Since 2021/6/11
      */
-    public HashMap<Long, Object> checkContestJudgeResult(SubmitIdListDTO submitIdListDto) throws StatusNotFoundException {
+    public HashMap<Long, Object> checkContestJudgeResult(SubmitIdListDTO submitIdListDto)
+            throws StatusNotFoundException {
 
         if (submitIdListDto.getCid() == null) {
             throw new StatusNotFoundException("查询比赛id不能为空");
@@ -594,7 +598,6 @@ public class JudgeManager {
         }
         return result;
     }
-
 
     /**
      * @MethodName getJudgeCase
@@ -713,7 +716,8 @@ public class JudgeManager {
         return judgeCaseVo;
     }
 
-    private List<SubTaskJudgeCaseVO> buildSubTaskDetail(List<JudgeCase> judgeCaseList, Constants.JudgeCaseMode judgeCaseMode) {
+    private List<SubTaskJudgeCaseVO> buildSubTaskDetail(List<JudgeCase> judgeCaseList,
+            Constants.JudgeCaseMode judgeCaseMode) {
         List<SubTaskJudgeCaseVO> subTaskJudgeCaseVOS = new ArrayList<>();
         LinkedHashMap<Integer, List<JudgeCase>> groupJudgeCaseMap = judgeCaseList.stream()
                 .sorted(Comparator.comparingInt(JudgeCase::getGroupNum).thenComparingInt(JudgeCase::getSeq))

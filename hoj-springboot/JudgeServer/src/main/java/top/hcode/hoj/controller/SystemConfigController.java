@@ -19,7 +19,7 @@ public class SystemConfigController {
     private SystemConfigService systemConfigService;
 
     @RequestMapping("/get-sys-config")
-    public HashMap<String,Object> getSystemConfig(){
+    public HashMap<String, Object> getSystemConfig() {
         return systemConfigService.getSystemConfig();
     }
 }

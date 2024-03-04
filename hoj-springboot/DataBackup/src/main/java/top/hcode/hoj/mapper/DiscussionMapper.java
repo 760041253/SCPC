@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import top.hcode.hoj.pojo.entity.discussion.Discussion;
 import top.hcode.hoj.pojo.vo.DiscussionVO;
 
-
 @Mapper
 @Repository
 public interface DiscussionMapper extends BaseMapper<Discussion> {

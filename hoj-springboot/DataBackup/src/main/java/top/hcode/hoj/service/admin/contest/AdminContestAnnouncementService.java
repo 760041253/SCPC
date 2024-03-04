@@ -1,11 +1,9 @@
 package top.hcode.hoj.service.admin.contest;
 
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import top.hcode.hoj.common.result.CommonResult;
 import top.hcode.hoj.pojo.dto.AnnouncementDTO;
 import top.hcode.hoj.pojo.vo.AnnouncementVO;
-
 
 public interface AdminContestAnnouncementService {
 

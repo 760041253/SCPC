@@ -12,5 +12,6 @@ import top.hcode.hoj.dao.problem.ProblemTagEntityService;
  * @Description:
  */
 @Service
-public class ProblemTagEntityServiceImpl extends ServiceImpl<ProblemTagMapper, ProblemTag> implements ProblemTagEntityService {
+public class ProblemTagEntityServiceImpl extends ServiceImpl<ProblemTagMapper, ProblemTag>
+        implements ProblemTagEntityService {
 }

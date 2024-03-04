@@ -1,102 +1,50 @@
 <template>
   <div style="margin: 0px 0px 15px 0px;font-size: 14px;position: relative">
-    <el-row
-      class="header"
-      id="js-right-header"
-    >
-      <el-col
-        :xs="24"
-        :sm="16"
-        :md="16"
-        :lg="16"
-      >
+    <el-row class="header" id="js-right-header">
+      <el-col :xs="24" :sm="16" :md="16" :lg="16">
         <div class="select-row">
           <span>{{ $t('m.Lang') }}:</span>
           <span>
             <el-select
-              :value="this.language"
+              :value="CodeLanguage()"
               @change="onLangChange"
               class="left-adjust"
               size="small"
             >
-              <el-option
-                v-for="item in languages"
-                :key="item"
-                :value="item"
-              >{{ item }}
-              </el-option>
+              <el-option v-for="item in languages" :key="item" :value="item">{{ item }}</el-option>
             </el-select>
           </span>
           <span>
-            <el-tooltip
-              :content="$t('m.Reset_Code')"
-              placement="top"
-            >
-              <el-button
-                icon="el-icon-refresh"
-                @click="onResetClick"
-                size="small"
-              ></el-button>
+            <el-tooltip :content="$t('m.Reset_Code')" placement="top">
+              <el-button icon="el-icon-refresh" @click="onResetClick" size="small"></el-button>
             </el-tooltip>
           </span>
           <span v-if="isAuthenticated && !submitDisabled">
-            <el-tooltip
-              :content="$t('m.Get_Recently_Passed_Code')"
-              placement="top"
-            >
-              <el-button
-                icon="el-icon-download"
-                size="small"
-                @click="getUserLastAccepetedCode"
-              >
-              </el-button>
+            <el-tooltip :content="$t('m.Get_Recently_Passed_Code')" placement="top">
+              <el-button icon="el-icon-download" size="small" @click="getUserLastAccepetedCode"></el-button>
+            </el-tooltip>
+          </span>
+          <span>
+            <el-tooltip :content="$t('m.Beauty_Code')" placement="top">
+              <el-button icon="el-icon-thumb" @click="CodeBeauty" size="small"></el-button>
             </el-tooltip>
           </span>
         </div>
       </el-col>
-      <el-col
-        :xs="24"
-        :sm="8"
-        :md="8"
-        :lg="8"
-      >
+      <el-col :xs="24" :sm="8" :md="8" :lg="8">
         <div class="select-row fl-right">
           <span>
-            <el-tooltip
-              :content="$t('m.Upload_file')"
-              placement="bottom"
-            >
-              <el-button
-                icon="el-icon-upload"
-                @click="onUploadFile"
-                size="small"
-              ></el-button>
+            <el-tooltip :content="$t('m.Upload_file')" placement="bottom">
+              <el-button icon="el-icon-upload" @click="onUploadFile" size="small"></el-button>
             </el-tooltip>
           </span>
           <span>
-            <input
-              type="file"
-              id="file-uploader"
-              style="display: none"
-              @change="onUploadFileDone"
-            />
+            <input type="file" id="file-uploader" style="display: none" @change="onUploadFileDone" />
           </span>
           <span>
-            <el-tooltip
-              :content="$t('m.Code_Editor_Setting')"
-              placement="top"
-            >
-              <el-popover
-                placement="bottom"
-                width="300"
-                trigger="click"
-              >
-                <el-button
-                  slot="reference"
-                  icon="el-icon-s-tools"
-                  size="small"
-                >
-                </el-button>
+            <el-tooltip :content="$t('m.Code_Editor_Setting')" placement="top">
+              <el-popover placement="bottom" width="300" trigger="click">
+                <el-button slot="reference" icon="el-icon-s-tools" size="small"></el-button>
                 <div class="setting-title">{{ $t('m.Setting') }}</div>
                 <div class="setting-item">
                   <span class="setting-item-name">
@@ -104,7 +52,7 @@
                     {{ $t('m.Theme') }}
                   </span>
                   <el-select
-                    :value="this.theme"
+                    :value="formProfile.ideTheme || this.theme"
                     @change="onThemeChange"
                     class="setting-item-value"
                     size="small"
@@ -114,8 +62,7 @@
                       :key="item.label"
                       :label="$t('m.' + item.label)"
                       :value="item.value"
-                    >{{ $t('m.' + item.label) }}
-                    </el-option>
+                    >{{ $t('m.' + item.label) }}</el-option>
                   </el-select>
                 </div>
                 <div class="setting-item">
@@ -124,7 +71,7 @@
                     {{ $t('m.FontSize') }}
                   </span>
                   <el-select
-                    :value="fontSize"
+                    :value="formProfile.codeSize || this.fontSize"
                     @change="onFontSizeChange"
                     class="setting-item-value"
                     size="small"
@@ -134,8 +81,7 @@
                       :key="item"
                       :label="item"
                       :value="item"
-                    >{{ item }}
-                    </el-option>
+                    >{{ item }}</el-option>
                   </el-select>
                 </div>
                 <div class="setting-item">
@@ -150,36 +96,13 @@
                       aria-hidden="true"
                     >
                       <g transform="translate(101.57 355.48)">
-                        <rect
-                          width="812.53"
-                          height="152.35"
-                          x="0"
-                          y="0"
-                          rx="50.78"
-                        ></rect>
-                        <rect
-                          width="812.53"
-                          height="50.78"
-                          x="0"
-                          y="253.92"
-                          rx="25.39"
-                        ></rect>
-                        <rect
-                          width="50.78"
-                          height="203.13"
-                          x="0"
-                          y="177.74"
-                          rx="25.39"
-                        ></rect>
-                        <rect
-                          width="50.78"
-                          height="203.13"
-                          x="761.75"
-                          y="177.74"
-                          rx="25.39"
-                        ></rect>
+                        <rect width="812.53" height="152.35" x="0" y="0" rx="50.78" />
+                        <rect width="812.53" height="50.78" x="0" y="253.92" rx="25.39" />
+                        <rect width="50.78" height="203.13" x="0" y="177.74" rx="25.39" />
+                        <rect width="50.78" height="203.13" x="761.75" y="177.74" rx="25.39" />
                       </g>
-                    </svg> {{ $t('m.TabSize') }}
+                    </svg>
+                    {{ $t('m.TabSize') }}
                   </span>
                   <el-select
                     :value="tabSize"
@@ -187,57 +110,23 @@
                     class="setting-item-value"
                     size="small"
                   >
-                    <el-option
-                      :label="$t('m.Two_Spaces') "
-                      :value="2"
-                    >
-                      {{ $t('m.Two_Spaces') }}
-                    </el-option>
-                    <el-option
-                      :label="$t('m.Four_Spaces') "
-                      :value="4"
-                    >
-                      {{ $t('m.Four_Spaces') }}
-                    </el-option>
-                    <el-option
-                      :label="$t('m.Eight_Spaces') "
-                      :value="8"
-                    >
-                      {{ $t('m.Eight_Spaces') }}
-                    </el-option>
+                    <el-option :label="$t('m.Two_Spaces') " :value="2">{{ $t('m.Two_Spaces') }}</el-option>
+                    <el-option :label="$t('m.Four_Spaces') " :value="4">{{ $t('m.Four_Spaces') }}</el-option>
+                    <el-option :label="$t('m.Eight_Spaces') " :value="8">{{ $t('m.Eight_Spaces') }}</el-option>
                   </el-select>
                 </div>
               </el-popover>
             </el-tooltip>
           </span>
           <template v-if="supportFocusMode">
-            <span
-              v-if="!openFocusMode"
-              class="hidden-sm-and-down"
-            >
-              <el-tooltip
-                :content="$t('m.Enter_Focus_Mode')"
-                placement="bottom"
-              >
-                <el-button
-                  icon="el-icon-full-screen"
-                  @click="switchFocusMode(true)"
-                  size="small"
-                ></el-button>
+            <span v-if="!openFocusMode" class="hidden-sm-and-down">
+              <el-tooltip :content="$t('m.Enter_Focus_Mode')" placement="bottom">
+                <el-button icon="el-icon-full-screen" @click="switchFocusMode(true)" size="small"></el-button>
               </el-tooltip>
             </span>
-            <span
-              v-else
-              class="hidden-sm-and-down"
-            >
-              <el-tooltip
-                :content="$t('m.Exit_Focus_Mode')"
-                placement="bottom"
-              >
-                <el-button
-                  @click="switchFocusMode(false)"
-                  size="small"
-                >
+            <span v-else class="hidden-sm-and-down">
+              <el-tooltip :content="$t('m.Exit_Focus_Mode')" placement="bottom">
+                <el-button @click="switchFocusMode(false)" size="small">
                   <svg
                     focusable="false"
                     viewBox="0 0 1024 1024"
@@ -246,8 +135,9 @@
                     height="0.95em"
                     aria-hidden="true"
                   >
-                    <path d="M463.04 863.32h-88.51V641.14H152.35v-88.87H463.4l-.36 311.05zM863.32 463.4H552.27l.31-311.05h88.56v222.18h222.18v88.87z">
-                    </path>
+                    <path
+                      d="M463.04 863.32h-88.51V641.14H152.35v-88.87H463.4l-.36 311.05zM863.32 463.4H552.27l.31-311.05h88.56v222.18h222.18v88.87z"
+                    />
                   </svg>
                 </el-button>
               </el-tooltip>
@@ -256,21 +146,20 @@
         </div>
       </el-col>
     </el-row>
-    <div :style="'line-height: 1.5;font-size:'+fontSize">
+    <div :style="'line-height: 1.5;font-size:' + formProfile.codeSize || this.fontSize">
       <codemirror
         class="js-right"
         :value="value"
         :options="options"
         @change="onEditorCodeChange"
         ref="myEditor"
-      >
-      </codemirror>
+      ></codemirror>
     </div>
     <el-drawer
       :visible.sync="openTestCaseDrawer"
       style="position: absolute;"
       :modal="false"
-      size="40%"
+      size="50%"
       :with-header="false"
       @close="closeDrawer"
       direction="btt"
@@ -295,25 +184,53 @@
               :key="index"
               @click="addTestCaseToTestJudge(example.input, example.output, index)"
               :effect="example.active?'dark':'plain'"
-            >
-              {{ $t('m.Fill_Case') }} {{ index+1 }}
-            </el-tag>
+            >{{ $t('m.Fill_Case') }} {{ index+1 }}</el-tag>
           </div>
-          <el-input
-            type="textarea"
-            class="mt-10"
-            :rows="7"
-            show-word-limit
-            resize="none"
-            maxlength="1000"
-            v-model="userInput"
-          >
-          </el-input>
-        </el-tab-pane>
-        <el-tab-pane
-          :label="$t('m.Test_Result')"
-          name="result"
-        >
+
+          <div class="tj-res-tab">
+            <div class="tj-res-item">
+              <span class="name">{{ $t("m.Test_Input") }}</span>
+              <span class="value">
+                <el-input
+                  type="textarea"
+                  :rows="2"
+                  show-word-limit
+                  resize="none"
+                  maxlength="1000"
+                  v-model="userInput"
+                  :placeholder="$t('m.Test_Input')"
+                ></el-input>
+              </span>
+            </div>
+            <div class="tj-res-item">
+              <span class="name">{{ $t("m.Expected_Output") }}</span>
+              <span class="value">
+                <el-input
+                  type="textarea"
+                  :rows="2"
+                  show-word-limit
+                  resize="none"
+                  maxlength="1000"
+                  v-model="expectedOutput"
+                  :placeholder="$t('m.Expected_Output')"
+                ></el-input>
+              </span>
+            </div>
+            <div class="tj-res-item">
+              <span class="name">{{ $t("m.Real_Output") }}</span>
+              <span class="value">
+                <el-input
+                  type="textarea"
+                  class="textarea"
+                  :readonly="true"
+                  resize="none"
+                  :autosize="{ minRows: 1, maxRows: 4 }"
+                  v-model="testJudgeRes.userOutput"
+                ></el-input>
+              </span>
+            </div>
+          </div>
+
           <div v-loading="testJudgeLoding">
             <template v-if="testJudgeRes.status == -10">
               <div class="tj-res-tab mt-10">
@@ -323,8 +240,7 @@
                   center
                   :closable="false"
                   show-icon
-                >
-                </el-alert>
+                ></el-alert>
               </div>
             </template>
             <template v-else-if="testJudgeRes.status != -2">
@@ -336,29 +252,29 @@
                   show-icon
                 >
                   <template slot="title">
-                    <span class="status-title">{{ getResultStatusName(testJudgeRes.problemJudgeMode,
+                    <span class="status-title">
+                      {{ getResultStatusName(testJudgeRes.problemJudgeMode,
                       testJudgeRes.status,
                       testJudgeRes.expectedOutput!=null) }}
-                      <template v-if="equalsExpectedOuput != null">
-                        {{ "("+ $t('m.Pass_Test_Case')+ " "+equalsExpectedOuput+")" }}
-                      </template>
+                      <template
+                        v-if="equalsExpectedOuput != null"
+                      >{{ "("+ $t('m.Pass_Test_Case')+ " "+equalsExpectedOuput+")" }}</template>
                     </span>
                   </template>
                   <template slot>
                     <div style="display:flex">
                       <div style="margin-right:15px">
-                        <span class="color-gray mr-5"><i class="el-icon-time"></i></span>
+                        <span class="color-gray mr-5">
+                          <i class="el-icon-time"></i>
+                        </span>
                         <span class="color-gray mr-5">{{ $t('m.Time' )}}</span>
                         <span v-if="testJudgeRes.time!=null">{{testJudgeRes.time}}ms</span>
                         <span v-else>--ms</span>
                       </div>
                       <div>
-                        <span
-                          style="vertical-align: sub;"
-                          class="color-gray mr-5"
-                        >
+                        <span style="vertical-align: sub;" class="color-gray mr-5">
                           <svg
-                            data-v-79a9c93e=""
+                            data-v-79a9c93e
                             focusable="false"
                             viewBox="0 0 1025 1024"
                             fill="currentColor"
@@ -369,8 +285,7 @@
                             <path
                               d="M448.98 92.52V92.67l.37 40.46v62.75h125.5V92.52h81.22v103.36h33.12c76.08 0 137.9 61.05 139.12 136.84l.02 2.3v33.12h103.36v80.84l-40.6.37h-62.76v91.05h103.36v81.21H828.33v67.58c0 76.08-61.06 137.9-136.84 139.12l-2.3.02h-33.12v103.36h-80.84l-.37-40.6v-62.76H449.25l-.27 103.36h-80.84V828.33h-33.12c-76.08 0-137.9-61.06-139.12-136.84l-.02-2.3v-67.58H92.52v-80.83l40.6-.38h62.76v-91.15l-103.36-.27v-80.47l40.6-.37h62.76v-33.12c0-76.08 61.05-137.9 136.84-139.12l2.3-.02h33.12V92.52h80.84zM689.2 277.1H335.02c-32 0-57.93 25.93-57.93 57.93v354.17c0 32 25.93 57.93 57.93 57.93h354.17c32 0 57.93-25.94 57.93-57.93V335.02c0-32-25.94-57.93-57.93-57.93zm-73.73 91.05a40.6 40.6 0 0 1 40.6 40.6v206.72a40.6 40.6 0 0 1-40.6 40.6H408.75a40.6 40.6 0 0 1-40.6-40.6V408.75a40.6 40.6 0 0 1 40.6-40.6zm-40.6 81.16H449.3v125.55h125.55V449.3z"
                               transform="translate(1)"
-                            >
-                            </path>
+                            />
                           </svg>
                         </span>
                         <span class="color-gray mr-5">{{ $t('m.Memory' )}}</span>
@@ -378,65 +293,14 @@
                         <span v-else>--KB</span>
                       </div>
                     </div>
-                    <div v-if="testJudgeRes.stderr">
-                      {{ testJudgeRes.stderr }}
-                    </div>
+                    <div v-if="testJudgeRes.stderr">{{ testJudgeRes.stderr }}</div>
                     <div
-                      v-if="testJudgeRes.problemJudgeMode == 'spj' 
+                      v-if="testJudgeRes.problemJudgeMode == 'spj'
                           && (testJudgeRes.status == 0 || testJudgeRes.status == -1)"
                       style="font-weight: 700;"
-                    >
-                      {{ $t('m.Problem_Uncertain_Answer') }}
-                    </div>
+                    >{{ $t('m.Problem_Uncertain_Answer') }}</div>
                   </template>
                 </el-alert>
-              </div>
-              <div class="tj-res-tab">
-                <div class="tj-res-item">
-                  <span class="name">{{ $t('m.Test_Input') }}</span>
-                  <span class="value">
-                    <el-input
-                      type="textarea"
-                      class="textarea"
-                      :readonly="true"
-                      resize="none"
-                      :autosize="{ minRows: 1, maxRows: 4}"
-                      v-model="testJudgeRes.userInput"
-                    >
-                    </el-input>
-                  </span>
-                </div>
-                <div
-                  class="tj-res-item"
-                  v-if="testJudgeRes.expectedOutput!=null"
-                >
-                  <span class="name">{{ $t('m.Expected_Output') }}</span>
-                  <span class="value">
-                    <el-input
-                      type="textarea"
-                      :readonly="true"
-                      resize="none"
-                      :autosize="{ minRows: 1, maxRows: 4}"
-                      class="textarea"
-                      v-model="testJudgeRes.expectedOutput"
-                    >
-                    </el-input>
-                  </span>
-                </div>
-                <div class="tj-res-item">
-                  <span class="name">{{ $t('m.Real_Output') }}</span>
-                  <span class="value">
-                    <el-input
-                      type="textarea"
-                      class="textarea"
-                      :readonly="true"
-                      resize="none"
-                      :autosize="{ minRows: 1, maxRows: 4}"
-                      v-model="testJudgeRes.userOutput"
-                    >
-                    </el-input>
-                  </span>
-                </div>
               </div>
             </template>
             <template v-else>
@@ -451,17 +315,13 @@
                 </el-card>
               </div>
             </template>
+            <p></p>
           </div>
         </el-tab-pane>
         <el-tab-pane>
           <span slot="label">
-            <el-tag
-              type="success"
-              class="tj-btn"
-              @click="submitTestJudge"
-              effect="plain"
-            >
-              <i class="el-icon-video-play"> {{ $t('m.Running_Test') }}</i>
+            <el-tag type="success" class="tj-btn" @click="submitTestJudge" effect="plain">
+              <i class="el-icon-video-play">{{ $t('m.Running_Test') }}</i>
             </el-tag>
           </span>
           <template v-if="!isAuthenticated">
@@ -472,8 +332,7 @@
                 center
                 :closable="false"
                 show-icon
-              >
-              </el-alert>
+              ></el-alert>
             </div>
           </template>
         </el-tab-pane>
@@ -485,6 +344,9 @@
 import utils from "@/common/utils";
 import api from "@/common/api";
 import myMessage from "@/common/message";
+//js_beautify
+import { js_beautify } from "js-beautify";
+//codemirror
 import { codemirror, CodeMirror } from "vue-codemirror-lite";
 import { JUDGE_STATUS, JUDGE_STATUS_RESERVE } from "@/common/constants";
 
@@ -538,7 +400,7 @@ import "codemirror/addon/fold/indent-fold.js";
 import "codemirror/addon/hint/show-hint.css";
 import "codemirror/addon/hint/show-hint.js";
 import "codemirror/addon/hint/anyword-hint.js";
-import 'codemirror/addon/hint/javascript-hint'
+import "codemirror/addon/hint/javascript-hint";
 import "codemirror/addon/selection/mark-selection.js";
 
 export default {
@@ -554,16 +416,16 @@ export default {
     languages: {
       type: Array,
       default: () => {
-        return ["C", "C++", "Java", "Python3", "Python2"];
+        return ["C", "C++", "C++ 17", "C++ 20", "Java", "Python3", "Python2"];
       },
     },
     language: {
       type: String,
       default: "C",
     },
-    height:{
-      type:Number,
-      default: 550
+    height: {
+      type: Number,
+      default: 550,
     },
     theme: {
       type: String,
@@ -610,6 +472,11 @@ export default {
   },
   data() {
     return {
+      formProfile: {
+        codeLanguage: "",
+        codeSize: "",
+        ideTheme: "",
+      },
       options: {
         // codemirror options
         tabSize: this.tabSize,
@@ -622,6 +489,8 @@ export default {
         foldGutter: true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         lineWrapping: true,
+        // 自动对焦
+        autofocus: true,
         // 选中文本自动高亮，及高亮方式
         styleSelectedText: true,
         showCursorWhenSelecting: true,
@@ -635,6 +504,45 @@ export default {
         hintOptions: {
           // 当匹配只有一项的时候是否自动补全
           completeSingle: false,
+        },
+        extraKeys: {
+          "Ctrl-/": function (cm) {
+            let startLine = cm.getCursor("start").line;
+            let endLine = cm.getCursor("end").line;
+            for (let i = startLine; i <= endLine; i++) {
+              let origin = cm.getLine(i);
+              if (!origin.startsWith("// ")) {
+                cm.replaceRange(
+                  "// " + origin,
+                  { ch: 0, line: i },
+                  { ch: origin.length, line: i },
+                  null
+                );
+              } else {
+                cm.replaceRange(
+                  origin.substr(3),
+                  { ch: 0, line: i },
+                  { ch: origin.length, line: i },
+                  null
+                );
+              }
+            }
+          },
+          "Ctrl-;": function (cm) {
+            // 获取选中区域的范围
+            let from = cm.getCursor("start");
+            let to = cm.getCursor("end");
+
+            // 获取选中区域的内容并添加或去掉注释
+            let content = cm.getRange(from, to);
+            let note = "/*" + content.replace(/(\n|\r\n)/g, "$&") + "*/";
+            if (content.startsWith("/*") && content.endsWith("*/")) {
+              note = content.substr(2, content.length - 4);
+            }
+
+            // 将注释后的内容替换选中区域
+            cm.replaceRange(note, from, to, null);
+          },
         },
       },
       mode: {
@@ -665,21 +573,30 @@ export default {
     };
   },
   mounted() {
+    let profile = this.$store.getters.userInfo;
+    Object.keys(this.formProfile).forEach((element) => {
+      if (profile[element] !== undefined) {
+        this.formProfile[element] = profile[element];
+      }
+    });
     utils.getLanguages().then((languages) => {
       let mode = {};
       languages.forEach((lang) => {
         mode[lang.name] = lang.contentType;
       });
       this.mode = mode;
+      if (this.languages.includes(this.formProfile.codeLanguage)) {
+        this.language = this.formProfile.codeLanguage;
+      }
       this.editor.setOption("mode", this.mode[this.language]);
     });
-    this.editor.setOption("theme", this.theme);
-    this.editor.setSize('100%', this.height);
+    this.editor.setOption("theme", this.formProfile.ideTheme);
+    this.editor.setSize("100%", this.height);
     this.editor.on("inputRead", (instance, changeObj) => {
       if (changeObj.text && changeObj.text.length > 0) {
-      let c = changeObj.text[0].charAt(changeObj.text[0].length - 1)
-        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
-          instance.showHint({ completeSingle:false });
+        let c = changeObj.text[0].charAt(changeObj.text[0].length - 1);
+        if ((c >= "a" && c <= "z") || (c >= "A" && c <= "Z")) {
+          instance.showHint({ completeSingle: false });
         }
       }
       // if (/\w|\./g.test(changeObj.text) && changeObj.origin !== "complete") {
@@ -692,25 +609,44 @@ export default {
     });
     this.$nextTick(() => {
       this.editor.refresh();
-    })
+    });
   },
   methods: {
+    CodeLanguage() {
+      if (this.languages.includes(this.formProfile.codeLanguage)) {
+        this.language = this.formProfile.codeLanguage;
+        this.onLangChange(this.language);
+      }
+      return this.language;
+    },
+    CodeBeauty() {
+      this.value = js_beautify(this.value || "");
+      this.editor.setValue(this.value);
+      this.editor.refresh();
+    },
     onEditorCodeChange(newCode) {
       this.$emit("update:value", newCode);
     },
     onLangChange(newVal) {
+      if (this.languages.includes(newVal)) {
+        this.formProfile.codeLanguage = newVal;
+        this.language = newVal;
+      }
       this.editor.setOption("mode", this.mode[newVal]);
       this.$emit("changeLang", newVal);
     },
     onThemeChange(newTheme) {
+      this.formProfile.ideTheme = newTheme;
+      this.theme = newTheme;
       this.editor.setOption("theme", newTheme);
       this.$emit("changeTheme", newTheme);
     },
     onFontSizeChange(fontSize) {
+      this.formProfile.codeSize = fontSize;
       this.fontSize = fontSize;
       this.$nextTick(() => {
         this.editor.refresh();
-      })
+      });
       this.$emit("update:fontSize", fontSize);
     },
     onTabSizeChange(tabSize) {
@@ -725,16 +661,58 @@ export default {
     onUploadFile() {
       document.getElementById("file-uploader").click();
     },
+
+    // 防止读取大文件造成的 UI 假死
     onUploadFileDone() {
-      let f = document.getElementById("file-uploader").files[0];
-      let fileReader = new window.FileReader();
-      let self = this;
-      fileReader.onload = function (e) {
-        var text = e.target.result;
-        self.editor.setValue(text);
-        document.getElementById("file-uploader").value = "";
+      let that = this;
+      const fileInput = document.getElementById("file-uploader");
+      const file = fileInput.files[0];
+
+      if (!file) {
+        // 未选择文件
+        return;
+      }
+
+      const chunkSize = 1024 * 1024; // 1 MB chunks (根据需要进行调整)
+      let offset = 0;
+
+      const readChunk = () => {
+        const reader = new FileReader();
+        const blob = file.slice(offset, offset + chunkSize);
+
+        let concatenatedText = "";
+        reader.onload = function (event) {
+          if (event.target.error) {
+            // 读取文件块时出错
+            console.error("Error reading file chunk:", event.target.error);
+            return;
+          }
+
+          const textChunk = event.target.result;
+          // 处理textChunk（例如，更新UI，追加到内容等）
+          // 如果需要，也可以连接块：
+          concatenatedText += String(textChunk);
+
+          offset += textChunk.length;
+
+          if (offset < file.size) {
+            // 继续读取下一个块
+            readChunk();
+          } else {
+            // 所有块都已读取，执行最终操作
+            // 将文本转换为字符串
+            const textChunkString = String(concatenatedText);
+            // 将文本设置到编辑器中
+            that.editor.setValue(textChunkString);
+            // 清空文件上传字段
+            document.getElementById("file-uploader").value = "";
+          }
+        };
+
+        reader.readAsText(blob, "UTF-8");
       };
-      fileReader.readAsText(f, "UTF-8");
+
+      readChunk();
     },
     addTestCaseToTestJudge(input, output, index) {
       this.userInput = input;
@@ -786,7 +764,7 @@ export default {
       api.submitTestJudge(data).then(
         (res) => {
           this.testJudgeKey = res.data.data;
-          this.testJudgeActiveTab = "result";
+          this.testJudgeActiveTab = "input";
           this.testJudgeLoding = true;
           this.checkTestJudgeStatus();
         },
@@ -866,11 +844,11 @@ export default {
     },
   },
   watch: {
-    height(newVal){
-      this.editor.setSize('100%', newVal);
+    height(newVal) {
+      this.editor.setSize("100%", newVal);
       this.$nextTick(() => {
         this.editor.refresh();
-      })
+      });
     },
     theme(newVal, oldVal) {
       this.editor.setOption("theme", newVal);
@@ -973,6 +951,9 @@ export default {
 .mr-5 {
   margin-right: 5px;
 }
+.ml-5 {
+  margin-left: 5px;
+}
 .mt-10 {
   margin-top: 10px;
 }
@@ -1020,7 +1001,7 @@ export default {
 
 <style>
 @media screen and (max-width: 992px) {
-  .CodeMirror{
+  .CodeMirror {
     height: 550px;
   }
 }

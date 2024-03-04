@@ -13,7 +13,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
  */
 public interface GroupService {
 
-    public CommonResult<IPage<GroupVO>> getGroupList(Integer limit, Integer currentPage, String keyword, Integer auth, Boolean onlyMine);
+    public CommonResult<IPage<GroupVO>> getGroupList(Integer limit, Integer currentPage, String keyword, Integer auth,
+            Boolean onlyMine);
 
     public CommonResult<Group> getGroup(Long gid);
 

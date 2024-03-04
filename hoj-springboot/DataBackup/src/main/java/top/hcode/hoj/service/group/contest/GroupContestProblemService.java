@@ -15,7 +15,8 @@ import java.util.Map;
  */
 public interface GroupContestProblemService {
 
-    public CommonResult<HashMap<String, Object>> getContestProblemList(Integer limit, Integer currentPage, String keyword, Long cid, Integer problemType, String oj);
+    public CommonResult<HashMap<String, Object>> getContestProblemList(Integer limit, Integer currentPage,
+            String keyword, Long cid, Integer problemType, String oj);
 
     public CommonResult<Map<Object, Object>> addProblem(ProblemDTO problemDto);
 

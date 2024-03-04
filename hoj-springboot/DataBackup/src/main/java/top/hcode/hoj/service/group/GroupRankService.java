@@ -7,8 +7,8 @@ import top.hcode.hoj.pojo.vo.OIRankVO;
 public interface GroupRankService {
 
     public CommonResult<IPage<OIRankVO>> getGroupRankList(Integer limit,
-                                                          Integer currentPage,
-                                                          String searchUser,
-                                                          Integer type,
-                                                          Long gid);
+            Integer currentPage,
+            String searchUser,
+            Integer type,
+            Long gid);
 }

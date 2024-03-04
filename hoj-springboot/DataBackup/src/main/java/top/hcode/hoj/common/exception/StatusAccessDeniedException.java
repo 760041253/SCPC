@@ -22,7 +22,8 @@ public class StatusAccessDeniedException extends Exception {
         super(cause);
     }
 
-    public StatusAccessDeniedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public StatusAccessDeniedException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

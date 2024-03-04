@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <interpolator :dark="getTheme()" :watch-system="true" />
     <el-backtop :right="10"></el-backtop>
     <div v-if="!isAdminView" class="full-height flex-column">
       <NavBar></NavBar>
@@ -11,26 +12,14 @@
       <footer v-if="showFooter" class="fix-to-bottom">
         <div class="mundb-footer">
           <el-row>
-            <el-col
-              :md="6"
-              :xs="24"
-            >
+            <el-col :md="6" :xs="24">
               <h1>{{ websiteConfig.name }}</h1>
-              <span
-                style="line-height:25px"
-                v-html="websiteConfig.description"
-                v-katex
-                v-highlight
-              >
-              </span>
+              <span style="line-height:25px" v-html="websiteConfig.description" v-katex v-highlight></span>
             </el-col>
             <el-col class="hr-none">
               <el-divider></el-divider>
             </el-col>
-            <el-col
-              :md="6"
-              :xs="24"
-            >
+            <el-col :md="6" :xs="24">
               <h1>{{ $t('m.Service') }}</h1>
               <p>
                 <a @click="goRoute('/status')">{{ $t('m.Judging_Queue') }}</a>
@@ -42,41 +31,31 @@
             <el-col class="hr-none">
               <el-divider></el-divider>
             </el-col>
-            <el-col
-              :md="6"
-              :xs="24"
-            >
+            <el-col :md="6" :xs="24">
               <h1>{{ $t('m.Development') }}</h1>
               <p class="mb-1">
-                <a
-                  href="https://gitee.com/himitzh0730/hoj"
-                  target="_blank"
-                >{{
+                <a href="https://gitee.com/himitzh0730/hoj" target="_blank">
+                  {{
                   $t('m.Open_Source')
-                }}</a>
+                  }}
+                </a>
               </p>
-              <p class="mb-1"><a @click="goRoute('/#')">API</a></p>
+              <p class="mb-1">
+                <a @click="goRoute('/#')">API</a>
+              </p>
             </el-col>
             <el-col class="hr-none">
               <el-divider></el-divider>
             </el-col>
-            <el-col
-              :md="6"
-              :xs="24"
-            >
+            <el-col :md="6" :xs="24">
               <h1>{{ $t('m.Support') }}</h1>
               <p>
-                <i
-                  class="fa fa-info-circle"
-                  aria-hidden="true"
-                ></i><a @click="goRoute('/introduction')"> {{ $t('m.NavBar_About') }}</a>
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <a @click="goRoute('/introduction')">{{ $t('m.NavBar_About') }}</a>
               </p>
               <p>
                 <i class="el-icon-document"></i>
-                <a
-                  href="https://docs.hdoi.cn"
-                  target="_blank"
-                > {{ $t('m.Help') }}</a>
+                <a href="https://docs.hdoi.cn" target="_blank">{{ $t('m.Help') }}</a>
               </p>
             </el-col>
           </el-row>
@@ -94,20 +73,32 @@
             target="_blank"
           >{{ websiteConfig.projectName }}</a>
           <span style="margin-left:10px">
-            <el-dropdown
-              @command="changeWebLanguage"
-              placement="top"
-            >
+            <el-dropdown @command="changeWebLanguage" placement="top">
               <span class="el-dropdown-link">
                 <i
                   class="fa fa-globe"
                   aria-hidden="true"
-                >
-                  {{ this.webLanguage == 'zh-CN' ? '简体中文' : 'English' }}</i><i class="el-icon-arrow-up el-icon--right"></i>
+                >{{ this.webLanguage == 'zh-CN' ? '简体中文' : 'English' }}</i>
+                <i class="el-icon-arrow-up el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="zh-CN">简体中文</el-dropdown-item>
                 <el-dropdown-item command="en-US">English</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </span>
+          <span style="margin-left: 10px">
+            <el-dropdown @command="changeWebTheme" placement="top">
+              <span class="el-dropdown-link">
+                <i
+                  class="fa fa-globe"
+                  aria-hidden="true"
+                >{{ this.webTheme == "Light" ? $t("m.Light") : $t("m.Dark") }}</i>
+                <i class="el-icon-arrow-up el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="Light">{{ $t("m.Light") }}</el-dropdown-item>
+                <el-dropdown-item command="Dark">{{ $t("m.Dark") }}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </span>
@@ -130,10 +121,18 @@ import { mapActions, mapState, mapGetters } from "vuex";
 import { LOGO, MOTTO } from "@/common/logo";
 import storage from "@/common/storage";
 import utils from "@/common/utils";
+
+import interpolator from "vue-apply-darkmode/src/vue-apply-darkmode.vue";
+import {
+  enable as enableDarkMode,
+  setFetchMethod as setFetch,
+} from "darkreader";
+
 export default {
   name: "app-content",
   components: {
     NavBar,
+    interpolator,
   },
   data() {
     return {
@@ -143,6 +142,9 @@ export default {
   },
   methods: {
     ...mapActions(["changeDomTitle", "getWebsiteConfig"]),
+    getTheme() {
+      return this.webTheme == "Dark";
+    },
     goRoute(path) {
       this.$router.push({
         path: path,
@@ -150,6 +152,9 @@ export default {
     },
     changeWebLanguage(language) {
       this.$store.commit("changeWebLanguage", { language: language });
+    },
+    changeWebTheme(theme) {
+      this.$store.commit("changeWebTheme", { theme: theme });
     },
     autoChangeLanguge() {
       /**
@@ -220,9 +225,12 @@ export default {
       } else {
         this.isAdminView = false;
       }
-      if(newVal.name == 'ProblemDetails' || utils.isFocusModePage(newVal.name)){
+      if (
+        newVal.name == "ProblemDetails" ||
+        utils.isFocusModePage(newVal.name)
+      ) {
         this.showFooter = false;
-      }else{
+      } else {
         this.showFooter = true;
       }
     },
@@ -232,7 +240,7 @@ export default {
   },
   computed: {
     ...mapState(["websiteConfig"]),
-    ...mapGetters(["webLanguage", "token", "isAuthenticated"]),
+    ...mapGetters(["webLanguage", "webTheme", "token", "isAuthenticated"]),
   },
   created: function () {
     this.$nextTick(function () {
@@ -247,11 +255,17 @@ export default {
       this.isAdminView = true;
     }
 
-    if(this.isAuthenticated){
+    if (this.isAuthenticated) {
       this.$store.dispatch("refreshUserAuthInfo");
     }
 
-    this.showFooter = !(this.$route.name == 'ProblemDetails'|| utils.isFocusModePage(this.$route.name));
+    this.showFooter = !(
+      this.$route.name == "ProblemDetails" ||
+      utils.isFocusModePage(this.$route.name)
+    );
+    //解决跨域报错
+    setFetch(window.fetch);
+    enableDarkMode();
     window.addEventListener("visibilitychange", this.autoRefreshUserInfo);
   },
   mounted() {
@@ -365,22 +379,23 @@ a:hover {
   color: #409eff;
   font-family: "Raleway";
 }
-.contest-config{
-  text-align:right;
+.contest-config {
+  text-align: right;
+  justify-content: flex-end;
 }
-.contest-config-switches p span{
+.contest-config-switches p span {
   margin-left: 8px;
   margin-right: 4px;
 }
 
-.contest-rank-filter{
+.contest-rank-filter {
   margin: 10px 0;
 }
-.contest-rank-config{
-  text-align:right; 
+.contest-rank-config {
+  text-align: right;
   margin-top: 15px;
 }
-.contest-scoreBoard-config{
+.contest-scoreBoard-config {
   margin-top: 30px !important;
 }
 .contest-rank-config span {
@@ -390,16 +405,16 @@ a:hover {
   margin-left: 5px;
 }
 @media screen and (max-width: 992px) {
-  .contest-rank-config{
-    text-align:center; 
+  .contest-rank-config {
+    text-align: center;
     margin-bottom: 10px;
     margin-top: -1px;
   }
-  .contest-config{
+  .contest-config {
     margin-top: 5px;
-    text-align:center;
+    text-align: center;
   }
-  .contest-scoreBoard-config{
+  .contest-scoreBoard-config {
     margin-top: 10px !important;
   }
 }
@@ -413,12 +428,12 @@ a:hover {
   margin-top: 11px;
   cursor: pointer;
 }
-.contest-rank-user-box{
+.contest-rank-user-box {
   display: flex;
 }
-.contest-rank-user-info{
+.contest-rank-user-info {
   flex: 1;
-  text-align:right;
+  text-align: right;
   min-width: 0;
 }
 
@@ -480,7 +495,7 @@ a:hover {
   color: #fff;
 }
 .after-ac {
-  background-color: rgba(92,184,92,.4);
+  background-color: rgba(92, 184, 92, 0.4);
 }
 .first-ac {
   background-color: #1daa1d;

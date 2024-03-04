@@ -31,7 +31,8 @@ public class ContestServiceImpl implements ContestService {
     private ContestManager contestManager;
 
     @Override
-    public CommonResult<IPage<ContestVO>> getContestList(Integer limit, Integer currentPage, Integer status, Integer type, String keyword) {
+    public CommonResult<IPage<ContestVO>> getContestList(Integer limit, Integer currentPage, Integer status,
+            Integer type, String keyword) {
         return CommonResult.successResponse(contestManager.getContestList(limit, currentPage, status, type, keyword));
     }
 
@@ -68,9 +69,11 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public CommonResult<List<ContestProblemVO>> getContestProblem(Long cid, Boolean isContainsContestEndJudge) {
+    public CommonResult<List<ContestProblemVO>> getContestProblem(Long cid, Boolean isContainsContestEndJudge,
+            Long selectedTime) {
         try {
-            return CommonResult.successResponse(contestManager.getContestProblem(cid, isContainsContestEndJudge));
+            return CommonResult
+                    .successResponse(contestManager.getContestProblem(cid, isContainsContestEndJudge, selectedTime));
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         } catch (StatusForbiddenException e) {
@@ -79,9 +82,11 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public CommonResult<List<ContestProblemVO>> getSynchronousProblem(Long cid, Boolean isContainsContestEndJudge) {
+    public CommonResult<List<ContestProblemVO>> getSynchronousProblem(Long cid, Boolean isContainsContestEndJudge,
+            Long time) {
         try {
-            return CommonResult.successResponse(contestManager.getSynchronousProblem(cid, isContainsContestEndJudge));
+            return CommonResult
+                    .successResponse(contestManager.getSynchronousProblem(cid, isContainsContestEndJudge, time));
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         } catch (StatusForbiddenException e) {
@@ -90,9 +95,11 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public CommonResult<ProblemInfoVO> getContestProblemDetails(Long cid, String displayId, Boolean isContainsContestEndJudge) {
+    public CommonResult<ProblemInfoVO> getContestProblemDetails(Long cid, String displayId,
+            Boolean isContainsContestEndJudge) {
         try {
-            return CommonResult.successResponse(contestManager.getContestProblemDetails(cid, displayId, isContainsContestEndJudge));
+            return CommonResult.successResponse(
+                    contestManager.getContestProblemDetails(cid, displayId, isContainsContestEndJudge));
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         } catch (StatusForbiddenException e) {
@@ -104,15 +111,15 @@ public class ContestServiceImpl implements ContestService {
 
     @Override
     public CommonResult<IPage<JudgeVO>> getContestSubmissionList(Integer limit,
-                                                                 Integer currentPage,
-                                                                 Boolean onlyMine,
-                                                                 String displayId,
-                                                                 Integer searchStatus,
-                                                                 String searchUsername,
-                                                                 Long searchCid,
-                                                                 Boolean beforeContestSubmit,
-                                                                 Boolean completeProblemID,
-                                                                 Boolean isContainsContestEndJudge) {
+            Integer currentPage,
+            Boolean onlyMine,
+            String displayId,
+            Integer searchStatus,
+            String searchUsername,
+            Long searchCid,
+            Boolean beforeContestSubmit,
+            Boolean completeProblemID,
+            Boolean isContainsContestEndJudge) {
         try {
             return CommonResult.successResponse(contestManager.getContestSubmissionList(limit,
                     currentPage,
@@ -133,15 +140,15 @@ public class ContestServiceImpl implements ContestService {
 
     @Override
     public CommonResult<IPage<JudgeVO>> getSynchronousSubmissionList(Integer limit,
-                                                                 Integer currentPage,
-                                                                 Boolean onlyMine,
-                                                                 String displayId,
-                                                                 Integer searchStatus,
-                                                                 String searchUsername,
-                                                                 Long searchCid,
-                                                                 Boolean beforeContestSubmit,
-                                                                 Boolean completeProblemID,
-                                                                 Boolean isContainsContestEndJudge) {
+            Integer currentPage,
+            Boolean onlyMine,
+            String displayId,
+            Integer searchStatus,
+            String searchUsername,
+            Long searchCid,
+            Boolean beforeContestSubmit,
+            Boolean completeProblemID,
+            Boolean isContainsContestEndJudge) {
         try {
             return CommonResult.successResponse(contestManager.getSynchronousSubmissionList(limit,
                     currentPage,
@@ -181,7 +188,7 @@ public class ContestServiceImpl implements ContestService {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         }
     }
-    
+
     @Override
     public CommonResult<IPage<AnnouncementVO>> getContestAnnouncement(Long cid, Integer limit, Integer currentPage) {
         try {
@@ -194,9 +201,11 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public CommonResult<List<Announcement>> getContestUserNotReadAnnouncement(UserReadContestAnnouncementDTO userReadContestAnnouncementDto) {
+    public CommonResult<List<Announcement>> getContestUserNotReadAnnouncement(
+            UserReadContestAnnouncementDTO userReadContestAnnouncementDto) {
 
-        return CommonResult.successResponse(contestManager.getContestUserNotReadAnnouncement(userReadContestAnnouncementDto));
+        return CommonResult
+                .successResponse(contestManager.getContestUserNotReadAnnouncement(userReadContestAnnouncementDto));
     }
 
     @Override

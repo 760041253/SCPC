@@ -42,7 +42,7 @@ public class JudgeContext {
         LanguageConfig languageConfig = languageConfigLoader.getLanguageConfigByName(judge.getLanguage());
         if (languageConfig.getSrcName() == null
                 || (!languageConfig.getSrcName().endsWith(".c")
-                && !languageConfig.getSrcName().endsWith(".cpp"))) {
+                        && !languageConfig.getSrcName().endsWith(".cpp"))) {
             problem.setTimeLimit(problem.getTimeLimit() * 2);
             problem.setMemoryLimit(problem.getMemoryLimit() * 2);
         }
@@ -80,30 +80,31 @@ public class JudgeContext {
         LanguageConfig languageConfig = languageConfigLoader.getLanguageConfigByName(testJudgeReq.getLanguage());
         if (languageConfig.getSrcName() == null
                 || (!languageConfig.getSrcName().endsWith(".c")
-                && !languageConfig.getSrcName().endsWith(".cpp"))) {
+                        && !languageConfig.getSrcName().endsWith(".cpp"))) {
             testJudgeReq.setTimeLimit(testJudgeReq.getTimeLimit() * 2);
             testJudgeReq.setMemoryLimit(testJudgeReq.getMemoryLimit() * 2);
         }
         return judgeStrategy.testJudge(testJudgeReq);
     }
 
-    public Boolean compileSpj(String code, Long pid, String spjLanguage, HashMap<String, String> extraFiles) throws SystemError {
+    public Boolean compileSpj(String code, Long pid, String spjLanguage, HashMap<String, String> extraFiles)
+            throws SystemError {
         return Compiler.compileSpj(code, pid, spjLanguage, extraFiles);
     }
 
-    public Boolean compileInteractive(String code, Long pid, String interactiveLanguage, HashMap<String, String> extraFiles) throws SystemError {
+    public Boolean compileInteractive(String code, Long pid, String interactiveLanguage,
+            HashMap<String, String> extraFiles) throws SystemError {
         return Compiler.compileInteractive(code, pid, interactiveLanguage, extraFiles);
     }
 
-
     public void updateOtherTable(Long submitId,
-                                 Integer status,
-                                 Long cid,
-                                 String uid,
-                                 Long pid,
-                                 Long gid,
-                                 Integer score,
-                                 Integer useTime) {
+            Integer status,
+            Long cid,
+            String uid,
+            Long pid,
+            Long gid,
+            Integer score,
+            Integer useTime) {
 
         if (cid == 0) { // 非比赛提交
             // 如果是AC,就更新user_acproblem表,
@@ -111,11 +112,10 @@ public class JudgeContext {
                 userAcproblemEntityService.saveOrUpdate(new UserAcproblem()
                         .setPid(pid)
                         .setUid(uid)
-                        .setSubmitId(submitId)
-                );
+                        .setSubmitId(submitId));
             }
 
-        } else { //如果是比赛提交
+        } else { // 如果是比赛提交
             contestRecordEntityService.updateContestRecord(score, status, submitId, useTime);
         }
     }

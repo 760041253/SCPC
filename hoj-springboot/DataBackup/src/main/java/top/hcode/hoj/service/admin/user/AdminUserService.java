@@ -15,7 +15,8 @@ import java.util.Map;
  */
 public interface AdminUserService {
 
-    public CommonResult<IPage<UserRolesVO>> getUserList(Integer limit, Integer currentPage, Boolean onlyAdmin, String keyword);
+    public CommonResult<IPage<UserRolesVO>> getUserList(Integer limit, Integer currentPage, Boolean onlyAdmin,
+            String keyword);
 
     public CommonResult<Void> editUser(AdminEditUserDTO adminEditUserDto);
 
@@ -23,6 +24,6 @@ public interface AdminUserService {
 
     public CommonResult<Void> insertBatchUser(List<List<String>> users);
 
-    public CommonResult<Map<Object,Object>> generateUser(Map<String, Object> params);
+    public CommonResult<Map<Object, Object>> generateUser(Map<String, Object> params);
 
 }

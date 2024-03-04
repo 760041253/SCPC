@@ -18,7 +18,8 @@ import java.util.List;
  * @Description:
  */
 @Service
-public class GroupAnnouncementEntityServiceImpl extends ServiceImpl<GroupAnnouncementMapper, Announcement> implements GroupAnnouncementEntityService {
+public class GroupAnnouncementEntityServiceImpl extends ServiceImpl<GroupAnnouncementMapper, Announcement>
+        implements GroupAnnouncementEntityService {
 
     @Autowired
     private GroupAnnouncementMapper groupAnnouncementMapper;

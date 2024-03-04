@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller.oj;
 
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -29,7 +28,6 @@ import java.util.HashMap;
 @RequestMapping("/api")
 public class JudgeController {
 
-
     @Autowired
     private JudgeService judgeService;
 
@@ -49,15 +47,16 @@ public class JudgeController {
     @GetMapping("/get-submission-list")
     @AnonApi
     public CommonResult<IPage<JudgeVO>> getJudgeList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                     @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                     @RequestParam(value = "onlyMine", required = false) Boolean onlyMine,
-                                                     @RequestParam(value = "problemID", required = false) String searchPid,
-                                                     @RequestParam(value = "status", required = false) Integer searchStatus,
-                                                     @RequestParam(value = "username", required = false) String searchUsername,
-                                                     @RequestParam(value = "completeProblemID", defaultValue = "false") Boolean completeProblemID,
-                                                     @RequestParam(value = "gid", required = false) Long gid) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "onlyMine", required = false) Boolean onlyMine,
+            @RequestParam(value = "problemID", required = false) String searchPid,
+            @RequestParam(value = "status", required = false) Integer searchStatus,
+            @RequestParam(value = "username", required = false) String searchUsername,
+            @RequestParam(value = "completeProblemID", defaultValue = "false") Boolean completeProblemID,
+            @RequestParam(value = "gid", required = false) Long gid) {
 
-        return judgeService.getJudgeList(limit, currentPage, onlyMine, searchPid, searchStatus, searchUsername, completeProblemID, gid);
+        return judgeService.getJudgeList(limit, currentPage, onlyMine, searchPid, searchStatus, searchUsername,
+                completeProblemID, gid);
     }
 
     /**
@@ -93,7 +92,6 @@ public class JudgeController {
     public CommonResult<String> submitProblemTestJudge(@RequestBody TestJudgeDTO testJudgeDto) {
         return judgeService.submitProblemTestJudge(testJudgeDto);
     }
-
 
     @RequiresAuthentication
     @GetMapping("/get-test-judge-result")
@@ -149,7 +147,6 @@ public class JudgeController {
     public CommonResult<HashMap<Long, Object>> checkContestJudgeResult(@RequestBody SubmitIdListDTO submitIdListDto) {
         return judgeService.checkContestJudgeResult(submitIdListDto);
     }
-
 
     /**
      * @param submitId

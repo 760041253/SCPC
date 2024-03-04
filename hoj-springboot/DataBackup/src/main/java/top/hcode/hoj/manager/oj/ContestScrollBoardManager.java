@@ -48,7 +48,6 @@ public class ContestScrollBoardManager {
     @Resource
     private ContestCalculateRankManager contestCalculateRankManager;
 
-
     public ContestScrollBoardInfoVO getContestScrollBoardInfo(Long cid) throws StatusFailException {
         Contest contest = contestEntityService.getById(cid);
         if (contest == null) {
@@ -110,8 +109,8 @@ public class ContestScrollBoardManager {
         return list;
     }
 
-
-    public List<ContestScrollBoardSubmissionVO> getContestScrollBoardSubmission(Long cid, Boolean removeStar) throws StatusFailException {
+    public List<ContestScrollBoardSubmissionVO> getContestScrollBoardSubmission(Long cid, Boolean removeStar)
+            throws StatusFailException {
         Contest contest = contestEntityService.getById(cid);
         if (contest == null) {
             throw new StatusFailException("比赛不存在 (The contest does not exist)");
@@ -133,7 +132,8 @@ public class ContestScrollBoardManager {
         if (!removeUidList.contains(contest.getUid())) {
             removeUidList.add(contest.getUid());
         }
-        List<ContestScrollBoardSubmissionVO> submissions = judgeEntityService.getContestScrollBoardSubmission(cid, removeUidList);
+        List<ContestScrollBoardSubmissionVO> submissions = judgeEntityService.getContestScrollBoardSubmission(cid,
+                removeUidList);
         if (removeStar && StrUtil.isNotBlank(contest.getStarAccount())) {
             JSONObject jsonObject = JSONUtil.parseObj(contest.getStarAccount());
             List<String> usernameList = jsonObject.get("star_account", List.class);

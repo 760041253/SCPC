@@ -27,7 +27,8 @@ import java.util.List;
  * @since 2020-10-23
  */
 @Service
-public class ContestProblemEntityServiceImpl extends ServiceImpl<ContestProblemMapper, ContestProblem> implements ContestProblemEntityService {
+public class ContestProblemEntityServiceImpl extends ServiceImpl<ContestProblemMapper, ContestProblem>
+        implements ContestProblemEntityService {
 
     @Autowired
     private ContestProblemMapper contestProblemMapper;
@@ -40,25 +41,30 @@ public class ContestProblemEntityServiceImpl extends ServiceImpl<ContestProblemM
 
     @Override
     public List<ContestProblemVO> getContestProblemList(Long cid,
-                                                        Date startTime,
-                                                        Date endTime,
-                                                        Date sealTime,
-                                                        Boolean isAdmin,
-                                                        String contestAuthorUid,
-                                                        List<String> groupRootUidList,
-                                                        Boolean isContainsContestEndJudge) {
+            Date startTime,
+            Date endTime,
+            Date sealTime,
+            Boolean isAdmin,
+            String contestAuthorUid,
+            List<String> groupRootUidList,
+            Boolean isContainsContestEndJudge,
+            Date selectedTime) {
+
         // 筛去 比赛管理员和超级管理员的提交
         List<String> superAdminUidList = userInfoEntityService.getSuperAdminUidList();
         superAdminUidList.add(contestAuthorUid);
+
 
         if (!CollectionUtils.isEmpty(groupRootUidList)) {
             superAdminUidList.addAll(groupRootUidList);
         }
 
-        return contestProblemMapper.getContestProblemList(cid, startTime, endTime, sealTime, isAdmin, superAdminUidList, !isContainsContestEndJudge);
+        return contestProblemMapper.getContestProblemList(cid, startTime, endTime, sealTime, isAdmin, superAdminUidList,
+                !isContainsContestEndJudge, selectedTime);
     }
+
     @Override
-    public List<ProblemFullScreenListVO> getContestFullScreenProblemList(Long cid){
+    public List<ProblemFullScreenListVO> getContestFullScreenProblemList(Long cid) {
         return contestProblemMapper.getContestFullScreenProblemList(cid);
     }
 

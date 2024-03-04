@@ -120,6 +120,19 @@ public class Constants {
         }
     }
 
+    public enum NYOJ {
+        HOST("http://nyoj.online");
+
+        private final String mode;
+
+        NYOJ(String mode) {
+            this.mode = mode;
+        }
+
+        public String getMode() {
+            return mode;
+        }
+    }
 
     /**
      * @Description 比赛相关的常量
@@ -136,6 +149,8 @@ public class Constants {
         AUTH_PUBLIC(0, "Public"),
         AUTH_PRIVATE(1, "Private"),
         AUTH_PROTECT(2, "Protect"),
+        AUTH_PUBLIC_SYNCHRONOUS(4, "Public_Synchronous"),
+        AUTH_PRIVATE_SYNCHRONOUS(5, "Private_Synchronous"),
 
         RECORD_NOT_AC_PENALTY(-1, "未AC通过算罚时"),
         RECORD_NOT_AC_NOT_PENALTY(0, "未AC通过不罚时"),
@@ -165,6 +180,52 @@ public class Constants {
         }
     }
 
+
+    public enum Group {
+        PUBLIC(1),
+        PROTECTED(2),
+        PRIVATE(3),
+        PROPOSITION(4);
+
+        private final Integer auth;
+
+        Group(Integer auth) {
+            this.auth = auth;
+        }
+
+        public Integer getAuth() {
+            return auth;
+        }
+
+        public static Group getGroup(Integer auth) {
+            for (Group group : Group.values()) {
+                if (group.getAuth().equals(auth)) {
+                    return group;
+                }
+            }
+            return null;
+        }
+    }
+
+    public enum GroupNemberAuth {
+        APPLYING(1),
+        REFUSED(2),
+        COMMON(3),
+        ADMIN(4),
+        SUPERADMIN(5);
+
+        private final Integer auth;
+
+        GroupNemberAuth(Integer auth) {
+            this.auth = auth;
+        }
+
+        public Integer getAuth() {
+            return auth;
+        }
+    }
+
+    
     /**
      * @Description 账户相关常量
      * @Since 2021/1/8
@@ -206,13 +267,11 @@ public class Constants {
         }
     }
 
-
     /**
      * @Description 文件操作的一些常量
      * @Since 2021/1/10
      */
     public enum File {
-
 
         USER_AVATAR_FOLDER("/hoj/file/avatar"),
 
@@ -232,6 +291,8 @@ public class Constants {
 
         TESTCASE_TMP_FOLDER("/hoj/file/zip"),
 
+        BOXFILE_BASE_FOLDER("/hoj/file/file"),
+
         TESTCASE_BASE_FOLDER("/hoj/testcase"),
 
         FILE_DOWNLOAD_TMP_FOLDER("/hoj/file/zip/download"),
@@ -248,7 +309,6 @@ public class Constants {
             return path;
         }
     }
-
 
     /**
      * @Description 邮件任务的一些常量
@@ -318,6 +378,7 @@ public class Constants {
     public enum ProblemType {
         ACM(0),
         OI(1);
+
         private final Integer type;
 
         ProblemType(Integer type) {
@@ -419,7 +480,6 @@ public class Constants {
             return mode;
         }
 
-
         public static JudgeCaseMode getJudgeCaseMode(String mode) {
             for (JudgeCaseMode judgeCaseMode : JudgeCaseMode.values()) {
                 if (judgeCaseMode.getMode().equals(mode)) {
@@ -468,11 +528,12 @@ public class Constants {
 
     @Getter
     @AllArgsConstructor
-    public enum Team{
+    public enum Team {
         ACCEPT(200),
         PENDING(500),
         REJECT(400),
         APPLY_FOR_UPDATE(300);
+
         Integer status;
     }
 }

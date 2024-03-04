@@ -24,7 +24,7 @@ public class SignUpContestDTO {
 
     Date endTime;
 
-    //ACM/OI
+    // ACM/OI
     String contestType;
 
     /***

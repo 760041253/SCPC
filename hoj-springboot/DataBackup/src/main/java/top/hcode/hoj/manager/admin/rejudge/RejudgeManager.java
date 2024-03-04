@@ -3,6 +3,7 @@ package top.hcode.hoj.manager.admin.rejudge;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -14,6 +15,7 @@ import top.hcode.hoj.dao.problem.ProblemEntityService;
 import top.hcode.hoj.dao.user.UserAcproblemEntityService;
 import top.hcode.hoj.judge.remote.RemoteJudgeDispatcher;
 import top.hcode.hoj.judge.self.JudgeDispatcher;
+import top.hcode.hoj.mapper.ContestMapper;
 import top.hcode.hoj.pojo.entity.contest.ContestRecord;
 import top.hcode.hoj.pojo.entity.judge.Judge;
 import top.hcode.hoj.pojo.entity.judge.JudgeCase;
@@ -54,13 +56,15 @@ public class RejudgeManager {
     @Resource
     private RemoteJudgeDispatcher remoteJudgeDispatcher;
 
+    @Autowired
+    private ContestMapper contestMapper;
+
     private static List<Integer> penaltyStatus = Arrays.asList(
             Constants.Judge.STATUS_PRESENTATION_ERROR.getStatus(),
             Constants.Judge.STATUS_WRONG_ANSWER.getStatus(),
             Constants.Judge.STATUS_TIME_LIMIT_EXCEEDED.getStatus(),
             Constants.Judge.STATUS_MEMORY_LIMIT_EXCEEDED.getStatus(),
             Constants.Judge.STATUS_RUNTIME_ERROR.getStatus());
-
 
     public Judge rejudge(Long submitId) throws StatusFailException {
         Judge judge = judgeEntityService.getById(submitId);
@@ -118,7 +122,28 @@ public class RejudgeManager {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean checkAndUpdateJudge(Boolean isContestSubmission, Judge judge, Long submitId) throws StatusFailException {
+    public void rejudgeOIProblem(Long pid) throws StatusFailException {
+
+        // 查询对应的 OI 题目
+        List<Judge> rejudgeList = contestMapper.getRejudgeList(pid);
+
+        if (rejudgeList.size() == 0) {
+            throw new StatusFailException("当前该题目无提交，不可重判！");
+        }
+        HashMap<Long, Integer> idMapStatus = new HashMap<>();
+        // 全部设置默认值
+        checkAndUpdateJudgeBatch(rejudgeList, idMapStatus);
+
+        // 调用重判服务
+        for (Judge judge : rejudgeList) {
+            // 进入重判队列，等待调用判题服务
+            judgeDispatcher.sendTask(judge.getSubmitId(), judge.getPid(), judge.getCid() != 0);
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean checkAndUpdateJudge(Boolean isContestSubmission, Judge judge, Long submitId)
+            throws StatusFailException {
         // 如果是非比赛题目
         boolean resetContestRecordResult = true;
         if (!isContestSubmission) {
@@ -162,7 +187,8 @@ public class RejudgeManager {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void checkAndUpdateJudgeBatch(List<Judge> rejudgeList, HashMap<Long, Integer> idMapStatus) throws StatusFailException {
+    public void checkAndUpdateJudgeBatch(List<Judge> rejudgeList, HashMap<Long, Integer> idMapStatus)
+            throws StatusFailException {
         List<Long> submitIdList = new LinkedList<>();
         // 全部设置默认值
         for (Judge judge : rejudgeList) {
@@ -242,7 +268,7 @@ public class RejudgeManager {
                 } else if (score < 0) {
                     score = 0;
                 }
-                oiRankScore = (int) Math.round(problem.getDifficulty() * 2 + 0.1 * score);
+                oiRankScore = (int) Math.round(problem.getDifficulty() * 0.002 + 0.1 * score);
                 judgeUpdateWrapper.set("score", score)
                         .set("oi_rank_score", oiRankScore);
             } else {
@@ -268,8 +294,7 @@ public class RejudgeManager {
                 userAcproblemEntityService.saveOrUpdate(new UserAcproblem()
                         .setPid(judge.getPid())
                         .setUid(judge.getUid())
-                        .setSubmitId(submitId)
-                );
+                        .setSubmitId(submitId));
             }
         }
 
@@ -310,14 +335,15 @@ public class RejudgeManager {
         if (judge.getStatus().equals(Constants.Judge.STATUS_JUDGING.getStatus())
                 || judge.getStatus().equals(Constants.Judge.STATUS_COMPILING.getStatus())
                 || (judge.getStatus().equals(Constants.Judge.STATUS_PENDING.getStatus())
-                && !StringUtils.isEmpty(judge.getJudger()))) {
+                        && !StringUtils.isEmpty(judge.getJudger()))) {
             throw new StatusFailException("错误：该提交正在评测中，无法取消，请稍后再尝试！");
         }
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         UpdateWrapper<Judge> judgeUpdateWrapper = new UpdateWrapper<>();
         judgeUpdateWrapper
-                .setSql("status=-4,score=null,oi_rank_score=null,is_manual=true,judger='" + userRolesVo.getUsername() + "'")
+                .setSql("status=-4,score=null,oi_rank_score=null,is_manual=true,judger='" + userRolesVo.getUsername()
+                        + "'")
                 .eq("submit_id", judge.getSubmitId());
         boolean isUpdateOK = judgeEntityService.update(judgeUpdateWrapper);
         if (!isUpdateOK) {

@@ -4,7 +4,7 @@ package top.hcode.hoj.exception;
  * @Author Himit_ZH
  * @Date 2022/5/9
  */
-public class AccessException extends Exception{
+public class AccessException extends Exception {
     public AccessException() {
         super();
     }

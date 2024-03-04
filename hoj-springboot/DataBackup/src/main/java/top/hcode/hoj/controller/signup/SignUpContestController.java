@@ -23,8 +23,9 @@ public class SignUpContestController {
     private SignUpContestService signUpListService;
 
     @GetMapping("/get-sign-up-page")
-    public CommonResult<List<SignUpContest>> getSIgnUpContestPage( Integer pageNum, Integer pageSize) throws StatusForbiddenException {
-        return signUpListService.getContestSignList(pageNum,pageSize);
+    public CommonResult<List<SignUpContest>> getSIgnUpContestPage(Integer pageNum, Integer pageSize)
+            throws StatusForbiddenException {
+        return signUpListService.getContestSignList(pageNum, pageSize);
     }
 
     @DeleteMapping("/delete-sign-up-contest")
@@ -33,14 +34,15 @@ public class SignUpContestController {
     }
 
     @PutMapping("/update-sign-up-contest")
-    public CommonResult<Void> updateSignUpContest(@RequestBody SignUpContestDTO signUpContest) throws StatusForbiddenException, StatusFailException {
+    public CommonResult<Void> updateSignUpContest(@RequestBody SignUpContestDTO signUpContest)
+            throws StatusForbiddenException, StatusFailException {
         return signUpListService.updateContestSignUp(signUpContest);
     }
 
     @PostMapping("/add-new-sign-up-contest")
-    public CommonResult<Void> addNewSignUpContest(@RequestBody SignUpContestDTO signUpContestDTO) throws StatusForbiddenException, StatusFailException {
+    public CommonResult<Void> addNewSignUpContest(@RequestBody SignUpContestDTO signUpContestDTO)
+            throws StatusForbiddenException, StatusFailException {
         return signUpListService.addNewContestSignUp(signUpContestDTO);
     }
-
 
 }

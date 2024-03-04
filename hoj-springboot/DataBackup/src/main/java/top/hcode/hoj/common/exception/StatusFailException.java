@@ -5,7 +5,7 @@ package top.hcode.hoj.common.exception;
  * @Date: 2022/3/9 10:27
  * @Description:
  */
-public class StatusFailException extends Exception{
+public class StatusFailException extends Exception {
     public StatusFailException() {
     }
 

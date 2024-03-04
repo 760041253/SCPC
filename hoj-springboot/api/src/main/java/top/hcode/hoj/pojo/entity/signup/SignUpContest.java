@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 @TableName("sign_up_contest")
 public class SignUpContest {
-    @TableId(value = "id",type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     Long id;
 
     Long contestId;
@@ -28,7 +28,7 @@ public class SignUpContest {
 
     Date endTime;
 
-    //ACM/OI
+    // ACM/OI
     String contestType;
 
     /***

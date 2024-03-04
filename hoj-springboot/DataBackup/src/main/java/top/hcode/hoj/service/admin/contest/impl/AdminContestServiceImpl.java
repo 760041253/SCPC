@@ -67,7 +67,7 @@ public class AdminContestServiceImpl implements AdminContestService {
         try {
             adminContestManager.cloneContest(cid);
             return CommonResult.successResponse();
-        }catch (StatusSystemErrorException e) {
+        } catch (StatusSystemErrorException e) {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.SYSTEM_ERROR);
         }
     }

@@ -1,50 +1,22 @@
 <template>
   <div>
-    <vxe-table
-      stripe
-      auto-resize
-      :data="adminMemberList"
-      :loading="loading"
-      align="center"
-    >
-      <vxe-table-column
-        min-width="150"
-        field="username"
-        show-overflow
-        :title="$t('m.Username')"
-      >
-        <template v-slot="{ row }"
-          ><el-link
+    <vxe-table stripe auto-resize :data="adminMemberList" :loading="loading" align="center">
+      <vxe-table-column min-width="150" field="username" show-overflow :title="$t('m.Username')">
+        <template v-slot="{ row }">
+          <el-link
             type="primary"
             @click="goUserHome(row.username)"
             style="font-size: 13px;"
-            >{{ row.username }}</el-link
-          >
+          >{{ row.username }}</el-link>
         </template>
       </vxe-table-column>
-      <vxe-table-column
-        min-width="150"
-        field="gmtCreate"
-        :title="$t('m.Created_Time')"
-      >
-        <template v-slot="{ row }">
-          {{ row.gmtCreate | localtime }}
-        </template>
+      <vxe-table-column min-width="150" field="gmtCreate" :title="$t('m.Created_Time')">
+        <template v-slot="{ row }">{{ row.gmtCreate | localtime }}</template>
       </vxe-table-column>
-      <vxe-table-column
-        min-width="150"
-        field="gmtModify"
-        :title="$t('m.Modified_Time')"
-      >
-        <template v-slot="{ row }">
-          {{ row.gmtModify | localtime }}
-        </template>
+      <vxe-table-column min-width="150" field="gmtModify" :title="$t('m.Modified_Time')">
+        <template v-slot="{ row }">{{ row.gmtModify | localtime }}</template>
       </vxe-table-column>
-      <vxe-table-column
-        min-width="100"
-        field="auth"
-        :title="$t('m.Member_Auth')"
-      >
+      <vxe-table-column min-width="100" field="auth" :title="$t('m.Member_Auth')">
         <template v-slot="{ row }">
           <el-select
             v-model="row.auth"
@@ -82,12 +54,7 @@
       </vxe-table-column>
       <vxe-table-column :title="$t('m.Option')" min-width="150">
         <template v-slot="{ row }">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="$t('m.View_Reason')"
-            placement="top"
-          >
+          <el-tooltip class="item" effect="dark" :content="$t('m.View_Reason')" placement="top">
             <el-button
               icon="el-icon-search"
               @click.native="viewReason(row.reason)"
@@ -128,13 +95,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import Pagination from '@/components/oj/common/Pagination';
-import api from '@/common/api';
-import mMessage from '@/common/message';
-import Editor from '@/components/admin/Editor.vue';
+import { mapGetters } from "vuex";
+import Pagination from "@/components/oj/common/Pagination";
+import api from "@/common/api";
+import mMessage from "@/common/message";
+import Editor from "@/components/admin/Editor.vue";
 export default {
-  name: 'GroupMemberList',
+  name: "GroupMemberList",
   components: {
     Pagination,
     Editor,
@@ -147,7 +114,7 @@ export default {
       adminMemberList: [],
       member: {
         id: null,
-        username: '',
+        username: "",
         auth: null,
       },
       loading: false,
@@ -162,7 +129,7 @@ export default {
     },
     goUserHome(username) {
       this.$router.push({
-        path: '/user-home',
+        path: "/user-home",
         query: { username },
       });
     },
@@ -197,26 +164,26 @@ export default {
       api
         .updateGroupMember(data)
         .then((res) => {
-          mMessage.success(this.$i18n.t('m.Update_Successfully'));
-          this.$emit('currentChange', 1);
-          this.$store.dispatch('getGroup');
+          mMessage.success(this.$i18n.t("m.Update_Successfully"));
+          this.$emit("currentChange", 1);
+          this.$store.dispatch("getGroup");
           this.currentChange(1);
         })
         .catch(() => {});
     },
     viewReason(value) {
-      this.$alert(value, this.$t('m.Apply_Reason'), {
-        confirmButtonText: this.$t('m.OK'),
+      this.$alert(value, this.$t("m.Apply_Reason"), {
+        confirmButtonText: this.$t("m.OK"),
       });
     },
     deleteMember(uid, gid) {
       this.$confirm(
-        this.$i18n.t('m.Delete_Member_Tips'),
-        this.$i18n.t('m.Warning'),
+        this.$i18n.t("m.Delete_Member_Tips"),
+        this.$i18n.t("m.Warning"),
         {
-          confirmButtonText: this.$i18n.t('m.OK'),
-          cancelButtonText: this.$i18n.t('m.Cancel'),
-          type: 'warning',
+          confirmButtonText: this.$i18n.t("m.OK"),
+          cancelButtonText: this.$i18n.t("m.Cancel"),
+          type: "warning",
         }
       )
         .then(() => {
@@ -225,9 +192,9 @@ export default {
             .deleteGroupMember(uid, gid)
             .then((res) => {
               this.loading = false;
-              mMessage.success(this.$i18n.t('m.Delete_successfully'));
-              this.$emit('currentChange', 1);
-              this.$store.dispatch('getGroup');
+              mMessage.success(this.$i18n.t("m.Delete_successfully"));
+              this.$emit("currentChange", 1);
+              this.$store.dispatch("getGroup");
               this.currentChange(1);
             })
             .catch(() => {
@@ -241,11 +208,11 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'userInfo',
-      'isSuperAdmin',
-      'userAuth',
-      'isGroupOwner',
-      'group',
+      "userInfo",
+      "isSuperAdmin",
+      "userAuth",
+      "isGroupOwner",
+      "group",
     ]),
   },
 };

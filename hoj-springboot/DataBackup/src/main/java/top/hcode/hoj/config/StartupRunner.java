@@ -23,6 +23,7 @@ import top.hcode.hoj.pojo.entity.problem.Problem;
 import top.hcode.hoj.pojo.entity.problem.ProblemLanguage;
 import top.hcode.hoj.pojo.vo.ConfigVO;
 import top.hcode.hoj.utils.Constants;
+import top.hcode.hoj.utils.SpringContextUtil;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -58,6 +59,9 @@ public class StartupRunner implements CommandLineRunner {
     @Autowired
     private ProblemLanguageEntityService problemLanguageEntityService;
 
+    @Autowired
+    private SpringContextUtil springContextUtil;
+
     @Value("${open-remote-judge}")
     private String openRemoteJudge;
 
@@ -65,42 +69,42 @@ public class StartupRunner implements CommandLineRunner {
     @Value("${jwt-token-secret}")
     private String tokenSecret;
 
-    @Value("${jwt-token-expire}")
+    @Value("${jwt-token-expire:86400}")
     private String tokenExpire;
 
-    @Value("${jwt-token-fresh-expire}")
+    @Value("${jwt-token-fresh-expire:43200}")
     private String checkRefreshExpire;
 
     // 数据库配置
-    @Value("${mysql-username}")
+    @Value("${mysql-username:root}")
     private String mysqlUsername;
 
-    @Value("${mysql-password}")
+    @Value("${mysql-password:hoj123456}")
     private String mysqlPassword;
 
-    @Value("${mysql-name}")
+    @Value("${mysql-name:hoj}")
     private String mysqlDBName;
 
-    @Value("${mysql-host}")
+    @Value("${mysql-host:172.20.0.3}")
     private String mysqlHost;
 
-    @Value("${mysql-public-host}")
+    @Value("${mysql-public-host:172.20.0.3}")
     private String mysqlPublicHost;
 
-    @Value("${mysql-port}")
+    @Value("${mysql-port:3306}")
     private Integer mysqlPort;
 
-    @Value("${mysql-public-port}")
+    @Value("${mysql-public-port:3306}")
     private Integer mysqlPublicPort;
 
     // 缓存配置
-    @Value("${redis-host}")
+    @Value("${redis-host:172.20.0.2}")
     private String redisHost;
 
-    @Value("${redis-port}")
+    @Value("${redis-port:6379}")
     private Integer redisPort;
 
-    @Value("${redis-password}")
+    @Value("${redis-password:hoj123456}")
     private String redisPassword;
     // 判题服务token
     @Value("${judge-token}")
@@ -166,14 +170,13 @@ public class StartupRunner implements CommandLineRunner {
         initSwitchConfig();
 
         upsertHOJLanguageV2();
-//      upsertHOJLanguage("PHP", "PyPy2", "PyPy3", "JavaScript Node", "JavaScript V8");
-//      checkAllLanguageUpdate();
+        // upsertHOJLanguage("PHP", "PyPy2", "PyPy3", "JavaScript Node", "JavaScript
+        // V8");
+        // checkAllLanguageUpdate();
 
         checkLanguageUpdate();
 
-
     }
-
 
     /**
      * 更新修改基础的配置
@@ -210,7 +213,6 @@ public class StartupRunner implements CommandLineRunner {
         configManager.sendNewConfigToNacos();
     }
 
-
     private void initWebConfig() {
         WebConfig webConfig = nacosSwitchConfig.getWebConfig();
         boolean isChanged = false;
@@ -240,6 +242,13 @@ public class StartupRunner implements CommandLineRunner {
     }
 
     private void initSwitchConfig() {
+
+        // 获取当前的环境
+        String env = springContextUtil.getActiveProfile();
+
+        if (env.equals("dev")) {
+            return;
+        }
 
         SwitchConfig switchConfig = nacosSwitchConfig.getSwitchConfig();
 
@@ -340,7 +349,6 @@ public class StartupRunner implements CommandLineRunner {
         }
     }
 
-
     /**
      * @param oj
      * @param usernameList
@@ -352,10 +360,10 @@ public class StartupRunner implements CommandLineRunner {
      */
     private void addRemoteJudgeAccountToMySQL(String oj, List<String> usernameList, List<String> passwordList) {
 
-
-        if (CollectionUtils.isEmpty(usernameList) || CollectionUtils.isEmpty(passwordList) || usernameList.size() != passwordList.size()) {
+        if (CollectionUtils.isEmpty(usernameList) || CollectionUtils.isEmpty(passwordList)
+                || usernameList.size() != passwordList.size()) {
             log.error("[Init System Config] [{}]: There is no account or password configured for remote judge, " +
-                            "username list:{}, password list:{}", oj, Arrays.toString(usernameList.toArray()),
+                    "username list:{}, password list:{}", oj, Arrays.toString(usernameList.toArray()),
                     Arrays.toString(passwordList.toArray()));
         }
 
@@ -374,11 +382,12 @@ public class StartupRunner implements CommandLineRunner {
         if (remoteAccountList.size() > 0) {
             boolean addOk = remoteJudgeAccountEntityService.saveOrUpdateBatch(remoteAccountList);
             if (!addOk) {
-                log.error("[Init System Config] Remote judge initialization failed. Failed to add account for: [{}]. Please check the configuration file and restart!", oj);
+                log.error(
+                        "[Init System Config] Remote judge initialization failed. Failed to add account for: [{}]. Please check the configuration file and restart!",
+                        oj);
             }
         }
     }
-
 
     private void upsertHOJLanguageV2() {
         /**
@@ -400,7 +409,9 @@ public class StartupRunner implements CommandLineRunner {
                     .setOj("ME");
             boolean isOk = languageEntityService.save(rubyLanguage);
             if (!isOk) {
-                log.error("[Init System Config] [HOJ] Failed to add new language [{}]! Please check whether the language table corresponding to the database has the language!", "Ruby");
+                log.error(
+                        "[Init System Config] [HOJ] Failed to add new language [{}]! Please check whether the language table corresponding to the database has the language!",
+                        "Ruby");
             }
         }
 
@@ -429,7 +440,9 @@ public class StartupRunner implements CommandLineRunner {
                     .setOj("ME");
             boolean isOk = languageEntityService.save(rustLanguage);
             if (!isOk) {
-                log.error("[Init System Config] [HOJ] Failed to add new language [{}]! Please check whether the language table corresponding to the database has the language!", "Rust");
+                log.error(
+                        "[Init System Config] [HOJ] Failed to add new language [{}]! Please check whether the language table corresponding to the database has the language!",
+                        "Rust");
             }
         }
     }
@@ -448,7 +461,9 @@ public class StartupRunner implements CommandLineRunner {
                 Language newLanguage = buildHOJLanguage(language);
                 boolean isOk = languageEntityService.save(newLanguage);
                 if (!isOk) {
-                    log.error("[Init System Config] [HOJ] Failed to add new language [{}]! Please check whether the language table corresponding to the database has the language!", language);
+                    log.error(
+                            "[Init System Config] [HOJ] Failed to add new language [{}]! Please check whether the language table corresponding to the database has the language!",
+                            language);
                 }
             }
         }
@@ -527,7 +542,9 @@ public class StartupRunner implements CommandLineRunner {
                 List<Language> languageList = new LanguageContext(remoteOJ).buildLanguageList();
                 boolean isOk = languageEntityService.saveBatch(languageList);
                 if (!isOk) {
-                    log.error("[Init System Config] [{}] Failed to initialize language list! Please check whether the language table corresponding to the database has the OJ language!", remoteOJ.getName());
+                    log.error(
+                            "[Init System Config] [{}] Failed to initialize language list! Please check whether the language table corresponding to the database has the OJ language!",
+                            remoteOJ.getName());
                 }
                 if (Objects.equals(remoteOJ, Constants.RemoteOJ.ATCODER)) {
                     // 2023.09.24 同时需要把所有atcoder的题目都重新关联上新language的id
@@ -537,7 +554,8 @@ public class StartupRunner implements CommandLineRunner {
                     problemQueryWrapper.like("problem_id", "AC-");
                     List<Problem> problemList = problemEntityService.list(problemQueryWrapper);
                     if (!CollectionUtils.isEmpty(problemList)) {
-                        List<Long> problemIdList = problemList.stream().map(Problem::getId).collect(Collectors.toList());
+                        List<Long> problemIdList = problemList.stream().map(Problem::getId)
+                                .collect(Collectors.toList());
                         List<ProblemLanguage> problemLanguageList = new LinkedList<>();
                         QueryWrapper<Language> newLanguageQueryWrapper = new QueryWrapper<>();
                         newLanguageQueryWrapper.eq("oj", remoteOJ.getName());
@@ -643,7 +661,6 @@ public class StartupRunner implements CommandLineRunner {
         return null;
     }
 
-
     private void checkLanguageUpdate() {
         if (CollectionUtil.isNotEmpty(checkLanguageConfig.getList())) {
             for (Language language : checkLanguageConfig.getList()) {
@@ -653,13 +670,14 @@ public class StartupRunner implements CommandLineRunner {
                         .eq("is_spj", language.getIsSpj()) // 这三个条件确定唯一性
                         .set(StrUtil.isNotEmpty(language.getContentType()), "content_type", language.getContentType())
                         .set(StrUtil.isNotEmpty(language.getDescription()), "description", language.getDescription())
-                        .set(StrUtil.isNotEmpty(language.getCompileCommand()), "compile_command", language.getCompileCommand())
+                        .set(StrUtil.isNotEmpty(language.getCompileCommand()), "compile_command",
+                                language.getCompileCommand())
                         .set(StrUtil.isNotEmpty(language.getTemplate()), "template", language.getTemplate())
-                        .set(StrUtil.isNotEmpty(language.getCodeTemplate()), "code_template", language.getCodeTemplate())
+                        .set(StrUtil.isNotEmpty(language.getCodeTemplate()), "code_template",
+                                language.getCodeTemplate())
                         .set(language.getSeq() != null, "seq", language.getSeq());
                 languageEntityService.update(updateWrapper);
             }
         }
     }
 }
-

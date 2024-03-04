@@ -16,11 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import top.hcode.hoj.common.exception.StatusFailException;
 import top.hcode.hoj.dao.user.UserInfoEntityService;
+import top.hcode.hoj.dao.user.UserPreferencesEntityService;
 import top.hcode.hoj.dao.user.UserRecordEntityService;
 import top.hcode.hoj.dao.user.UserRoleEntityService;
 import top.hcode.hoj.manager.msg.AdminNoticeManager;
 import top.hcode.hoj.pojo.dto.AdminEditUserDTO;
 import top.hcode.hoj.pojo.entity.user.UserInfo;
+import top.hcode.hoj.pojo.entity.user.UserPreferences;
 import top.hcode.hoj.pojo.entity.user.UserRecord;
 import top.hcode.hoj.pojo.entity.user.UserRole;
 import top.hcode.hoj.pojo.vo.UserRolesVO;
@@ -53,11 +55,16 @@ public class AdminUserManager {
     private UserRecordEntityService userRecordEntityService;
 
     @Autowired
+    private UserPreferencesEntityService userPreferencesEntityService;
+
+    @Autowired
     private RedisUtils redisUtils;
 
     public IPage<UserRolesVO> getUserList(Integer limit, Integer currentPage, Boolean onlyAdmin, String keyword) {
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
         if (keyword != null) {
             keyword = keyword.trim();
         }
@@ -194,6 +201,8 @@ public class AdminUserManager {
     @Transactional(rollbackFor = Exception.class)
     public String addNewUser(List<String> user) throws StatusFailException {
         String uuid = IdUtil.simpleUUID();
+
+        UserPreferences userPreferences = new UserPreferences().setUid(uuid);
         UserInfo userInfo = new UserInfo()
                 .setUuid(uuid)
                 .setUsername(user.get(0))
@@ -230,7 +239,6 @@ public class AdminUserManager {
             }
         }
 
-
         boolean result1 = userInfoEntityService.save(userInfo);
         UserRole userRole = new UserRole()
                 .setRoleId(1002L)
@@ -238,7 +246,8 @@ public class AdminUserManager {
         boolean result2 = userRoleEntityService.save(userRole);
         UserRecord userRecord = new UserRecord().setUid(uuid);
         boolean result3 = userRecordEntityService.save(userRecord);
-        if (!result1 || !result2 || !result3) {
+        boolean result4 = userPreferencesEntityService.save(userPreferences);
+        if (!result1 || !result2 || !result3 || !result4) {
             throw new StatusFailException("生成用户失败");
         }
         return uuid;
@@ -256,6 +265,7 @@ public class AdminUserManager {
         List<UserInfo> userInfoList = new LinkedList<>();
         List<UserRole> userRoleList = new LinkedList<>();
         List<UserRecord> userRecordList = new LinkedList<>();
+        List<UserPreferences> userPreferencesList = new LinkedList<>();
 
         HashMap<String, Object> userInfo = new HashMap<>(); // 存储账号密码放入redis中，等待导出excel
         for (int num = numberFrom; num <= numberTo; num++) {
@@ -271,11 +281,14 @@ public class AdminUserManager {
                     .setRoleId(1002L)
                     .setUid(uuid));
             userRecordList.add(new UserRecord().setUid(uuid));
+            userPreferencesList.add(new UserPreferences().setUid(uuid));
         }
         boolean result1 = userInfoEntityService.saveBatch(userInfoList);
         boolean result2 = userRoleEntityService.saveBatch(userRoleList);
         boolean result3 = userRecordEntityService.saveBatch(userRecordList);
-        if (result1 && result2 && result3) {
+        boolean result4 = userPreferencesEntityService.saveBatch(userPreferencesList);
+
+        if (result1 && result2 && result3 && result4) {
             String key = IdUtil.simpleUUID();
             redisUtils.hmset(key, userInfo, 1800); // 存储半小时
             // 异步同步系统通知

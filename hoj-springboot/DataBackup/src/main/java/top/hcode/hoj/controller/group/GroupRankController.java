@@ -25,10 +25,10 @@ public class GroupRankController {
     @GetMapping("/get-group-rank-list")
     @RequiresAuthentication
     public CommonResult<IPage<OIRankVO>> getRankList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                     @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                     @RequestParam(value = "searchUser", required = false) String searchUser,
-                                                     @RequestParam(value = "gid", required = true) Long gid,
-                                                     @RequestParam(value = "type", required = true) Integer type) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "searchUser", required = false) String searchUser,
+            @RequestParam(value = "gid", required = true) Long gid,
+            @RequestParam(value = "type", required = true) Integer type) {
         return groupRankService.getGroupRankList(limit, currentPage, searchUser, type, gid);
     }
 }

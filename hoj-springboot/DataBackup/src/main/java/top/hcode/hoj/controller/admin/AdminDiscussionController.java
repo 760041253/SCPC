@@ -29,29 +29,30 @@ public class AdminDiscussionController {
     private AdminDiscussionService adminDiscussionService;
 
     @PutMapping("/discussion")
-    @RequiresRoles(value = {"root", "admin","problem_admin"}, logical = Logical.OR)
+    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     @RequiresAuthentication
     public CommonResult<Void> updateDiscussion(@RequestBody Discussion discussion) {
         return adminDiscussionService.updateDiscussion(discussion);
     }
 
     @DeleteMapping("/discussion")
-    @RequiresRoles(value = {"root", "admin","problem_admin"}, logical = Logical.OR)
+    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     @RequiresAuthentication
     public CommonResult<Void> removeDiscussion(@RequestBody List<Integer> didList) {
         return adminDiscussionService.removeDiscussion(didList);
     }
 
     @GetMapping("/discussion-report")
-    @RequiresRoles(value = {"root", "admin","problem_admin"}, logical = Logical.OR)
+    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     @RequiresAuthentication
-    public CommonResult<IPage<DiscussionReportVO>> getDiscussionReport(@RequestParam(value = "limit", defaultValue = "10") Integer limit,
-                                                                       @RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage) {
+    public CommonResult<IPage<DiscussionReportVO>> getDiscussionReport(
+            @RequestParam(value = "limit", defaultValue = "10") Integer limit,
+            @RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage) {
         return adminDiscussionService.getDiscussionReport(limit, currentPage);
     }
 
     @PutMapping("/discussion-report")
-    @RequiresRoles(value = {"root", "admin","problem_admin"}, logical = Logical.OR)
+    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     @RequiresAuthentication
     public CommonResult<Void> updateDiscussionReport(@RequestBody DiscussionReport discussionReport) {
         return adminDiscussionService.updateDiscussionReport(discussionReport);

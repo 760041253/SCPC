@@ -26,13 +26,13 @@ public interface JudgeService {
     public CommonResult<TestJudgeVO> getTestJudgeResult(String testJudgeKey);
 
     public CommonResult<IPage<JudgeVO>> getJudgeList(Integer limit,
-                                                     Integer currentPage,
-                                                     Boolean onlyMine,
-                                                     String searchPid,
-                                                     Integer searchStatus,
-                                                     String searchUsername,
-                                                     Boolean completeProblemID,
-                                                     Long gid);
+            Integer currentPage,
+            Boolean onlyMine,
+            String searchPid,
+            Integer searchStatus,
+            String searchUsername,
+            Boolean completeProblemID,
+            Long gid);
 
     public CommonResult<Void> updateSubmission(Judge judge);
 

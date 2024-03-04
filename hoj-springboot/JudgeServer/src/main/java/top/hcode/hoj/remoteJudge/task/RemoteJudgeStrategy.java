@@ -5,7 +5,6 @@ import lombok.Setter;
 import top.hcode.hoj.remoteJudge.entity.RemoteJudgeDTO;
 import top.hcode.hoj.remoteJudge.entity.RemoteJudgeRes;
 
-
 /**
  * 远程评测抽象类
  */

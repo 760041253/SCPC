@@ -52,8 +52,10 @@ public class AdminContestManager {
 
     public IPage<Contest> getContestList(Integer limit, Integer currentPage, String keyword) {
 
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
         IPage<Contest> iPage = new Page<>(currentPage, limit);
         QueryWrapper<Contest> queryWrapper = new QueryWrapper<>();
         // 过滤密码
@@ -108,20 +110,19 @@ public class AdminContestManager {
             adminContestVo.setAwardConfigList(new ArrayList<>());
         }
 
-        if (contest.getSynchronous() != null) {
+        // 同步赛
+        if (contest.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || contest.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             try {
                 JSONObject jsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
                 List<ContestSynchronousConfigVO> synchronousConfigList = jsonObject.get("config", List.class);
 
-                adminContestVo.setSynchronous(contest.getSynchronous());
                 adminContestVo.setSynchronousConfigList(synchronousConfigList);
 
             } catch (Exception e) {
-                adminContestVo.setSynchronous(false);
                 adminContestVo.setSynchronousConfigList(new ArrayList<>());
             }
         } else {
-            adminContestVo.setSynchronous(false);
             adminContestVo.setSynchronousConfigList(new ArrayList<>());
         }
 
@@ -131,7 +132,7 @@ public class AdminContestManager {
     public void deleteContest(Long cid) throws StatusFailException {
         boolean isOk = contestEntityService.removeById(cid);
         /*
-        contest的id为其他表的外键的表中的对应数据都会被一起删除！
+         * contest的id为其他表的外键的表中的对应数据都会被一起删除！
          */
         if (!isOk) { // 删除成功
             throw new StatusFailException("删除失败");
@@ -161,12 +162,12 @@ public class AdminContestManager {
             contest.setAwardConfig(awardConfigJson.toString());
         }
 
-        if (adminContestVo.getSynchronous() != null) {
-            Boolean synchronous = adminContestVo.getSynchronous();
+        // 同步赛
+        if (adminContestVo.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || adminContestVo.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             List<ContestSynchronousConfigVO> synchronousConfigList = adminContestVo.getSynchronousConfigList();
             JSONObject awardConfigJson = new JSONObject();
             awardConfigJson.set("config", synchronousConfigList);
-            contest.setSynchronous(synchronous);
             contest.setSynchronousConfig(awardConfigJson.toString());
         }
 
@@ -218,12 +219,12 @@ public class AdminContestManager {
             contest.setAwardConfig(awardConfigJson.toString());
         }
 
-        if (adminContestVo.getSynchronous() != null) {
-            Boolean synchronous = adminContestVo.getSynchronous();
+        // 同步赛
+        if (adminContestVo.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || adminContestVo.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             List<ContestSynchronousConfigVO> synchronousConfigList = adminContestVo.getSynchronousConfigList();
             JSONObject awardConfigJson = new JSONObject();
             awardConfigJson.set("config", synchronousConfigList);
-            contest.setSynchronous(synchronous);
             contest.setSynchronousConfig(awardConfigJson.toString());
         }
 
@@ -242,7 +243,8 @@ public class AdminContestManager {
         }
     }
 
-    public void changeContestVisible(Long cid, String uid, Boolean visible) throws StatusFailException, StatusForbiddenException {
+    public void changeContestVisible(Long cid, String uid, Boolean visible)
+            throws StatusFailException, StatusForbiddenException {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         // 是否为超级管理员

@@ -22,7 +22,6 @@ import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 @Slf4j(topic = "hoj")
 @Component
 public class RemoteJudgeGetResult {
@@ -39,9 +38,11 @@ public class RemoteJudgeGetResult {
     @Resource
     private JudgeCaseEntityService judgeCaseEntityService;
 
-    private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+    private final static ScheduledExecutorService scheduler = Executors
+            .newScheduledThreadPool(Runtime.getRuntime().availableProcessors() * 2);
 
-    private final static Map<String, Future> futureTaskMap = new ConcurrentHashMap<>(Runtime.getRuntime().availableProcessors() * 2);
+    private final static Map<String, Future> futureTaskMap = new ConcurrentHashMap<>(
+            Runtime.getRuntime().availableProcessors() * 2);
 
     public void process(RemoteJudgeStrategy remoteJudgeStrategy) {
 
@@ -56,7 +57,8 @@ public class RemoteJudgeGetResult {
                     // 更新此次提交状态为提交失败！
                     UpdateWrapper<Judge> judgeUpdateWrapper = new UpdateWrapper<>();
                     judgeUpdateWrapper.set("status", Constants.Judge.STATUS_SUBMITTED_FAILED.getStatus())
-                            .set("error_message", "Waiting for remote judge result exceeds the maximum number of times, please try submitting again!")
+                            .set("error_message",
+                                    "Waiting for remote judge result exceeds the maximum number of times, please try submitting again!")
                             .eq("submit_id", remoteJudgeDTO.getJudgeId());
                     judgeEntityService.update(judgeUpdateWrapper);
 
@@ -119,7 +121,8 @@ public class RemoteJudgeGetResult {
                     if (status.intValue() == Constants.Judge.STATUS_COMPILE_ERROR.getStatus()) {
                         finalJudgeRes.setErrorMessage(errorInfo);
                     } else if (status.intValue() == Constants.Judge.STATUS_SYSTEM_ERROR.getStatus()) {
-                        finalJudgeRes.setErrorMessage("There is something wrong with the " + remoteJudgeDTO.getOj() + ", please try again later");
+                        finalJudgeRes.setErrorMessage("There is something wrong with the " + remoteJudgeDTO.getOj()
+                                + ", please try again later");
                     }
 
                     // 如果是比赛题目，需要特别适配OI比赛的得分 除AC给100 其它结果给0分
@@ -176,8 +179,8 @@ public class RemoteJudgeGetResult {
         futureTaskMap.put(key, beeperHandle);
     }
 
-
-    private void changeRemoteJudgeLock(String remoteJudge, String username, String ip, Integer port, Long resultSubmitId) {
+    private void changeRemoteJudgeLock(String remoteJudge, String username, String ip, Integer port,
+            Long resultSubmitId) {
         log.info("After Get Result,remote_judge:[{}],submit_id: [{}]! Begin to return the account to other task!",
                 remoteJudge, resultSubmitId);
         // 将账号变为可用
@@ -185,12 +188,12 @@ public class RemoteJudgeGetResult {
         if (RemoteJudgeContext.openCodeforcesFixServer) {
             if (remoteJudge.equals(Constants.RemoteJudge.GYM_JUDGE.getName())
                     || remoteJudge.equals(Constants.RemoteJudge.CF_JUDGE.getName())) {
-                log.info("After Get Result,remote_judge:[{}],submit_id: [{}] !Begin to return the Server Status to other task!",
+                log.info(
+                        "After Get Result,remote_judge:[{}],submit_id: [{}] !Begin to return the Server Status to other task!",
                         remoteJudge, resultSubmitId);
                 remoteJudgeService.changeServerSubmitCFStatus(ip, port);
             }
         }
     }
-
 
 }

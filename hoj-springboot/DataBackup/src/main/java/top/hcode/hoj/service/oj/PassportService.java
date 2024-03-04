@@ -1,6 +1,5 @@
 package top.hcode.hoj.service.oj;
 
-
 import top.hcode.hoj.common.result.CommonResult;
 import top.hcode.hoj.pojo.dto.ApplyResetPasswordDTO;
 import top.hcode.hoj.pojo.dto.LoginDTO;

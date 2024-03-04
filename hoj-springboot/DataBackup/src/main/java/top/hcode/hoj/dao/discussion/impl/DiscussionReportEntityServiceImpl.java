@@ -17,7 +17,8 @@ import javax.annotation.Resource;
  * @Description:
  */
 @Service
-public class DiscussionReportEntityServiceImpl extends ServiceImpl<DiscussionReportMapper, DiscussionReport> implements DiscussionReportEntityService {
+public class DiscussionReportEntityServiceImpl extends ServiceImpl<DiscussionReportMapper, DiscussionReport>
+        implements DiscussionReportEntityService {
 
     @Resource
     private DiscussionReportMapper discussionReportMapper;

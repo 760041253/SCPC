@@ -25,10 +25,12 @@ public class AccessInterceptor implements HandlerInterceptor {
     private AccessValidator accessValidator;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(handler instanceof HandlerMethod) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
+        if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = HandlerMethod.class.cast(handler);
-            HOJAccess hojAccess = ServiceContextUtils.getAnnotation(handlerMethod.getMethod(), handlerMethod.getBeanType(), HOJAccess.class);
+            HOJAccess hojAccess = ServiceContextUtils.getAnnotation(handlerMethod.getMethod(),
+                    handlerMethod.getBeanType(), HOJAccess.class);
             if (hojAccess == null || hojAccess.value().length == 0) {
                 return true;
             }
@@ -36,7 +38,7 @@ public class AccessInterceptor implements HandlerInterceptor {
                 accessValidator.validateAccess(value);
             }
             return true;
-        }else if (handler instanceof ResourceHttpRequestHandler){
+        } else if (handler instanceof ResourceHttpRequestHandler) {
             // 静态资源的请求不处理
             return true;
         }
@@ -44,12 +46,14 @@ public class AccessInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+            ModelAndView modelAndView) throws Exception {
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+            throws Exception {
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 }

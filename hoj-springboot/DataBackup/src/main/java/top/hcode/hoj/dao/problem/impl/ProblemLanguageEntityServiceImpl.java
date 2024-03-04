@@ -12,5 +12,6 @@ import top.hcode.hoj.dao.problem.ProblemLanguageEntityService;
  * @Description:
  */
 @Service
-public class ProblemLanguageEntityServiceImpl extends ServiceImpl<ProblemLanguageMapper, ProblemLanguage> implements ProblemLanguageEntityService {
+public class ProblemLanguageEntityServiceImpl extends ServiceImpl<ProblemLanguageMapper, ProblemLanguage>
+        implements ProblemLanguageEntityService {
 }

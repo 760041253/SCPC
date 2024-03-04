@@ -32,10 +32,10 @@ public class TeamInfo {
     @ApiModelProperty("密码")
     private String password;
 
-    @ApiModelProperty(value = "成员名",notes = "用-隔开")
+    @ApiModelProperty(value = "成员名", notes = "用-隔开")
     private String teammatesName;
 
-    @ApiModelProperty(value = "队伍类型",notes = "1:女队")
+    @ApiModelProperty(value = "队伍类型", notes = "1:女队")
     private Integer teamType;
 
     @ApiModelProperty(value = "队伍名")
@@ -44,13 +44,13 @@ public class TeamInfo {
     @ApiModelProperty(value = "队伍英文名")
     private String englishTeamName;
 
-    @ApiModelProperty(value = "成员尺码",notes = "-分割")
+    @ApiModelProperty(value = "成员尺码", notes = "-分割")
     private String size;
 
-    @ApiModelProperty(value = "成员学校",notes = "-分割")
+    @ApiModelProperty(value = "成员学校", notes = "-分割")
     private String school;
 
-    @ApiModelProperty(value = "学号",notes = "-分割")
+    @ApiModelProperty(value = "学号", notes = "-分割")
     private String studentId;
 
     @ApiModelProperty(value = "班级", notes = "-分割")

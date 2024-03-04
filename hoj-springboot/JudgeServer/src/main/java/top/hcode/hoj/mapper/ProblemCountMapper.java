@@ -7,7 +7,7 @@ import top.hcode.hoj.pojo.entity.problem.ProblemCount;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author Himit_ZH

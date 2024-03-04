@@ -25,10 +25,12 @@ public class AdminContestAnnouncementManager {
     @Autowired
     private ContestAnnouncementEntityService contestAnnouncementEntityService;
 
-    public IPage<AnnouncementVO> getAnnouncementList(Integer limit, Integer currentPage, Long cid){
+    public IPage<AnnouncementVO> getAnnouncementList(Integer limit, Integer currentPage, Long cid) {
 
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
         return announcementEntityService.getContestAnnouncement(cid, false, limit, currentPage);
     }
 

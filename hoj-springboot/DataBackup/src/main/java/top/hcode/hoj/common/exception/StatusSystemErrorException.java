@@ -22,7 +22,8 @@ public class StatusSystemErrorException extends Exception {
         super(cause);
     }
 
-    public StatusSystemErrorException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public StatusSystemErrorException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

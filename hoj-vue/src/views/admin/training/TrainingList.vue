@@ -20,8 +20,7 @@
               size="small"
               @click="goCreateTraining"
               icon="el-icon-plus"
-              >{{ $t('m.Create') }}
-            </el-button>
+            >{{ $t('m.Create') }}</el-button>
           </span>
         </div>
       </div>
@@ -33,21 +32,12 @@
         stripe
         align="center"
       >
-        <vxe-table-column field="id" width="80" title="ID"> </vxe-table-column>
-        <vxe-table-column field="rank" width="80" :title="$t('m.Order_Number')">
-        </vxe-table-column>
-        <vxe-table-column
-          field="title"
-          min-width="150"
-          :title="$t('m.Title')"
-          show-overflow
-        >
-        </vxe-table-column>
+        <vxe-table-column field="id" width="80" title="ID"></vxe-table-column>
+        <vxe-table-column field="rank" width="80" :title="$t('m.Order_Number')"></vxe-table-column>
+        <vxe-table-column field="title" min-width="150" :title="$t('m.Title')" show-overflow></vxe-table-column>
         <vxe-table-column :title="$t('m.Auth')" width="100">
           <template v-slot="{ row }">
-            <el-tag :type="TRAINING_TYPE[row.auth]['color']" effect="dark">
-              {{ row.auth }}
-            </el-tag>
+            <el-tag :type="TRAINING_TYPE[row.auth]['color']" effect="dark">{{ row.auth }}</el-tag>
           </template>
         </vxe-table-column>
         <vxe-table-column :title="$t('m.Visible')" min-width="80">
@@ -56,8 +46,7 @@
               v-model="row.status"
               :disabled="!isSuperAdmin && userInfo.username != row.author"
               @change="changeTrainingStatus(row.id, row.status, row.author)"
-            >
-            </el-switch>
+            ></el-switch>
           </template>
         </vxe-table-column>
         <vxe-table-column min-width="210" :title="$t('m.Info')">
@@ -71,18 +60,13 @@
           <template v-slot="{ row }">
             <template v-if="isSuperAdmin || userInfo.username == row.author">
               <div style="margin-bottom:10px">
-                <el-tooltip
-                  effect="dark"
-                  :content="$t('m.Edit')"
-                  placement="top"
-                >
+                <el-tooltip effect="dark" :content="$t('m.Edit')" placement="top">
                   <el-button
                     icon="el-icon-edit"
                     size="mini"
                     @click.native="goEdit(row.id)"
                     type="primary"
-                  >
-                  </el-button>
+                  ></el-button>
                 </el-tooltip>
                 <el-tooltip
                   effect="dark"
@@ -94,24 +78,17 @@
                     size="mini"
                     @click.native="goTrainingProblemList(row.id)"
                     type="success"
-                  >
-                  </el-button>
+                  ></el-button>
                 </el-tooltip>
               </div>
             </template>
-            <el-tooltip
-              effect="dark"
-              :content="$t('m.Delete')"
-              placement="top"
-              v-if="isSuperAdmin"
-            >
+            <el-tooltip effect="dark" :content="$t('m.Delete')" placement="top" v-if="isSuperAdmin">
               <el-button
                 icon="el-icon-delete"
                 size="mini"
                 @click.native="deleteTraining(row.id)"
                 type="danger"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
           </template>
         </vxe-table-column>
@@ -123,26 +100,25 @@
           @current-change="currentChange"
           :page-size="pageSize"
           :total="total"
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </el-card>
   </div>
 </template>
 
 <script>
-import api from '@/common/api';
-import { TRAINING_TYPE } from '@/common/constants';
-import { mapGetters } from 'vuex';
-import myMessage from '@/common/message';
+import api from "@/common/api";
+import { TRAINING_TYPE } from "@/common/constants";
+import { mapGetters } from "vuex";
+import myMessage from "@/common/message";
 export default {
-  name: 'TrainingList',
+  name: "TrainingList",
   data() {
     return {
       pageSize: 10,
       total: 0,
       trainingList: [],
-      keyword: '',
+      keyword: "",
       loading: false,
       excludeAdmin: true,
       currentPage: 1,
@@ -157,14 +133,14 @@ export default {
   },
   watch: {
     $route() {
-      let refresh = this.$route.query.refresh == 'true' ? true : false;
+      let refresh = this.$route.query.refresh == "true" ? true : false;
       if (refresh) {
         this.getTrainingList(1);
       }
     },
   },
   computed: {
-    ...mapGetters(['isSuperAdmin', 'userInfo']),
+    ...mapGetters(["isSuperAdmin", "userInfo"]),
   },
   methods: {
     // 切换页码回调
@@ -187,38 +163,38 @@ export default {
     },
     goEdit(trainingId) {
       this.$router.push({
-        name: 'admin-edit-training',
+        name: "admin-edit-training",
         params: { trainingId },
       });
     },
     goTrainingProblemList(trainingId) {
       this.$router.push({
-        name: 'admin-training-problem-list',
+        name: "admin-training-problem-list",
         params: { trainingId },
       });
     },
     deleteTraining(trainingId) {
-      this.$confirm(this.$i18n.t('m.Delete_Training_Tips'), 'Tips', {
-        confirmButtonText: this.$i18n.t('m.OK'),
-        cancelButtonText: this.$i18n.t('m.Cancel'),
-        type: 'warning',
+      this.$confirm(this.$i18n.t("m.Delete_Training_Tips"), "Tips", {
+        confirmButtonText: this.$i18n.t("m.OK"),
+        cancelButtonText: this.$i18n.t("m.Cancel"),
+        type: "warning",
       }).then(() => {
         api.admin_deleteTraining(trainingId).then((res) => {
-          myMessage.success(this.$i18n.t('m.Delete_successfully'));
+          myMessage.success(this.$i18n.t("m.Delete_successfully"));
           this.currentChange(1);
         });
       });
     },
     changeTrainingStatus(trainingId, status, author) {
       api.admin_changeTrainingStatus(trainingId, status, author).then((res) => {
-        myMessage.success(this.$i18n.t('m.Update_Successfully'));
+        myMessage.success(this.$i18n.t("m.Update_Successfully"));
       });
     },
     filterByKeyword() {
       this.currentChange(1);
     },
     goCreateTraining() {
-      this.$router.push({ name: 'admin-create-training' });
+      this.$router.push({ name: "admin-create-training" });
     },
   },
 };

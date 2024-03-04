@@ -85,10 +85,12 @@ public class ProblemManager {
      * @Since 2020/10/27
      */
     public Page<ProblemVO> getProblemList(Integer limit, Integer currentPage,
-                                          String keyword, List<Long> tagId, Integer difficulty, String oj) {
+            String keyword, List<Long> tagId, Integer difficulty, String oj) {
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
 
         // 关键词查询不为空
         if (!StringUtils.isEmpty(keyword)) {
@@ -249,9 +251,10 @@ public class ProblemManager {
      * @Description 获取指定题目的详情信息，标签，所支持语言，做题情况（只能查询公开题目 也就是auth为1）
      * @Since 2020/10/27
      */
-    public ProblemInfoVO getProblemInfo(String problemId, Long gid) throws StatusNotFoundException, StatusForbiddenException {
+    public ProblemInfoVO getProblemInfo(String problemId, Long gid)
+            throws StatusNotFoundException, StatusForbiddenException {
         QueryWrapper<Problem> wrapper = new QueryWrapper<Problem>().eq("problem_id", problemId);
-        //查询题目详情，题目标签，题目语言，题目做题情况
+        // 查询题目详情，题目标签，题目语言，题目做题情况
         Problem problem = problemEntityService.getOne(wrapper, false);
         if (problem == null) {
             throw new StatusNotFoundException("该题号对应的题目不存在");
@@ -295,7 +298,7 @@ public class ProblemManager {
         if (CollectionUtil.isNotEmpty(lidList)) {
             Collection<Language> languages = languageEntityService.listByIds(lidList);
             languages = languages.stream().sorted(Comparator.comparing(Language::getSeq, Comparator.reverseOrder())
-                            .thenComparing(Language::getId))
+                    .thenComparing(Language::getId))
                     .collect(Collectors.toList());
             languages.forEach(language -> {
                 languagesStr.add(language.getName());

@@ -26,9 +26,10 @@ public class AdminNoticeController {
     @GetMapping("/notice")
     @RequiresAuthentication
     @RequiresRoles("root")
-    public CommonResult<IPage<AdminSysNoticeVO>> getSysNotice(@RequestParam(value = "limit", required = false) Integer limit,
-                                                              @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                              @RequestParam(value = "type", required = false) String type) {
+    public CommonResult<IPage<AdminSysNoticeVO>> getSysNotice(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "type", required = false) String type) {
 
         return adminNoticeService.getSysNotice(limit, currentPage, type);
     }
@@ -41,7 +42,6 @@ public class AdminNoticeController {
         return adminNoticeService.addSysNotice(adminSysNotice);
     }
 
-
     @DeleteMapping("/notice")
     @RequiresAuthentication
     @RequiresRoles("root")
@@ -49,7 +49,6 @@ public class AdminNoticeController {
 
         return adminNoticeService.deleteSysNotice(id);
     }
-
 
     @PutMapping("/notice")
     @RequiresAuthentication

@@ -9,7 +9,6 @@ import top.hcode.hoj.pojo.entity.judge.Judge;
 
 import top.hcode.hoj.service.admin.rejudge.RejudgeService;
 
-
 /**
  * @Author: Himit_ZH
  * @Date: 2022/1/7 18:12
@@ -36,6 +35,16 @@ public class RejudgeServiceImpl implements RejudgeService {
         try {
             rejudgeManager.rejudgeContestProblem(cid, pid);
             return CommonResult.successResponse("重判成功！该题目对应的全部提交已进入判题队列！");
+        } catch (StatusFailException e) {
+            return CommonResult.errorResponse(e.getMessage());
+        }
+    }
+
+    @Override
+    public CommonResult<Void> rejudgeOIProblem(Long pid) {
+        try {
+            rejudgeManager.rejudgeOIProblem(pid);
+            return CommonResult.successResponse("重判成功！对应OI题目的全部提交已进入判题队列！");
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         }

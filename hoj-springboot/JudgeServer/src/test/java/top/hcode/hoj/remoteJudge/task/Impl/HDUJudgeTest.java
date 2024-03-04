@@ -1,6 +1,5 @@
 package top.hcode.hoj.remoteJudge.task.Impl;
 
-
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 class HDUJudgeTest {
 
@@ -24,29 +22,30 @@ class HDUJudgeTest {
             .put("Host", "acm.hdu.edu.cn")
             .put("origin", "https://acm.hdu.edu.cn")
             .put("referer", "https://acm.hdu.edu.cn")
-            .put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
+            .put("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
             .map();
-
 
     @Test
     void test() throws Exception {
         System.out.println(login("****", "****"));
     }
 
-    private java.util.List<java.net.HttpCookie> login(String username, String password){
+    private java.util.List<java.net.HttpCookie> login(String username, String password) {
         HttpRequest request = HttpUtil.createPost(HOST + LOGIN_URL).addHeaders(headers);
         HttpResponse response = request.form(MapUtil
-                        .builder(new HashMap<String, Object>())
-                        .put("username", username)
-                        .put("login", "Sign In")
-                        .put("userpass", password).map())
+                .builder(new HashMap<String, Object>())
+                .put("username", username)
+                .put("login", "Sign In")
+                .put("userpass", password).map())
                 .execute();
         if (response.getStatus() != 302) {
-            throw new RuntimeException("[HDU] Failed to login! The possible cause is connection failure, and the returned status code is " + response.getStatus());
+            throw new RuntimeException(
+                    "[HDU] Failed to login! The possible cause is connection failure, and the returned status code is "
+                            + response.getStatus());
         }
         System.out.println(response.getStatus());
-       return response.getCookies();
+        return response.getCookies();
     }
-
 
 }

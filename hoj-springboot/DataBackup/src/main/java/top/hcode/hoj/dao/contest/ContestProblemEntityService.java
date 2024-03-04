@@ -18,13 +18,14 @@ import java.util.List;
  */
 public interface ContestProblemEntityService extends IService<ContestProblem> {
     List<ContestProblemVO> getContestProblemList(Long cid,
-                                                 Date startTime,
-                                                 Date endTime,
-                                                 Date sealTime,
-                                                 Boolean isAdmin,
-                                                 String contestAuthorUid,
-                                                 List<String> groupRootUidList,
-                                                 Boolean isContainsContestEndJudge);
+            Date startTime,
+            Date endTime,
+            Date sealTime,
+            Boolean isAdmin,
+            String contestAuthorUid,
+            List<String> groupRootUidList,
+            Boolean isContainsContestEndJudge,
+            Date selectedTime);
 
     List<ProblemFullScreenListVO> getContestFullScreenProblemList(Long cid);
 

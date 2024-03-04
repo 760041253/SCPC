@@ -17,5 +17,6 @@ public interface TestCaseService {
 
     public CommonResult<Map<Object, Object>> uploadTestcaseZip(MultipartFile file, Long gid, String mode);
 
-    public void downloadTestcase(Long pid, HttpServletResponse response) throws StatusFailException, StatusForbiddenException;
+    public void downloadTestcase(Long pid, HttpServletResponse response)
+            throws StatusFailException, StatusForbiddenException;
 }

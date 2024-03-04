@@ -20,5 +20,5 @@ import java.util.List;
 public interface ReplyMapper extends BaseMapper<Reply> {
 
     public List<ReplyVO> getAllReplyByCommentId(@Param("commentId") Integer commentId,
-                                                @Param("myAndAdminUidList") List<String> myAndAdminUidList);
+            @Param("myAndAdminUidList") List<String> myAndAdminUidList);
 }

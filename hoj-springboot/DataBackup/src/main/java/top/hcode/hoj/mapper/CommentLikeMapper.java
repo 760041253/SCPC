@@ -5,7 +5,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import top.hcode.hoj.pojo.entity.discussion.CommentLike;
 
-
 @Mapper
 @Repository
 public interface CommentLikeMapper extends BaseMapper<CommentLike> {

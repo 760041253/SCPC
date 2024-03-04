@@ -13,7 +13,7 @@ import java.util.List;
  * @Date: 2020/12/5 14:05
  * @Description:
  */
-@ApiModel(value="角色以及其对应的权限列表", description="")
+@ApiModel(value = "角色以及其对应的权限列表", description = "")
 @Data
 public class RoleAuthsVO {
 

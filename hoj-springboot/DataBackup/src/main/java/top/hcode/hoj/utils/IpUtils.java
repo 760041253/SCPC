@@ -56,7 +56,7 @@ public class IpUtils {
         InetAddress address = null;
         try {
             address = InetAddress.getLocalHost();
-            return address.getHostAddress(); //返回IP地址
+            return address.getHostAddress(); // 返回IP地址
         } catch (UnknownHostException e) {
             log.error("本地ip获取异常---------->{}", e.getMessage());
         }

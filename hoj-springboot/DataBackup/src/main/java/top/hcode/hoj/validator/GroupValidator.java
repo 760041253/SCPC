@@ -27,7 +27,7 @@ public class GroupValidator {
         QueryWrapper<GroupMember> groupMemberQueryWrapper = new QueryWrapper<>();
         groupMemberQueryWrapper.eq("gid", gid).eq("uid", uid).in("auth", 3, 4, 5);
 
-        GroupMember groupMember = groupMemberEntityService.getOne(groupMemberQueryWrapper,false);
+        GroupMember groupMember = groupMemberEntityService.getOne(groupMemberQueryWrapper, false);
 
         return groupMember != null || isGroupOwner(uid, gid);
     }
@@ -36,7 +36,7 @@ public class GroupValidator {
         QueryWrapper<GroupMember> groupMemberQueryWrapper = new QueryWrapper<>();
         groupMemberQueryWrapper.eq("gid", gid).eq("uid", uid).in("auth", 4, 5);
 
-        GroupMember groupMember = groupMemberEntityService.getOne(groupMemberQueryWrapper,false);
+        GroupMember groupMember = groupMemberEntityService.getOne(groupMemberQueryWrapper, false);
 
         return groupMember != null || isGroupOwner(uid, gid);
     }
@@ -46,7 +46,7 @@ public class GroupValidator {
         QueryWrapper<GroupMember> groupMemberQueryWrapper = new QueryWrapper<>();
         groupMemberQueryWrapper.eq("gid", gid).eq("uid", uid).eq("auth", 5);
 
-        GroupMember groupMember = groupMemberEntityService.getOne(groupMemberQueryWrapper,false);
+        GroupMember groupMember = groupMemberEntityService.getOne(groupMemberQueryWrapper, false);
 
         return groupMember != null;
     }

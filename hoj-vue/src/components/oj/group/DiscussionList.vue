@@ -1,75 +1,32 @@
 <template>
   <div>
-    <vxe-table
-      stripe
-      auto-resize
-      :data="adminDiscussionList"
-      :loading="loading"
-      align="center"
-    >
+    <vxe-table stripe auto-resize :data="adminDiscussionList" :loading="loading" align="center">
       <vxe-table-column field="id" title="ID" width="60"></vxe-table-column>
-      <vxe-table-column
-        field="title"
-        :title="$t('m.Title')"
-        show-overflow
-        min-width="130"
-      ></vxe-table-column>
-      <vxe-table-column
-        field="author"
-        :title="$t('m.Author')"
-        min-width="130"
-        show-overflow
-      ></vxe-table-column>
-      <vxe-table-column
-        field="likeNum"
-        :title="$t('m.Likes')"
-        min-width="96"
-      ></vxe-table-column>
-      <vxe-table-column
-        field="viewNum"
-        :title="$t('m.Views')"
-        min-width="96"
-      ></vxe-table-column>
-      <vxe-table-column
-        field="gmtCreate"
-        :title="$t('m.Created_Time')"
-        min-width="150"
-      >
-        <template v-slot="{ row }">
-          {{ row.gmtCreate | localtime }}
-        </template>
+      <vxe-table-column field="title" :title="$t('m.Title')" show-overflow min-width="130"></vxe-table-column>
+      <vxe-table-column field="author" :title="$t('m.Author')" min-width="130" show-overflow></vxe-table-column>
+      <vxe-table-column field="likeNum" :title="$t('m.Likes')" min-width="96"></vxe-table-column>
+      <vxe-table-column field="viewNum" :title="$t('m.Views')" min-width="96"></vxe-table-column>
+      <vxe-table-column field="gmtCreate" :title="$t('m.Created_Time')" min-width="150">
+        <template v-slot="{ row }">{{ row.gmtCreate | localtime }}</template>
       </vxe-table-column>
       <vxe-table-column field="status" :title="$t('m.Status')" min-width="100">
         <template v-slot="{ row }">
-          <el-select
-            v-model="row.status"
-            @change="updateGroupDiscussion(row)"
-            size="small"
-          >
-            <el-option :label="$t('m.Normal')" :value="0" :key="0"></el-option
-            ><el-option
-              :label="$t('m.Disable')"
-              :value="1"
-              :key="1"
-            ></el-option>
+          <el-select v-model="row.status" @change="updateGroupDiscussion(row)" size="small">
+            <el-option :label="$t('m.Normal')" :value="0" :key="0"></el-option>
+            <el-option :label="$t('m.Disable')" :value="1" :key="1"></el-option>
           </el-select>
         </template>
       </vxe-table-column>
-      <vxe-table-column
-        min-width="100"
-        field="topPriority"
-        :title="$t('m.Top')"
-      >
+      <vxe-table-column min-width="100" field="topPriority" :title="$t('m.Top')">
         <template v-slot="{ row }">
           <el-switch
             v-model="row.topPriority"
-            active-text=""
-            inactive-text=""
+            active-text
+            inactive-text
             :active-value="true"
             :inactive-value="false"
             @change="updateGroupDiscussion(row)"
-          >
-          </el-switch>
+          ></el-switch>
         </template>
       </vxe-table-column>
       <vxe-table-column :title="$t('m.Option')" min-width="130">
@@ -80,21 +37,15 @@
               size="mini"
               @click.native="deleteGroupDiscussion(row.id)"
               type="danger"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
-          <el-tooltip
-            effect="dark"
-            :content="$t('m.View_Discussion')"
-            placement="top"
-          >
+          <el-tooltip effect="dark" :content="$t('m.View_Discussion')" placement="top">
             <el-button
               icon="el-icon-search"
               size="mini"
               @click.native="goGroupDiscussion(row.id)"
               type="primary"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
         </template>
       </vxe-table-column>
@@ -111,13 +62,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import Pagination from '@/components/oj/common/Pagination';
-import api from '@/common/api';
-import mMessage from '@/common/message';
-import Editor from '@/components/admin/Editor.vue';
+import { mapGetters } from "vuex";
+import Pagination from "@/components/oj/common/Pagination";
+import api from "@/common/api";
+import mMessage from "@/common/message";
+import Editor from "@/components/admin/Editor.vue";
 export default {
-  name: 'GroupDiscussionList',
+  name: "GroupDiscussionList",
   components: {
     Pagination,
     Editor,
@@ -167,7 +118,7 @@ export default {
     },
     goGroupDiscussion(discussionId) {
       this.$router.push({
-        name: 'GroupDiscussionDetails',
+        name: "GroupDiscussionDetails",
         params: {
           discussionID: discussionId,
           groupID: this.$route.params.groupID,
@@ -176,27 +127,27 @@ export default {
     },
     updateGroupDiscussion(row) {
       api.updateGroupDiscussion(row).then((res) => {
-        mMessage.success(this.$i18n.t('m.Update_Successfully'));
-        this.$emit('currentChange', 1);
+        mMessage.success(this.$i18n.t("m.Update_Successfully"));
+        this.$emit("currentChange", 1);
         this.currentChange(1);
       });
     },
     deleteGroupDiscussion(did) {
       this.$confirm(
-        this.$i18n.t('m.Delete_Discussion_Tips'),
-        this.$i18n.t('m.Warning'),
+        this.$i18n.t("m.Delete_Discussion_Tips"),
+        this.$i18n.t("m.Warning"),
         {
-          confirmButtonText: this.$i18n.t('m.OK'),
-          cancelButtonText: this.$i18n.t('m.Cancel'),
-          type: 'warning',
+          confirmButtonText: this.$i18n.t("m.OK"),
+          cancelButtonText: this.$i18n.t("m.Cancel"),
+          type: "warning",
         }
       )
         .then(() => {
           this.loading = true;
           api.deleteGroupDiscussion(did).then((res) => {
             this.loading = true;
-            mMessage.success(this.$i18n.t('m.Delete_successfully'));
-            this.$emit('currentChange', 1);
+            mMessage.success(this.$i18n.t("m.Delete_successfully"));
+            this.$emit("currentChange", 1);
             this.currentChange(1);
           });
         })
@@ -206,7 +157,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['userInfo', 'isSuperAdmin', 'isGroupAdmin']),
+    ...mapGetters(["userInfo", "isSuperAdmin", "isGroupAdmin"]),
   },
 };
 </script>

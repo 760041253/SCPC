@@ -22,10 +22,10 @@ public class TeamInfoVO {
     @ApiModelProperty(value = "队伍登录名")
     String teamUsername;
 
-    @ApiModelProperty(value = "成员名",notes = "用-隔开")
+    @ApiModelProperty(value = "成员名", notes = "用-隔开")
     String teammatesName;
 
-    @ApiModelProperty(value = "队伍类型",notes = "1:女队")
+    @ApiModelProperty(value = "队伍类型", notes = "1:女队")
     Integer teamType;
 
     @ApiModelProperty(value = "队伍名")
@@ -34,13 +34,13 @@ public class TeamInfoVO {
     @ApiModelProperty(value = "队伍英文名")
     String englishTeamName;
 
-    @ApiModelProperty(value = "成员尺码",notes = "-分割")
+    @ApiModelProperty(value = "成员尺码", notes = "-分割")
     String size;
 
-    @ApiModelProperty(value = "成员学校",notes = "-分割")
+    @ApiModelProperty(value = "成员学校", notes = "-分割")
     String school;
 
-    @ApiModelProperty(value = "学号",notes = "-分割")
+    @ApiModelProperty(value = "学号", notes = "-分割")
     String studentId;
 
     @ApiModelProperty(value = "班级", notes = "-分割")
@@ -69,6 +69,6 @@ public class TeamInfoVO {
     @ApiModelProperty(value = "打星 1 or 0")
     Integer star;
 
-    //是否是队长，是（1），否（0）
+    // 是否是队长，是（1），否（0）
     Integer captain;
 }

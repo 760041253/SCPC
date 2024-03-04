@@ -53,8 +53,7 @@ public class JudgeDispatcher {
                 judgeEntityService.updateById(new Judge()
                         .setSubmitId(judgeId)
                         .setStatus(Constants.Judge.STATUS_SUBMITTED_FAILED.getStatus())
-                        .setErrorMessage("Call Redis to push task error. Please try to submit again!")
-                );
+                        .setErrorMessage("Call Redis to push task error. Please try to submit again!"));
             }
             // 调用判题任务处理
             judgeReceiver.processWaitingTask();
@@ -67,7 +66,8 @@ public class JudgeDispatcher {
     public void sendTestJudgeTask(TestJudgeReq testJudgeReq) throws StatusSystemErrorException {
         testJudgeReq.setToken(judgeToken);
         try {
-            boolean isOk = redisUtils.llPush(Constants.Queue.TEST_JUDGE_WAITING.getName(), JSONUtil.toJsonStr(testJudgeReq));
+            boolean isOk = redisUtils.llPush(Constants.Queue.TEST_JUDGE_WAITING.getName(),
+                    JSONUtil.toJsonStr(testJudgeReq));
             if (!isOk) {
                 throw new StatusSystemErrorException("系统错误：当前评测任务进入等待队列失败！");
             }

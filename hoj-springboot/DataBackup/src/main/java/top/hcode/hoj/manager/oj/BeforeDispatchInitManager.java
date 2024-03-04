@@ -88,7 +88,7 @@ public class BeforeDispatchInitManager {
         problemQueryWrapper.eq("problem_id", problemId);
         Problem problem = problemEntityService.getOne(problemQueryWrapper, false);
 
-        if (problem == null){
+        if (problem == null) {
             throw new StatusForbiddenException("错误！当前题目已不存在，不可提交！");
         }
 
@@ -99,7 +99,7 @@ public class BeforeDispatchInitManager {
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
 
         if (problem.getIsGroup()) {
-            if (gid == null){
+            if (gid == null) {
                 throw new StatusForbiddenException("提交失败，该题目为团队所属，请你前往指定团队内提交！");
             }
             if (!isRoot && !groupValidator.isGroupMember(userRolesVo.getUid(), problem.getGid())) {
@@ -118,15 +118,15 @@ public class BeforeDispatchInitManager {
         trainingManager.checkAndSyncTrainingRecord(problem.getId(), judge.getSubmitId(), judge.getUid());
     }
 
-
     @Transactional(rollbackFor = Exception.class)
-    public void initContestSubmission(Long cid, String displayId, AccountProfile userRolesVo, Judge judge) throws StatusNotFoundException, StatusForbiddenException {
+    public void initContestSubmission(Long cid, String displayId, AccountProfile userRolesVo, Judge judge)
+            throws StatusNotFoundException, StatusForbiddenException {
         Contest contest = contestEntityService.getById(cid);
         if (contest == null) {
             throw new StatusNotFoundException("对不起，该比赛不存在！");
         }
         // 首先判断一下比赛的状态是否是正在进行，结束状态都不能提交(除非开启允许赛后提交)，比赛前比赛管理员可以提交
-        if (Objects.equals(contest.getAllowEndSubmit(), false)){
+        if (Objects.equals(contest.getAllowEndSubmit(), false)) {
             if (contest.getStatus().intValue() == Constants.Contest.STATUS_ENDED.getCode()) {
                 throw new StatusForbiddenException("比赛已结束，不可再提交！");
             }
@@ -144,7 +144,8 @@ public class BeforeDispatchInitManager {
 
             // 需要校验当前比赛是否为保护或私有比赛，同时是否开启账号规则限制，如果有，需要对当前用户的用户名进行验证
             if (contest.getOpenAccountLimit()
-                    && !contestValidator.validateAccountRule(contest.getAccountLimitRule(), userRolesVo.getUsername())) {
+                    && !contestValidator.validateAccountRule(contest.getAccountLimitRule(),
+                            userRolesVo.getUsername())) {
                 throw new StatusForbiddenException("对不起！本次比赛只允许符合特定账号规则的用户参赛！");
             }
         }
@@ -159,7 +160,7 @@ public class BeforeDispatchInitManager {
 
         Problem problem = problemEntityService.getById(contestProblem.getPid());
 
-        if (problem == null){
+        if (problem == null) {
             throw new StatusForbiddenException("错误！当前题目已不存在，不可提交！");
         }
 
@@ -167,7 +168,7 @@ public class BeforeDispatchInitManager {
             throw new StatusForbiddenException("错误！当前题目已被隐藏，不可提交！");
         }
 
-        if (problem.getIsGroup()){
+        if (problem.getIsGroup()) {
             judge.setGid(problem.getGid());
         }
 
@@ -196,9 +197,9 @@ public class BeforeDispatchInitManager {
         contestRecordEntityService.save(contestRecord);
     }
 
-
     @Transactional(rollbackFor = Exception.class)
-    public void initTrainingSubmission(Long tid, String displayId, AccountProfile userRolesVo, Judge judge) throws StatusForbiddenException, StatusFailException, StatusAccessDeniedException {
+    public void initTrainingSubmission(Long tid, String displayId, AccountProfile userRolesVo, Judge judge)
+            throws StatusForbiddenException, StatusFailException, StatusAccessDeniedException {
 
         Training training = trainingEntityService.getById(tid);
         if (training == null || !training.getStatus()) {
@@ -216,7 +217,7 @@ public class BeforeDispatchInitManager {
 
         Problem problem = problemEntityService.getById(trainingProblem.getPid());
 
-        if (problem == null){
+        if (problem == null) {
             throw new StatusForbiddenException("错误！当前题目已不存在，不可提交！");
         }
 
@@ -224,7 +225,7 @@ public class BeforeDispatchInitManager {
             throw new StatusForbiddenException("错误！当前题目不可提交！");
         }
 
-        if (problem.getIsGroup()){
+        if (problem.getIsGroup()) {
             judge.setGid(problem.getGid());
         }
 
@@ -247,6 +248,5 @@ public class BeforeDispatchInitManager {
                 .setUid(userRolesVo.getUid());
         trainingRecordEntityService.save(trainingRecord);
     }
-
 
 }

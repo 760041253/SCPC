@@ -79,7 +79,8 @@ public class AdminTagManager {
         QueryWrapper<TagClassification> tagClassificationQueryWrapper = new QueryWrapper<>();
         tagClassificationQueryWrapper.eq("name", tagClassification.getName())
                 .eq("oj", tagClassification.getOj());
-        TagClassification existTagClassification = tagClassificationEntityService.getOne(tagClassificationQueryWrapper, false);
+        TagClassification existTagClassification = tagClassificationEntityService.getOne(tagClassificationQueryWrapper,
+                false);
 
         if (existTagClassification != null) {
             throw new StatusFailException("该标签分类名称已存在！请勿重复！");

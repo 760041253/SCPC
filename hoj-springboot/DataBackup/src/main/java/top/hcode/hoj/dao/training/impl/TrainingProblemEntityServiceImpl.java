@@ -25,7 +25,8 @@ import java.util.stream.Collectors;
  * @Description:
  */
 @Service
-public class TrainingProblemEntityServiceImpl extends ServiceImpl<TrainingProblemMapper, TrainingProblem> implements TrainingProblemEntityService {
+public class TrainingProblemEntityServiceImpl extends ServiceImpl<TrainingProblemMapper, TrainingProblem>
+        implements TrainingProblemEntityService {
 
     @Resource
     private TrainingProblemMapper trainingProblemMapper;

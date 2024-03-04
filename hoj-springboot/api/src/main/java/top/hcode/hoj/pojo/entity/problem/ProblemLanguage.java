@@ -19,7 +19,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="ProblemLanguage对象", description="")
+@ApiModel(value = "ProblemLanguage对象", description = "")
 public class ProblemLanguage {
     private static final long serialVersionUID = 1L;
 

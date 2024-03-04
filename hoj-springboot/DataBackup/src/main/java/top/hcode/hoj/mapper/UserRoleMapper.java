@@ -29,10 +29,10 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
     List<Role> getRolesByUid(@Param("uid") String uid);
 
     IPage<UserRolesVO> getUserList(Page<UserRolesVO> page, @Param("limit") int limit,
-                                   @Param("currentPage") int currentPage,
-                                   @Param("keyword") String keyword);
+            @Param("currentPage") int currentPage,
+            @Param("keyword") String keyword);
 
     IPage<UserRolesVO> getAdminUserList(Page<UserRolesVO> page, @Param("limit") int limit,
-                                        @Param("currentPage") int currentPage,
-                                        @Param("keyword") String keyword);
+            @Param("currentPage") int currentPage,
+            @Param("keyword") String keyword);
 }

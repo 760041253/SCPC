@@ -11,7 +11,7 @@ import java.util.Date;
  * @Date: 2021/10/3 16:36
  * @Description:
  */
-@ApiModel(value="用户的系统消息", description="")
+@ApiModel(value = "用户的系统消息", description = "")
 @Data
 public class SysMsgVO {
 
@@ -33,6 +33,5 @@ public class SysMsgVO {
     private Boolean state;
 
     private Date gmtCreate;
-
 
 }
