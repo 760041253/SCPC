@@ -571,6 +571,7 @@ export const m = {
   Sign_up_Modify_Dialog_Input: '申请理由',
   Sign_up_Ac_Modify_error: '请填写修改申请理由',
   Sign_up_Ac_Modify_success: '申请成功，请等待管理员再次审核',
+  Sign_up_delete_success: '你已经成功取消了报名',
 
   // /views/oj/about/Introduction.vue
   Compiler: '编译器',

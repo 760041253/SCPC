@@ -2,7 +2,6 @@ package top.hcode.hoj.service.signup.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -476,6 +475,18 @@ public class TeamInfoEntityServiceImpl implements TeamInfoEntityService {
         if (!userRolesVo.getUsername().equals(usernames[0])) {
             throw new StatusForbiddenException("你无权修改");
         }
+        Long cid = teamInfo.getSignUpContestId();
+        SignUpContest contest = signUpContestMapper.selectById(cid);
+
+        if (contest == null) {
+            throw new StatusFailException("没有该比赛");
+        }
+
+        // 比赛是否结束
+        if (new Date().after(contest.getEndTime()) || contest.getStartTime().after(new Date())) {
+            throw new StatusFailException("不能在报名时间之外修改报名");
+        }
+
         teamInfoMapper.deleteById(tid);
         return CommonResult.successResponse();
     }

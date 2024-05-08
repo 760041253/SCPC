@@ -41,7 +41,7 @@ public class SignUpContestServiceImpl implements SignUpContestService {
     public CommonResult<List<SignUpContest>> getContestSignList(Integer pageSize, Integer pageNum)
             throws StatusForbiddenException {
         List<SignUpContest> signUpContests = signUpContestMapper.selectPage(new Page<SignUpContest>(pageSize, pageNum),
-                null).getRecords();
+                new QueryWrapper<SignUpContest>().orderByDesc("start_time")).getRecords();
         return CommonResult.successResponse(signUpContests);
     }
 

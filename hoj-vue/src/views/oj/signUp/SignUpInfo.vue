@@ -324,12 +324,17 @@
         <el-row type="flex" justify="space-around">
           <el-col :span="24">
             <el-card shadow>
-              <div slot="header">
-                <span class="panel-title">
-                  <el-tag
-                    :type="SIGN_UP_STATUS_REVERSE[signUpItem.status]['type']"
-                  >{{ $t('m.' + SIGN_UP_STATUS_REVERSE[signUpItem.status]['name']) }}</el-tag>
-                </span>
+              <div slot="header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span class="panel-title" style="padding-bottom: 0; padding-top: 0;">
+                    <el-tag
+                      :type="SIGN_UP_STATUS_REVERSE[signUpItem.status]['type']"
+                    >{{ $t('m.' + SIGN_UP_STATUS_REVERSE[signUpItem.status]['name']) }}</el-tag>
+                  </span>
+                </div> 
+                <div style="padding: 3px;">
+                  <el-button type="danger" icon="el-icon-delete" circle @click="deleteSignInfo()"/>
+                </div>
               </div>
               <el-form :model="signUpItem" ref="signUpItem" label-width="100px" :rules="rules">
                 <p id="teamInfo">{{$t('m.TeamInfo')}}</p>
@@ -1575,6 +1580,32 @@ export default {
         }
       });
     },
+    deleteSignInfo() {
+      this.$confirm('此操作将永久删除该报名队伍信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.btnSignUpLoading = true;
+        api.deleteSignUpTeam(this.signUpItems[0].teamId).then((res) =>{
+          if(res.status == 200){
+            this.btnSignUpLoading = false;
+            mMessage.success(this.$i18n.t("m.Sign_up_delete_success"));
+            this.$router.push({
+              name: "SignUpDetails",
+              params: { signUpID: this.signUpContestId },
+            });
+            } else {
+              this.btnSignUpLoading = false;
+            }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        });          
+      });
+    },
     handleClose(done) {
       done();
       // this.$confirm('确认关闭？')
@@ -1591,7 +1622,7 @@ export default {
   mounted() {
     this.SIGN_UP_STATUS_REVERSE = Object.assign({}, SIGN_UP_STATUS_REVERSE);
     this.maxParticipants = storage.get("maxParticipants");
-  },
+  }
 };
 </script>
 
