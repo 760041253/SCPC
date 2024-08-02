@@ -79,6 +79,8 @@
           :title="$t('m.User')"
           header-align="center"
           align="left"
+          :filters="registerYearFilters"
+          :filter-method="filterRegisterYear"
         >
           <template v-slot="{ row }">
             <div class="contest-rank-user-box">
