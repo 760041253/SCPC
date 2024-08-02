@@ -26,7 +26,7 @@
         align="center"
         :data="dataRank"
         :cell-class-name="cellClassName"
-        ref="TraningtRank"
+        ref="TrainRank"
         :seq-config="{ startIndex: (this.page - 1) * this.limit }"
         @cell-click="getUserProblemSubmission"
         :loading="loading"
@@ -40,6 +40,8 @@
           :title="$t('m.User')"
           header-align="center"
           align="left"
+          :filters="registerYearFilters"
+          :filter-method="filterRegisterYear"
         >
           <template v-slot="{ row }">
             <div class="contest-rank-user-box">
@@ -77,6 +79,8 @@
           :title="$t('m.User')"
           header-align="center"
           align="left"
+          :filters="registerYearFilters"
+          :filter-method="filterRegisterYear"
         >
           <template v-slot="{ row }">
             <div class="contest-rank-user-box">
@@ -213,6 +217,7 @@ export default {
       JUDGE_STATUS: {},
       groupID: null,
       loading: false,
+      registerYearFilters: [],
     };
   },
   mounted() {
@@ -331,9 +336,23 @@ export default {
         }
       });
       this.dataRank = dataRank;
+      // 获取表格数据中包含的所有年份
+      const years = new Set(dataRank.map(row => new Date(row.registerTime).getFullYear()));
+      this.registerYearFilters = Array.from(years).map(year => ({
+        label: `${year} 年`,
+        value: Number(year),
+      }));
+      const xTable = this.$refs.TrainRank
+      const column = xTable.getColumnByField('username')
+      xTable.setFilter(column, this.registerYearFilters)
+      xTable.updateData()
     },
     parseTotalTime(totalTime) {
       return time.secondFormat(totalTime);
+    },
+    filterRegisterYear({ value, row }) {
+      const rowYear = new Date(row.registerTime).getFullYear()
+      return rowYear == value
     },
   },
   computed: {

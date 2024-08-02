@@ -328,6 +328,7 @@ public class TrainingManager {
                         .setUid(trainingRecordVo.getUid())
                         .setUsername(trainingRecordVo.getUsername())
                         .setNickname(trainingRecordVo.getNickname())
+                        .setRegisterTime(trainingRecordVo.getRegisterTime())
                         .setAc(0)
                         .setTotalRunTime(0);
                 HashMap<String, HashMap<String, Object>> submissionInfo = new HashMap<>();

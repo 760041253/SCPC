@@ -45,6 +45,9 @@ public class TrainingRecordVO {
     @ApiModelProperty(value = "真实姓名")
     private String realname;
 
+    @ApiModelProperty(value = "注册时间")
+    private String registerTime;
+
     @ApiModelProperty(value = "昵称")
     private String nickname;
 
@@ -56,4 +59,5 @@ public class TrainingRecordVO {
 
     @ApiModelProperty(value = "提交耗时")
     private Integer useTime;
+
 }

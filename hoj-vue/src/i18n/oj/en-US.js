@@ -569,6 +569,7 @@ export const m = {
   Sign_up_Modify_Dialog_Input: 'Reason For Application',
   Sign_up_Ac_Modify_error: 'Please fill in the reason for the amendment application',
   Sign_up_Ac_Modify_success: 'The application is successful, please wait for the administrator to review again',
+  Sign_up_delete_success: 'You have successfully canceled your enrollment',
 
   // /views/oj/about/Introduction.vue
   Compiler: 'Compiler',
