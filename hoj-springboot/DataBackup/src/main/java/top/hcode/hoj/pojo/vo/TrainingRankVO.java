@@ -24,6 +24,9 @@ public class TrainingRankVO {
     @ApiModelProperty(value = "用户真实姓名")
     private String realname;
 
+    @ApiModelProperty(value = "注册时间")
+    private String registerTime;
+
     @ApiModelProperty(value = "昵称")
     private String nickname;
 
