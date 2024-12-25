@@ -38,10 +38,10 @@ public class ContestController {
     @GetMapping("/get-contest-list")
     @AnonApi
     public CommonResult<IPage<ContestVO>> getContestList(@RequestParam(value = "limit", required = false) Integer limit,
-            @RequestParam(value = "currentPage", required = false) Integer currentPage,
-            @RequestParam(value = "status", required = false) Integer status,
-            @RequestParam(value = "type", required = false) Integer type,
-            @RequestParam(value = "keyword", required = false) String keyword) {
+                                                         @RequestParam(value = "currentPage", required = false) Integer currentPage,
+                                                         @RequestParam(value = "status", required = false) Integer status,
+                                                         @RequestParam(value = "type", required = false) Integer type,
+                                                         @RequestParam(value = "keyword", required = false) String keyword) {
         return contestService.getContestList(limit, currentPage, status, type, keyword);
     }
 
@@ -98,7 +98,6 @@ public class ContestController {
 
         return contestService.getContestProblem(cid, containsEnd, time);
     }
-
     /**
      * @MethodName getSynchronousProblem
      * @Description 获得指定同步赛比赛的题目列表
@@ -117,25 +116,24 @@ public class ContestController {
     @GetMapping("/get-contest-problem-details")
     @RequiresAuthentication
     public CommonResult<ProblemInfoVO> getContestProblemDetails(@RequestParam(value = "cid", required = true) Long cid,
-            @RequestParam(value = "displayId", required = true) String displayId,
-            @RequestParam(value = "containsEnd", defaultValue = "false") Boolean containsEnd) {
+                                                                @RequestParam(value = "displayId", required = true) String displayId,
+                                                                @RequestParam(value = "containsEnd", defaultValue = "false") Boolean containsEnd) {
 
         return contestService.getContestProblemDetails(cid, displayId, containsEnd);
     }
 
     @GetMapping("/contest-submissions")
     @RequiresAuthentication
-    public CommonResult<IPage<JudgeVO>> getContestSubmissionList(
-            @RequestParam(value = "limit", required = false) Integer limit,
-            @RequestParam(value = "currentPage", required = false) Integer currentPage,
-            @RequestParam(value = "onlyMine", required = false) Boolean onlyMine,
-            @RequestParam(value = "problemID", required = false) String displayId,
-            @RequestParam(value = "status", required = false) Integer searchStatus,
-            @RequestParam(value = "username", required = false) String searchUsername,
-            @RequestParam(value = "contestID", required = true) Long searchCid,
-            @RequestParam(value = "beforeContestSubmit", required = true) Boolean beforeContestSubmit,
-            @RequestParam(value = "completeProblemID", defaultValue = "false") Boolean completeProblemID,
-            @RequestParam(value = "containsEnd", defaultValue = "false") Boolean containsEnd) {
+    public CommonResult<IPage<JudgeVO>> getContestSubmissionList(@RequestParam(value = "limit", required = false) Integer limit,
+                                                                 @RequestParam(value = "currentPage", required = false) Integer currentPage,
+                                                                 @RequestParam(value = "onlyMine", required = false) Boolean onlyMine,
+                                                                 @RequestParam(value = "problemID", required = false) String displayId,
+                                                                 @RequestParam(value = "status", required = false) Integer searchStatus,
+                                                                 @RequestParam(value = "username", required = false) String searchUsername,
+                                                                 @RequestParam(value = "contestID", required = true) Long searchCid,
+                                                                 @RequestParam(value = "beforeContestSubmit", required = true) Boolean beforeContestSubmit,
+                                                                 @RequestParam(value = "completeProblemID", defaultValue = "false") Boolean completeProblemID,
+                                                                 @RequestParam(value = "containsEnd", defaultValue = "false") Boolean containsEnd) {
 
         return contestService.getContestSubmissionList(limit,
                 currentPage,
@@ -208,10 +206,9 @@ public class ContestController {
      */
     @GetMapping("/get-contest-announcement")
     @RequiresAuthentication
-    public CommonResult<IPage<AnnouncementVO>> getContestAnnouncement(
-            @RequestParam(value = "cid", required = true) Long cid,
-            @RequestParam(value = "limit", required = false) Integer limit,
-            @RequestParam(value = "currentPage", required = false) Integer currentPage) {
+    public CommonResult<IPage<AnnouncementVO>> getContestAnnouncement(@RequestParam(value = "cid", required = true) Long cid,
+                                                                      @RequestParam(value = "limit", required = false) Integer limit,
+                                                                      @RequestParam(value = "currentPage", required = false) Integer currentPage) {
 
         return contestService.getContestAnnouncement(cid, limit, currentPage);
     }

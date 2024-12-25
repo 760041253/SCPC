@@ -104,9 +104,10 @@ const getters = {
   countdown: (state, getters) => {
     // 还未开始的显示
     if (getters.contestStatus === CONTEST_STATUS.SCHEDULED) {
-      let durationMs = getters.contestStartTime.diff(state.now, 'seconds');
 
-      let duration = moment.duration(durationMs, 'seconds');
+      let durationMs = getters.contestStartTime.diff(state.now, 'seconds')
+
+      let duration = moment.duration(durationMs, 'seconds')
       // time is too long
       if (duration.weeks() > 0) {
         return 'Start At ' + duration.humanize();

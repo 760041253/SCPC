@@ -66,7 +66,7 @@ public abstract class AbstractJudge {
                 .stderr(((JSONObject) judgeResult.get("files")).getStr("stderr"))
                 .time(judgeResult.getLong("time") / 1000000) // ns->ms
                 .memory(judgeResult.getLong("memory") / 1024) // b-->kb
-                .exitCode(judgeResult.getInt("exitStatus"))
+                .exitCode(judgeResult.getLong("exitStatus"))
                 .status(judgeResult.getInt("status"))
                 .originalStatus(judgeResult.getStr("originalStatus"))
                 .build();
@@ -83,7 +83,7 @@ public abstract class AbstractJudge {
                 .stderr(((JSONObject) userJudgeResult.get("files")).getStr("stderr"))
                 .time(userJudgeResult.getLong("time") / 1000000) // ns->ms
                 .memory(userJudgeResult.getLong("memory") / 1024) // b-->kb
-                .exitCode(userJudgeResult.getInt("exitStatus"))
+                .exitCode(userJudgeResult.getLong("exitStatus"))
                 .status(userJudgeResult.getInt("status"))
                 .originalStatus(userJudgeResult.getStr("originalStatus"))
                 .build();
@@ -94,7 +94,7 @@ public abstract class AbstractJudge {
                 .stderr(((JSONObject) interactiveJudgeResult.get("files")).getStr("stderr"))
                 .time(interactiveJudgeResult.getLong("time") / 1000000) // ns->ms
                 .memory(interactiveJudgeResult.getLong("memory") / 1024) // b-->kb
-                .exitCode(interactiveJudgeResult.getInt("exitStatus"))
+                .exitCode(interactiveJudgeResult.getLong("exitStatus"))
                 .status(interactiveJudgeResult.getInt("status"))
                 .originalStatus(interactiveJudgeResult.getStr("originalStatus"))
                 .build();

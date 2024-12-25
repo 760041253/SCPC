@@ -4,14 +4,14 @@ export const JUDGE_STATUS = {
     short: 'NS',
     color: 'gray',
     type: 'info',
-    rgb: '#909399',
+    rgb: '#909399'
   },
   '-5': {
     name: 'Submitted Unknown Result',
     short: 'SNR',
     color: 'gray',
     type: 'info',
-    rgb: '#909399',
+    rgb: '#909399'
   },
   '-4': {
     name: 'Cancelled',
@@ -113,67 +113,29 @@ export const JUDGE_STATUS = {
     color: 'gray',
     short: 'SF',
     type: 'info',
-    rgb: '#909399',
-  },
-};
+    rgb:'#909399',
+  }
+}
 
-export const SIGN_UP_STATUS_REVERSE = {
-  '200': {
-    name: 'Accept',
-    color: '#8fc31f',
-    type: 'success',
-    describe: '已通过',
-  },
-  '300': {
-    name: 'Apply_For_Update',
-    color: '#ffd521',
-    type: '',
-    describe: '申请修改中',
-  },
-  '500': {
-    name: 'Pending',
-    color: '#ff9900',
-    type: 'warning',
-    describe: '审核中',
-  },
-  '400': {
-    name: 'Reject',
-    color: '#ed3f14',
-    type: 'danger',
-    describe: '已拒绝',
-  },
-};
-
-export const SIGN_UP_TYPE = {
-  '0': {
-    name: 'Official',
-    color: '#2ea7e0',
-  },
-  '1': {
-    name: 'Star',
-    color: '#ffc107',
-  },
-};
-
-export const JUDGE_STATUS_RESERVE = {
-  ns: -10,
-  snr: -5,
-  ca: -4,
-  pe: -3,
-  ce: -2,
-  wa: -1,
-  ac: 0,
-  tle: 1,
-  mle: 2,
-  re: 3,
-  se: 4,
-  Pending: 5,
-  Compiling: 6,
-  Judging: 7,
-  pa: 8,
-  Submitting: 9,
-  sf: 10,
-};
+export const JUDGE_STATUS_RESERVE={
+  'ns':-10,
+  'snr':-5,
+  'ca':-4,
+  'pe':-3,
+  'ce':-2,
+  'wa':-1,
+  'ac':0,
+  'tle':1,
+  'mle':2,
+  're':3,
+  'se':4,
+  'Pending':5,
+  'Compiling':6,
+  'Judging':7,
+  'pa':8,
+  'Submitting':9,
+  'sf':10,
+}
 
 export const PROBLEM_LEVEL = {
   '10000': {
@@ -236,15 +198,18 @@ export const REMOTE_OJ = [
   },
   {
     name: 'SPOJ',
-    key: 'SPOJ',
-  },
-];
+    key: 'SPOJ'
+  },{
+    name: 'LIBREOJ',
+    key: 'LIBRE'
+  }
+]
 
 export const CONTEST_STATUS = {
-  SCHEDULED: -1,
-  RUNNING: 0,
-  ENDED: 1,
-};
+  'SCHEDULED': -1,
+  'RUNNING': 0,
+  'ENDED': 1
+}
 
 export const CONTEST_STATUS_REVERSE = {
   '-1': {
@@ -262,15 +227,15 @@ export const CONTEST_STATUS_REVERSE = {
 };
 
 export const TRAINING_TYPE = {
-  Public: {
-    color: 'success',
-    name: 'Public',
+  'Public':{
+    color:'success',
+    name:'Public'
   },
-  Private: {
-    color: 'danger',
-    name: 'Private',
-  },
-};
+  'Private':{
+    color:'danger',
+    name:'Private'
+  }
+}
 
 export const GROUP_TYPE = {
   PUBLIC: 1,
@@ -368,11 +333,12 @@ export const JUDGE_CASE_MODE = {
 };
 
 export const FOCUS_MODE_ROUTE_NAME = {
-  TrainingFullProblemDetails: 'TrainingProblemDetails',
-  ContestFullProblemDetails: 'ContestProblemDetails',
-  GroupFullProblemDetails: 'GroupProblemDetails',
-  GroupTrainingFullProblemDetails: 'GroupTrainingProblemDetails',
-};
+  'TrainingFullProblemDetails': 'TrainingProblemDetails',
+  'ContestFullProblemDetails': 'ContestProblemDetails',
+  'GroupFullProblemDetails':'GroupProblemDetails',
+  'GroupTrainingFullProblemDetails': 'GroupTrainingProblemDetails'
+}
+
 
 export const STORAGE_KEY = {
   AUTHED: 'authed',

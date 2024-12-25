@@ -193,8 +193,8 @@ public class EmailManager {
             context.setVariable(Constants.Email.OJ_NAME.name(), UnicodeUtil.toString(webConfig.getName()));
             context.setVariable(Constants.Email.OJ_SHORT_NAME.name(), UnicodeUtil.toString(webConfig.getShortName()));
             context.setVariable(Constants.Email.OJ_URL.name(), webConfig.getBaseUrl());
-            context.setVariable(Constants.Email.EMAIL_BACKGROUND_IMG.name(), webConfig.getBaseUrl());
-            // 利用模板引擎加载html文件进行渲染并生成对应的字符串
+            context.setVariable(Constants.Email.EMAIL_BACKGROUND_IMG.name(), webConfig.getEmailBGImg());
+            //利用模板引擎加载html文件进行渲染并生成对应的字符串
             String emailContent = templateEngine.process("emailTemplate_testEmail", context);
 
             mimeMessageHelper.setSubject(UnicodeUtil.toString(webConfig.getShortName()) + "的测试邮件");

@@ -140,7 +140,7 @@ public class ConfigManager {
         for (ServiceInstance serviceInstance : serviceInstances) {
             try {
                 String result = restTemplate.getForObject(serviceInstance.getUri() + "/get-sys-config", String.class);
-                JSONObject jsonObject = JSONUtil.parseObj(result);
+                JSONObject jsonObject = JSONUtil.parseObj(result, false);
                 jsonObject.put("service", serviceInstance);
                 serviceInfoList.add(jsonObject);
             } catch (Exception e) {
@@ -432,6 +432,15 @@ public class ConfigManager {
             changeRemoteJudgeAccount(config.getAtcoderUsernameList(),
                     config.getAtcoderPasswordList(),
                     Constants.RemoteOJ.ATCODER.getName());
+        }
+
+        if (checkListDiff(config.getLibreojUsernameList(), switchConfig.getLibreojUsernameList()) ||
+                checkListDiff(config.getLibreojPasswordList(), switchConfig.getLibreojPasswordList())) {
+            switchConfig.setLibreojUsernameList(config.getLibreojUsernameList());
+            switchConfig.setLibreojPasswordList(config.getLibreojPasswordList());
+            changeRemoteJudgeAccount(config.getLibreojUsernameList(),
+                    config.getLibreojPasswordList(),
+                    Constants.RemoteOJ.LIBRE.getName());
         }
 
         boolean isOk = nacosSwitchConfig.publishSwitchConfig();

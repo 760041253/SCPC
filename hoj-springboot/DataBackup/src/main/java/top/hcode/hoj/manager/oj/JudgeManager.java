@@ -123,11 +123,9 @@ public class JudgeManager {
         SwitchConfig switchConfig = nacosSwitchConfig.getSwitchConfig();
         if (!isContestSubmission && switchConfig.getDefaultSubmitInterval() > 0) { // 非比赛提交有限制限制
             String lockKey = Constants.Account.SUBMIT_NON_CONTEST_LOCK.getCode() + userRolesVo.getUid();
-            long count = redisUtils.incr(lockKey, 1);
-            if (count > 1) {
+            if (!redisUtils.isWithinRateLimit(lockKey, switchConfig.getDefaultSubmitInterval())) {
                 throw new StatusForbiddenException("对不起，您的提交频率过快，请稍后再尝试！");
             }
-            redisUtils.expire(lockKey, switchConfig.getDefaultSubmitInterval());
         }
 
         HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes()))
@@ -180,11 +178,12 @@ public class JudgeManager {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         String lockKey = Constants.Account.TEST_JUDGE_LOCK.getCode() + userRolesVo.getUid();
-        long count = redisUtils.incr(lockKey, 1);
-        if (count > 1) {
-            throw new StatusForbiddenException("对不起，您使用在线调试过于频繁，请稍后再尝试！");
+        SwitchConfig switchConfig = nacosSwitchConfig.getSwitchConfig();
+        if (switchConfig.getDefaultSubmitInterval() > 0) {
+            if (!redisUtils.isWithinRateLimit(lockKey, switchConfig.getDefaultSubmitInterval())) {
+                throw new StatusForbiddenException("对不起，您使用在线调试过于频繁，请稍后再尝试！");
+            }
         }
-        redisUtils.expire(lockKey, 3);
 
         Problem problem = problemEntityService.getById(testJudgeDto.getPid());
         if (problem == null) {

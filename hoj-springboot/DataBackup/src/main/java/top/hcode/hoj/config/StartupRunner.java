@@ -69,42 +69,42 @@ public class StartupRunner implements CommandLineRunner {
     @Value("${jwt-token-secret}")
     private String tokenSecret;
 
-    @Value("${jwt-token-expire:86400}")
+    @Value("${jwt-token-expire}")
     private String tokenExpire;
 
-    @Value("${jwt-token-fresh-expire:43200}")
+    @Value("${jwt-token-fresh-expire}")
     private String checkRefreshExpire;
 
     // 数据库配置
-    @Value("${mysql-username:root}")
+    @Value("${mysql-username}")
     private String mysqlUsername;
 
-    @Value("${mysql-password:hoj123456}")
+    @Value("${mysql-password}")
     private String mysqlPassword;
 
-    @Value("${mysql-name:hoj}")
+    @Value("${mysql-name}")
     private String mysqlDBName;
 
-    @Value("${mysql-host:172.20.0.3}")
+    @Value("${mysql-host}")
     private String mysqlHost;
 
-    @Value("${mysql-public-host:172.20.0.3}")
+    @Value("${mysql-public-host}")
     private String mysqlPublicHost;
 
-    @Value("${mysql-port:3306}")
+    @Value("${mysql-port}")
     private Integer mysqlPort;
 
-    @Value("${mysql-public-port:3306}")
+    @Value("${mysql-public-port}")
     private Integer mysqlPublicPort;
 
     // 缓存配置
-    @Value("${redis-host:172.20.0.2}")
+    @Value("${redis-host}")
     private String redisHost;
 
-    @Value("${redis-port:6379}")
+    @Value("${redis-port}")
     private Integer redisPort;
 
-    @Value("${redis-password:hoj123456}")
+    @Value("${redis-password}")
     private String redisPassword;
     // 判题服务token
     @Value("${judge-token}")
@@ -153,6 +153,12 @@ public class StartupRunner implements CommandLineRunner {
     @Value("${spoj-password-list}")
     private List<String> spojPasswordList;
 
+    @Value("${libreoj-username-list}")
+    private List<String> libreojUsernameList;
+
+    @Value("${libreoj-password-list}")
+    private List<String> libreojPasswordList;
+
     @Value("${forced-update-remote-judge-account}")
     private Boolean forcedUpdateRemoteJudgeAccount;
 
@@ -170,11 +176,12 @@ public class StartupRunner implements CommandLineRunner {
         initSwitchConfig();
 
         upsertHOJLanguageV2();
-        // upsertHOJLanguage("PHP", "PyPy2", "PyPy3", "JavaScript Node", "JavaScript
-        // V8");
-        // checkAllLanguageUpdate();
+//      upsertHOJLanguage("PHP", "PyPy2", "PyPy3", "JavaScript Node", "JavaScript V8");
+//      checkAllLanguageUpdate();
 
         checkLanguageUpdate();
+
+        upsertHOJLanguageV3();
 
     }
 
@@ -243,12 +250,6 @@ public class StartupRunner implements CommandLineRunner {
 
     private void initSwitchConfig() {
 
-        // 获取当前的环境
-        String env = springContextUtil.getActiveProfile();
-
-        if (env.equals("dev")) {
-            return;
-        }
 
         SwitchConfig switchConfig = nacosSwitchConfig.getSwitchConfig();
 
@@ -323,6 +324,21 @@ public class StartupRunner implements CommandLineRunner {
             isChanged = true;
         }
 
+        if ((CollectionUtils.isEmpty(switchConfig.getLibreojUsernameList())
+                && !CollectionUtils.isEmpty(libreojUsernameList))
+                || forcedUpdateRemoteJudgeAccount) {
+            switchConfig.setLibreojUsernameList(libreojUsernameList);
+            isChanged = true;
+        }
+
+
+        if ((CollectionUtils.isEmpty(switchConfig.getLibreojPasswordList())
+                && !CollectionUtils.isEmpty(libreojPasswordList))
+                || forcedUpdateRemoteJudgeAccount) {
+            switchConfig.setLibreojPasswordList(libreojPasswordList);
+            isChanged = true;
+        }
+
         if (isChanged) {
             nacosSwitchConfig.publishWebConfig();
         }
@@ -345,6 +361,9 @@ public class StartupRunner implements CommandLineRunner {
             addRemoteJudgeAccountToMySQL(Constants.RemoteOJ.ATCODER.getName(),
                     switchConfig.getAtcoderUsernameList(),
                     switchConfig.getAtcoderPasswordList());
+            addRemoteJudgeAccountToMySQL(Constants.RemoteOJ.LIBRE.getName(),
+                    switchConfig.getLibreojUsernameList(),
+                    switchConfig.getLibreojPasswordList());
             checkRemoteOJLanguage(Constants.RemoteOJ.SPOJ, Constants.RemoteOJ.ATCODER);
         }
     }
@@ -360,10 +379,10 @@ public class StartupRunner implements CommandLineRunner {
      */
     private void addRemoteJudgeAccountToMySQL(String oj, List<String> usernameList, List<String> passwordList) {
 
-        if (CollectionUtils.isEmpty(usernameList) || CollectionUtils.isEmpty(passwordList)
-                || usernameList.size() != passwordList.size()) {
+
+        if (CollectionUtils.isEmpty(usernameList) || CollectionUtils.isEmpty(passwordList) || usernameList.size() != passwordList.size()) {
             log.error("[Init System Config] [{}]: There is no account or password configured for remote judge, " +
-                    "username list:{}, password list:{}", oj, Arrays.toString(usernameList.toArray()),
+                            "username list:{}, password list:{}", oj, Arrays.toString(usernameList.toArray()),
                     Arrays.toString(passwordList.toArray()));
         }
 
@@ -382,9 +401,7 @@ public class StartupRunner implements CommandLineRunner {
         if (remoteAccountList.size() > 0) {
             boolean addOk = remoteJudgeAccountEntityService.saveOrUpdateBatch(remoteAccountList);
             if (!addOk) {
-                log.error(
-                        "[Init System Config] Remote judge initialization failed. Failed to add account for: [{}]. Please check the configuration file and restart!",
-                        oj);
+                log.error("[Init System Config] Remote judge initialization failed. Failed to add account for: [{}]. Please check the configuration file and restart!", oj);
             }
         }
     }
@@ -409,9 +426,7 @@ public class StartupRunner implements CommandLineRunner {
                     .setOj("ME");
             boolean isOk = languageEntityService.save(rubyLanguage);
             if (!isOk) {
-                log.error(
-                        "[Init System Config] [HOJ] Failed to add new language [{}]! Please check whether the language table corresponding to the database has the language!",
-                        "Ruby");
+                log.error("[Init System Config] [HOJ] Failed to add new language [{}]! Please check whether the language table corresponding to the database has the language!", "Ruby");
             }
         }
 
@@ -440,9 +455,7 @@ public class StartupRunner implements CommandLineRunner {
                     .setOj("ME");
             boolean isOk = languageEntityService.save(rustLanguage);
             if (!isOk) {
-                log.error(
-                        "[Init System Config] [HOJ] Failed to add new language [{}]! Please check whether the language table corresponding to the database has the language!",
-                        "Rust");
+                log.error("[Init System Config] [HOJ] Failed to add new language [{}]! Please check whether the language table corresponding to the database has the language!", "Rust");
             }
         }
     }
@@ -461,9 +474,7 @@ public class StartupRunner implements CommandLineRunner {
                 Language newLanguage = buildHOJLanguage(language);
                 boolean isOk = languageEntityService.save(newLanguage);
                 if (!isOk) {
-                    log.error(
-                            "[Init System Config] [HOJ] Failed to add new language [{}]! Please check whether the language table corresponding to the database has the language!",
-                            language);
+                    log.error("[Init System Config] [HOJ] Failed to add new language [{}]! Please check whether the language table corresponding to the database has the language!", language);
                 }
             }
         }
@@ -542,9 +553,7 @@ public class StartupRunner implements CommandLineRunner {
                 List<Language> languageList = new LanguageContext(remoteOJ).buildLanguageList();
                 boolean isOk = languageEntityService.saveBatch(languageList);
                 if (!isOk) {
-                    log.error(
-                            "[Init System Config] [{}] Failed to initialize language list! Please check whether the language table corresponding to the database has the OJ language!",
-                            remoteOJ.getName());
+                    log.error("[Init System Config] [{}] Failed to initialize language list! Please check whether the language table corresponding to the database has the OJ language!", remoteOJ.getName());
                 }
                 if (Objects.equals(remoteOJ, Constants.RemoteOJ.ATCODER)) {
                     // 2023.09.24 同时需要把所有atcoder的题目都重新关联上新language的id
@@ -554,8 +563,7 @@ public class StartupRunner implements CommandLineRunner {
                     problemQueryWrapper.like("problem_id", "AC-");
                     List<Problem> problemList = problemEntityService.list(problemQueryWrapper);
                     if (!CollectionUtils.isEmpty(problemList)) {
-                        List<Long> problemIdList = problemList.stream().map(Problem::getId)
-                                .collect(Collectors.toList());
+                        List<Long> problemIdList = problemList.stream().map(Problem::getId).collect(Collectors.toList());
                         List<ProblemLanguage> problemLanguageList = new LinkedList<>();
                         QueryWrapper<Language> newLanguageQueryWrapper = new QueryWrapper<>();
                         newLanguageQueryWrapper.eq("oj", remoteOJ.getName());
@@ -670,14 +678,39 @@ public class StartupRunner implements CommandLineRunner {
                         .eq("is_spj", language.getIsSpj()) // 这三个条件确定唯一性
                         .set(StrUtil.isNotEmpty(language.getContentType()), "content_type", language.getContentType())
                         .set(StrUtil.isNotEmpty(language.getDescription()), "description", language.getDescription())
-                        .set(StrUtil.isNotEmpty(language.getCompileCommand()), "compile_command",
-                                language.getCompileCommand())
+                        .set(StrUtil.isNotEmpty(language.getCompileCommand()), "compile_command", language.getCompileCommand())
                         .set(StrUtil.isNotEmpty(language.getTemplate()), "template", language.getTemplate())
-                        .set(StrUtil.isNotEmpty(language.getCodeTemplate()), "code_template",
-                                language.getCodeTemplate())
+                        .set(StrUtil.isNotEmpty(language.getCodeTemplate()), "code_template", language.getCodeTemplate())
                         .set(language.getSeq() != null, "seq", language.getSeq());
                 languageEntityService.update(updateWrapper);
             }
         }
     }
+
+    private void upsertHOJLanguageV3() {
+        /**
+         * 2024.02.23 新增loj语言支持
+         */
+
+        int count = languageEntityService.count(new QueryWrapper<Language>()
+                .eq("oj", Constants.RemoteOJ.LIBRE.getName())
+        );
+        if (count == 0) {
+            List<String> languageList = Arrays.asList("text/x-c++src","C++ 11 (G++)","C++ 11 (G++)","text/x-c++src","C++ 17 (G++)","C++ 17 (G++)","text/x-c++src","C++ 11 (Clang++) ","C++ 11 (Clang++) ","text/x-c++src","C++ 17 (Clang++)","C++ 17 (Clang++)","text/x-c++src","C++ 11 O2(G++)","C++ 11 O2(G++)","text/x-c++src","C++ 17 O2(G++)","C++ 17 O2(G++)","text/x-c++src","C++ 11 O2(Clang++) ","C++ 11 O2(Clang++)","text/x-c++src","C++ 17 O2(Clang++)","C++ 17 O2(Clang++)","text/x-csrc","C 11 (GCC)","C 11 (GCC)","text/x-csrc","C 17 (GCC)","C 17 (GCC)","text/x-csrc","C 11 (Clang)","C 11 (Clang)","text/x-csrc","C 17 (Clang)","C 17 (Clang)","text/x-java","Java","Java","text/x-java","Kotlin 1.8 (JVM)","Kotlin 1.8 (JVM)","text/x-pascal","Pascal","Pascal","text/x-python","Python 3.10","Python 3.10","text/x-python","Python 3.9","Python 3.9","text/x-python","Python 2.7","Python 2.7","text/x-rustsrc","Rust 2021","Rust 2021","text/x-rustsrc","Rust 2018","Rust 2018","text/x-rustsrc","Rust 2015","Rust 2015","go","Go 1.x","Go 1.x","text/x-csharp","C# 9","C# 9","text/x-csharp","C# 7.3","C# 7.3");
+            List<Language> languages = new ArrayList<>();
+            for (int i = 0; i <= languageList.size() - 3; i += 3) {
+                languages.add(new Language()
+                        .setContentType(languageList.get(i))
+                        .setDescription(languageList.get(i + 1))
+                        .setName(languageList.get(i + 2))
+                        .setOj(Constants.RemoteOJ.LIBRE.getName())
+                        .setSeq(0)
+                        .setIsSpj(false)
+                );
+            }
+            languageEntityService.saveBatch(languages);
+        }
+
+    }
+
 }

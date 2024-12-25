@@ -53,7 +53,7 @@ public class AdminProblemManager {
     @Autowired
     private Dispatcher dispatcher;
 
-    @Value("${hoj.judge.token:default}")
+    @Value("${hoj.judge.token:no_judge_token}")
     private String judgeToken;
 
     @Resource
@@ -66,10 +66,8 @@ public class AdminProblemManager {
     private RemoteProblemManager remoteProblemManager;
 
     public IPage<Problem> getProblemList(Integer limit, Integer currentPage, String keyword, Integer auth, String oj) {
-        if (currentPage == null || currentPage < 1)
-            currentPage = 1;
-        if (limit == null || limit < 1)
-            limit = 10;
+        if (currentPage == null || currentPage < 1) currentPage = 1;
+        if (limit == null || limit < 1) limit = 10;
         IPage<Problem> iPage = new Page<>(currentPage, limit);
         IPage<Problem> problemList;
 
@@ -125,7 +123,7 @@ public class AdminProblemManager {
     public void deleteProblem(Long pid) throws StatusFailException {
         boolean isOk = problemEntityService.removeById(pid);
         /*
-         * problem的id为其他表的外键的表中的对应数据都会被一起删除！
+        problem的id为其他表的外键的表中的对应数据都会被一起删除！
          */
         if (isOk) { // 删除成功
             FileUtil.del(Constants.File.TESTCASE_BASE_FOLDER.getPath() + File.separator + "problem_" + pid);
@@ -236,8 +234,7 @@ public class AdminProblemManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         try {
-            ProblemStrategy.RemoteProblemInfo otherOJProblemInfo = remoteProblemManager
-                    .getOtherOJProblemInfo(name.toUpperCase(), problemId, userRolesVo.getUsername());
+            ProblemStrategy.RemoteProblemInfo otherOJProblemInfo = remoteProblemManager.getOtherOJProblemInfo(name.toUpperCase(), problemId, userRolesVo.getUsername());
             if (otherOJProblemInfo != null) {
                 Problem importProblem = remoteProblemManager.adminAddOtherOJProblem(otherOJProblemInfo, name);
                 if (importProblem == null) {

@@ -324,6 +324,8 @@ public class RemoteJudgeReceiver extends AbstractReceiver {
                 return !CollectionUtils.isEmpty(switchConfig.getSpojUsernameList());
             case ATCODER:
                 return !CollectionUtils.isEmpty(switchConfig.getAtcoderUsernameList());
+            case LIBRE:
+                return !CollectionUtils.isEmpty(switchConfig.getLibreojUsernameList());
         }
         return false;
     }
