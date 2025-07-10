@@ -58,7 +58,9 @@ public class JudgeEntityServiceImpl extends ServiceImpl<JudgeMapper, Judge> impl
             Long gid) {
         // 新建分页
         Page<JudgeVO> page = new Page<>(currentPage, limit);
-
+        page.setSearchCount( false);
+        page.setOptimizeCountSql( false);
+        // 关闭 count 查询优化
         IPage<JudgeVO> commonJudgeList = judgeMapper.getCommonJudgeList(page, searchPid, status, username, uid,
                 completeProblemID, gid);
         List<JudgeVO> records = commonJudgeList.getRecords();
